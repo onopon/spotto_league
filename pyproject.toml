@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "spotto_league"
+version = "0.1.0"
+description = ""
+authors = ["kiyoto.onozawa <kiyoto.onozawa@mixi.co.jp>"]
+
+[tool.poetry.dependencies]
+python = "^3.4"
+flask = "0.12.1"
+
+[tool.poetry.dev-dependencies]
+pytest = "^4.6"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
