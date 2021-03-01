@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask_sample.database import db
+from spotto_league.database import db
 
 
 class UserPoint(db.Model):
