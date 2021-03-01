@@ -7,8 +7,8 @@ class League(db.Model):
     __tablename__ = 'leagues'
 
     id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.Date, nullable=False, default=datetime.now().date)
+    date = db.Column(db.Date, nullable=False, default=datetime.now().date, index=True)
     name = db.Column(db.String(255), nullable=False)
-    game_count = db.Column(db.Integer, nullable=False)
+    game_count = db.Column(db.Integer, nullable=False, index=True)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
