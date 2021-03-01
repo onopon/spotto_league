@@ -1,0 +1,14 @@
+from datetime import datetime
+from flask_sample.database import db
+
+
+class LeagueLogDetail(db.Model):
+
+    __tablename__ = 'league_log_details'
+
+    id = db.Column(db.Integer, primary_key=True)
+    league_log_id = db.Column(db.Integer, nullable=False)
+    score_1 = db.Column(db.Integer, nullable=False)
+    score_2 = db.Column(db.Integer, nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
