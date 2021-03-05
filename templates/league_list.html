@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Spotto League一覧{% endblock %}
+
+{% block content %}
+<h1>
+  Spottoリーグ一覧
+</h1>
+<ul>
+{% for league in league_list %}
+    <li>{{ league.date}} : {{ league.name }}</li>
+{% endfor %}
+</ul>
+{% endblock %}
