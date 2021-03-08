@@ -1,4 +1,5 @@
 import os
+import flask_login
 from flask import Flask, request, render_template
 from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -8,9 +9,15 @@ from spotto_league.database import db
 from datetime import date
 from spotto_league.controllers.league_list_controller import LeagueListController
 from spotto_league.controllers.league_controller import LeagueController
-
+from spotto_league.controllers.user.register_controller import RegisterController as UserRegisterController
+from spotto_league.controllers.user.post_register_controller import PostRegisterController as PostUserRegisterController
+from spotto_league.controllers.user.login_controller import LoginController as UserLoginController
+from spotto_league.controllers.user.post_login_controller import PostLoginController as PostUserLoginController
+from spotto_league.modules.password_util import PasswordUtil
+from spotto_league.models.user import User
 
 auth = HTTPBasicAuth()
+login_manager = flask_login.LoginManager()
 
 
 def create_app():
@@ -26,6 +33,9 @@ def create_app():
         app.config.from_pyfile(os.path.join("config", "production.py"), silent=True)
 
     init_db(app)
+    app.secret_key = app.config["SECRET_KEY"]
+    login_manager.init_app(app)
+    login_manager.login_view = 'user_login'
     return app
 
 app = create_app()
@@ -38,13 +48,64 @@ def verify_password(username, password):
 
 @app.route("/", methods=("GET", "POST"))
 @auth.login_required
+@flask_login.login_required
 def league_list():
     return LeagueListController(db.session).render(request)
 
 @app.route("/league/<int:league_id>/", methods=("GET", "POST"))
 @auth.login_required
+@flask_login.login_required
 def league(league_id: int):
     return LeagueController(db.session).render(request, league_id=league_id)
+
+@app.route("/user/register", methods=("GET", "POST"))
+@auth.login_required
+def user_register():
+    if request.method == "POST":
+        return PostUserRegisterController(db.session).render(request)
+    return UserRegisterController(db.session).render(request)
+
+@app.route("/user/login", methods=("GET", "POST"))
+@auth.login_required
+@login_manager.unauthorized_handler
+def user_login():
+    if request.method == "POST":
+        return PostUserLoginController(db.session).render(request)
+    return UserLoginController(db.session).render(request)
+
+'''
+for flask-login
+'''
+@login_manager.user_loader
+def user_loader(login_name):
+    name_tuples = db.session.query(User.login_name).all()
+    login_names = [t[0] for t in name_tuples]
+    if login_name not in login_names:
+        return
+
+    user = User()
+    user.login_name = login_name
+    user.id = login_name
+    return user
+
+'''
+for flask-login
+'''
+@login_manager.request_loader
+def request_loader(request):
+    name_tuples = db.session.query(User.login_name).all()
+    login_names = [t[0] for t in name_tuples]
+ 
+    login_name = request.form.get('login_name')
+    if login_name not in login_names:
+        return
+
+    user = User()
+    user.login_name = login_name
+    user.id = login_name
+    user.is_authenticated = PasswordUtil.is_same(request.form['password'], user.password)
+    return user
+
 
 def init_data_for_debug():
     league = spotto_league.models.league.League()
