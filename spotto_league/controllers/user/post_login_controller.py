@@ -13,7 +13,7 @@ class PostLoginController(BaseController):
     def validate(self, request: BaseRequest, **kwargs) -> None:
         login_name = request.form.get("login_name")
         password = request.form.get("password")
-        user = User.find_by_login_name(self.session, login_name)
+        user = User.find_by_login_name(login_name)
         if not user:
             raise Exception()
         if not PasswordUtil.is_same(password, user.password):

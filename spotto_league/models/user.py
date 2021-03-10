@@ -4,9 +4,12 @@ from spotto_league.database import db
 from spotto_league.modules.password_util import PasswordUtil
 import hashlib
 import flask_login
+from typing import Dict, Any
+from spotto_league.database import SpottoDB
+from .base import Base
 
 
-class User(db.Model):
+class User(flask_login.UserMixin, db.Model, Base):
 
     __tablename__ = 'users'
 
@@ -21,5 +24,10 @@ class User(db.Model):
         self.password = PasswordUtil.make_hex(password)
 
     @classmethod
-    def find_by_login_name(cls, session, login_name) -> Optional['User']:
-        return session.query(cls).filter(cls.login_name==login_name).one_or_none()
+    def find_by_login_name(cls, login_name) -> Optional['User']:
+        return SpottoDB().session.query(cls).filter(cls.login_name==login_name).one_or_none()
+
+    def to_hash(self) -> Dict[str ,Any]:
+        return {'id': self.id,
+                'login_name': self.login_name,
+                'name': self.name}
