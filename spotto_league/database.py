@@ -4,9 +4,16 @@ from flask_migrate import Migrate
 
 db = SQLAlchemy()
 
+# SQLAlchemyをシングルトンにする
+class SpottoDB(SQLAlchemy):
+    def __new__(cls, *args, **kargs):
+        if not hasattr(cls, "_instance"):
+            cls._instance = super(SpottoDB, cls).__new__(cls)
+        return cls._instance
+
 def init_db(app):
-    db.init_app(app)
-    Migrate(app, db)
+    SpottoDB().init_app(app)
+    Migrate(app, SpottoDB())
 
 def make_session_for_debug():
     import os
