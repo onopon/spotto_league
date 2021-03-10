@@ -1,77 +1,54 @@
 {% extends 'base.html' %}
-
+{% block head %}
+<script src="{{ url_for("static", filename="js/league.js") }}?38"></script>
+{% endblock %}
 {% block title %}{{ league.name }}{% endblock %}
 
 {% block content %}
 <h1>{{ league.name }}</h1>
-<ul>
-<table class="table table-bordered">
+
+<table id="target-table" class="table table-bordered">
   <thead>
     <tr>
       <th scope="col">#</th>
-      {% for (league_member, user) in league_members_and_users %}
+      {% for user in users %}
       <th scope="col">{{ user.name }}</th>
       {% endfor %}
     </tr>
   </thead>
   <tbody>
-    {% for (league_member, user) in league_members_and_users %}
+    {% for user in users %}
       <tr>
         <th scope="row">{{ user.name }}</th>
-      {% for (league_member_2, user_2) in league_members_and_users %}
-        {% if league_member.id < league_member_2.id %}
-          {% set log = league_log_hash.get((user.id, user_2.id)) %}
-          {% if log %}
-            {% set game_count = game_count_hash.get(log.id, (0, 0)) %}
-            {% set details = league_log_detail_hash.get(log.id, []) %}
-            <td>
-              {{ game_count[0] }} - {{ game_count[1] }} /
-              {% for detail in details %}
-              {{ detail.score_1, detail.score_2 }}
-              {% endfor %}
-            </td>
-          {% else %}
-            <td></td>
-          {% endif %}
-        {% elif league_member.id == league_member_2.id %}
+      {% for user_2 in users %}
+        {% if user.id == user_2.id %}
           <td>斜線</td>
         {% else %}
-          {% set log = league_log_hash.get((user_2.id, user.id)) %}
-          {% if log %}
-            {% set game_count = game_count_hash.get(log.id, (0, 0)) %}
-            {% set details = league_log_detail_hash.get(log.id, []) %}
-            <td>
-              {{ game_count[1] }} - {{ game_count[0] }} /
-              {% for detail in details %}
-              {{ detail.score_2, detail.score_1 }}
-              {% endfor %}
-            </td>
-          {% else %}
-            <td></td>
-          {% endif %}
+        <td id="{{ user.id }}-{{ user_2.id }}">
+          {{ league_log_hash["{}-{}".format(user.id, user_2.id)]['count_1'] }} - {{ league_log_hash["{}-{}".format(user.id, user_2.id)]['count_2'] }}
+        </td>
         {% endif %}
-        {% endfor %}
       {% endfor %}
+    {% endfor %}
   </tbody>
 </table>
 
-<table class="table table-bordered">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      {% for (league_member, user) in league_members_and_users %}
-      <th scope="col">{{ user.name }}</th>
-      {% endfor %}
-    </tr>
-  </thead>
-  <tbody>
-    {% for (league_member, user) in league_members_and_users %}
-      <tr>
-        <th scope="row">{{ user.name }}</th>
-      {% for (league_member_2, user_2) in league_members_and_users %}
-        <td>{{ league_member.id, league_member_2.id }}{{ user.id, user_2.id }}</td>
-        {% endfor %}
-      {% endfor %}
-  </tbody>
-</table>
+<!-- Modal -->
+<div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal-title"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id='league_id' hidden>{{ league.id }}</div>
 {% endblock %}
