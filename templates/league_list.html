@@ -8,7 +8,12 @@
 </h1>
 <ul>
 {% for league in league_list %}
-    <li>{{ league.date}} : {{ league.name }}</li>
+  <li><a href='/league/{{ league.id }}/'>{{ league.date}} : {{ league.name }}</a></li>
 {% endfor %}
 </ul>
+<form class="form-horizontal" action="/user/logout" method="get">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button class="btn btn-default">ログアウト</button>
+    </div>
+</form>
 {% endblock %}
