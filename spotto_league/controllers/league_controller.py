@@ -5,6 +5,7 @@ from collections import defaultdict
 from .base_controller import BaseController
 from werkzeug.wrappers import BaseRequest, BaseResponse
 from flask import Flask, request, render_template
+from flask_login import current_user
 from spotto_league.models.league import League
 from spotto_league.models.user import User
 from spotto_league.models.league_member import LeagueMember
@@ -28,7 +29,9 @@ class LeagueController(BaseController):
         user_hash, league_log_hash = self._get_user_hash_and_league_log_hash(league_id)
 
         return render_template("league.html",
+                login_user=User.find_by_login_name(current_user.id),
                 league=league,
+                is_join=(current_user.login_name in [u.login_name for u in user_hash.values()]),
                 users=user_hash.values(),
                 league_log_hash=league_log_hash)
 
@@ -50,10 +53,8 @@ class LeagueController(BaseController):
 
         league_log_hash = {}
         for user in users_hash.values():
-            is_reverse = True
             for user_2 in users_hash.values():
                 if (user.id == user_2.id):
-                    is_reverse = False
                     continue
                 league_log_hash["{}-{}".format(user.id, user_2.id)] =\
                         {'user_id_1': user.id,
@@ -62,21 +63,19 @@ class LeagueController(BaseController):
                          'user_name_2': user_2.name,
                          'count_1': 0,
                          'count_2': 0,
-                         'details_hash_list': [],
-                         'is_reverse': is_reverse
+                         'details_hash_list': []
                          }
         league_logs = SpottoDB().session.query(LeagueLog).filter_by(league_id=league_id).all()
         for log in league_logs:
-            count_1 = [d.score_1 > d.score_2 for d in log.details].count(True)
-            count_2 = [d.score_1 < d.score_2 for d in log.details].count(True)
-            details_hash_list = [{'score_1': d.score_1, 'score_2': d.score_2} for d in log.details]
-            league_log_hash["{}-{}".format(log.user_id_1, log.user_id_2)]['log_id'] = log.id
+            details = log.details
+            count_1 = [d.score_1 > d.score_2 for d in details].count(True)
+            count_2 = [d.score_1 < d.score_2 for d in details].count(True)
+            details_hash_list = [{'score_1': d.score_1, 'score_2': d.score_2} for d in details]
             league_log_hash["{}-{}".format(log.user_id_1, log.user_id_2)]['count_1'] = count_1
             league_log_hash["{}-{}".format(log.user_id_1, log.user_id_2)]['count_2'] = count_2
             league_log_hash["{}-{}".format(log.user_id_1, log.user_id_2)]['details_hash_list'] = details_hash_list
 
-            reverse_details_hash_list = [{'score_1': d.score_2, 'score_2': d.score_1} for d in log.details]
-            league_log_hash["{}-{}".format(log.user_id_2, log.user_id_1)]['log_id'] = log.id
+            reverse_details_hash_list = [{'score_1': d.score_2, 'score_2': d.score_1} for d in details]
             league_log_hash["{}-{}".format(log.user_id_2, log.user_id_1)]['count_1'] = count_2
             league_log_hash["{}-{}".format(log.user_id_2, log.user_id_1)]['count_2'] = count_1
             league_log_hash["{}-{}".format(log.user_id_2, log.user_id_1)]['details_hash_list'] = reverse_details_hash_list

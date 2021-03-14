@@ -1,0 +1,53 @@
+{% if is_join %}
+  {% for user in users %}
+    {% if not login_user.id == user.id %}
+    {% set hash = league_log_hash["{}-{}".format(login_user.id, user.id)] %}
+      <h2> vs {{ user.name }}</h2>
+      <div class="{{ login_user.id }}-{{ user.id }}">
+        <h3 class="game-count">{{ hash['count_1'] }} - {{ hash['count_2'] }}</h3>
+      </div>
+
+      <div class="container">
+        <form class="personal-record {{ login_user.id }}-{{ user.id }}">
+          <input type="hidden" name="rival_id" value="{{ user.id }}">
+      {% for count in range(league.game_count) %}
+      {% set score_hash = hash.details_hash_list[count] %}
+      {% if not score_hash %}
+        {% set score_hash = {'score_1': 0, 'score_2': 0} %}
+      {% endif %}
+          <div class="row">
+            <div class="col-sm-4">
+        			<div class="input-group number-spinner">
+        				<span class="input-group-btn">
+        					<button class="btn btn-default" data-dir="dwn"><i class="bi bi-dash-square"></i></button>
+        				</span>
+                <input type="number" class="score_1_{{ count }} form-control text-center score-left no-spin" value="{{ score_hash['score_1'] }}">
+        				<span class="input-group-btn">
+        					<button class="btn btn-default" data-dir="up"><i class="bi bi-plus-square"></i></button>
+        				</span>
+        			</div>
+        		</div>
+            <div class="col-sm-4">
+              <p>-</p>
+            </div>
+            <div class="col-sm-4">
+        			<div class="input-group number-spinner">
+        				<span class="input-group-btn">
+        					<button class="btn btn-default" data-dir="dwn"><i class="bi bi-dash-square"></i></button>
+        				</span>
+                <input type="number" class="score_2_{{ count }} form-control text-center score-right no-spin" value="{{ score_hash['score_2'] }}">
+        				<span class="input-group-btn">
+        					<button class="btn btn-default" data-dir="up"><i class="bi bi-plus-square"></i></button>
+        				</span>
+        			</div>
+        		</div>
+        	</div>
+      {% endfor %}
+          <button type="submit" class="btn btn-primary" name="btnProfileUpdate">更新</button>
+        </form>
+      </div>
+    {% endif %}
+  {% endfor %}
+{% else %}
+<p>このリーグ戦には不参加です。</p>
+{% endif %}

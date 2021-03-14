@@ -1,0 +1,25 @@
+<table id="target-table" class="table table-bordered">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      {% for user in users %}
+      <th scope="col">{{ user.name }}</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in users %}
+      <tr>
+        <th scope="row">{{ user.name }}</th>
+      {% for user_2 in users %}
+        {% if user.id == user_2.id %}
+          <td>斜線</td>
+        {% else %}
+        <td class="{{ user.id }}-{{ user_2.id }}">
+          <p class="game-count">{{ league_log_hash["{}-{}".format(user.id, user_2.id)]['count_1'] }} - {{ league_log_hash["{}-{}".format(user.id, user_2.id)]['count_2'] }}</p>
+        </td>
+        {% endif %}
+      {% endfor %}
+    {% endfor %}
+  </tbody>
+</table>

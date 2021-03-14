@@ -13,6 +13,7 @@ from spotto_league.controllers.user.register_controller import RegisterControlle
 from spotto_league.controllers.user.post_register_controller import PostRegisterController as PostUserRegisterController
 from spotto_league.controllers.user.login_controller import LoginController as UserLoginController
 from spotto_league.controllers.user.post_login_controller import PostLoginController as PostUserLoginController
+from spotto_league.controllers.post_league_log_controller import PostLeagueLogController as PostLeagueLogController
 from spotto_league.modules.password_util import PasswordUtil
 from spotto_league.models.user import User
 
@@ -63,6 +64,13 @@ def league(league_id: int):
 @flask_login.login_required
 def league_json_data(league_id: int):
     return LeagueController().render_as_json(request, league_id=league_id)
+
+@app.route("/league/log", methods=("GET", "POST"))
+@auth.login_required
+@flask_login.login_required
+def league_log():
+    if request.method == "POST":
+        return PostLeagueLogController().render(request)
 
 @app.route("/user/register", methods=("GET", "POST"))
 @auth.login_required
