@@ -4,7 +4,6 @@ from flask import Flask, request, render_template, redirect, url_for
 from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import generate_password_hash, check_password_hash
 from spotto_league.database import init_db
-import spotto_league.models
 from spotto_league.database import SpottoDB
 from datetime import date
 from spotto_league.controllers.league_list_controller import LeagueListController
