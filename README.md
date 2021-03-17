@@ -1,10 +1,10 @@
-h1. SPOTTOのリーグ戦情報やユーザポイントの入力サービス
+# SPOTTOのリーグ戦情報やユーザポイントの入力サービス
 
-h2. 開発環境準備
-h3. Pythonのversion
+## 開発環境準備
+### Pythonのversion
 4.3.1
 
-h3. dbを用意
+###  dbを用意
 brew install mysql
 mysql.server start
 などで、
@@ -17,7 +17,7 @@ create database spotto_dev
 をし、spotto_dev DBを作成する。
 
 
-h3. tableのmigrate
+### tableのmigrate
 詳しくはこの辺参照。
 https://qiita.com/shirakiya/items/0114d51e9c189658002e
 poetry run python manage.py db migrate    # spotto_leagus/models 内のファイルの追加や変更を行うたびに叩いて、migration/versions 内のファイルを生成する
@@ -25,7 +25,7 @@ poetry run python manage.py db upgrade    # mysqlへの反映が行われてい�
 poetry run python manage.py db downgrade  # mysqlの反映を巻き戻す時に叩く
 
 
-h3. 開発環境の起こし方
+### 開発環境の起こし方
 下記で起動
 $ export FLASK_APP=application.py
 $ poetry run python -m flask run
