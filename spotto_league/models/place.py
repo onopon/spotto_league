@@ -1,9 +1,7 @@
 from datetime import datetime
 from typing import List
-from spotto_league.database import SpottoDB
+from spotto_league.database import SpottoDB, db
 from .base import Base
-
-db = SpottoDB()
 
 
 class Place(db.Model, Base):

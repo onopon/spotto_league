@@ -2,11 +2,9 @@ from datetime import datetime
 from typing import Optional
 from sqlalchemy import Index
 from typing import List
-from spotto_league.database import SpottoDB
+from spotto_league.database import SpottoDB, db
 from spotto_league.models.league_log_detail import LeagueLogDetail
 from .base import Base
-
-db = SpottoDB()
 
 
 class LeagueLog(db.Model, Base):

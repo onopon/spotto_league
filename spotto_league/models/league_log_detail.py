@@ -1,8 +1,6 @@
 from datetime import datetime
 from .base import Base
-from spotto_league.database import SpottoDB
-
-db = SpottoDB()
+from spotto_league.database import SpottoDB, db
 
 
 class LeagueLogDetail(db.Model, Base):

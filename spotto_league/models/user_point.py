@@ -1,8 +1,6 @@
 from datetime import datetime
-from spotto_league.database import SpottoDB
+from spotto_league.database import SpottoDB, db
 from .base import Base
-
-db = SpottoDB()
 
 
 class UserPoint(db.Model, Base):

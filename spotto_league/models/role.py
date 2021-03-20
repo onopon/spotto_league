@@ -4,11 +4,9 @@ from spotto_league.modules.password_util import PasswordUtil
 import hashlib
 import flask_login
 from typing import Dict, Any
-from spotto_league.database import SpottoDB
+from spotto_league.database import SpottoDB, db
 from .base import Base
 from enum import Enum
-
-db = SpottoDB()
 
 
 class RoleType(Enum):

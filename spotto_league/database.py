@@ -9,6 +9,7 @@ class SpottoDB(SQLAlchemy):
             cls._instance = super(SpottoDB, cls).__new__(cls)
         return cls._instance
 
+db = SpottoDB()
 def init_db(app):
     SpottoDB().init_app(app)
     Migrate(app, SpottoDB())

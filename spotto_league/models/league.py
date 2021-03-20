@@ -1,13 +1,11 @@
 from typing import List
-from spotto_league.database import SpottoDB
+from spotto_league.database import SpottoDB, db
 from spotto_league.models.league_log import LeagueLog
 from spotto_league.models.place import Place
 from spotto_league.models.league_member import LeagueMember
 from .base import Base
 import datetime
 from datetime import datetime as dt
-
-db = SpottoDB()
 
 
 class League(db.Model, Base):
@@ -18,13 +16,13 @@ class League(db.Model, Base):
     date = db.Column(db.Date, nullable=False, default=dt.now().date, index=True)
     name = db.Column(db.String(255), nullable=False)
     game_count = db.Column(db.Integer, nullable=False, index=True)
-    created_at = db.Column(db.DateTime, nullable=False, default=dt.now)
-    updated_at = db.Column(db.DateTime, nullable=False, default=dt.now, onupdate=dt.now)
     start_at = db.Column(db.Time, nullable=False, default=dt.now().time)
     end_at = db.Column(db.Time, nullable=False, default=dt.now().time)
     join_end_at = db.Column(db.DateTime, nullable=False, default=dt.now)
-    is_decided = db.Column(db.Boolean, nullable=False, default=False, index=True)
+    status = db.Column(db.Integer, nullable=False, default=False, index=True)
     place_id = db.Column(db.Integer, nullable=False, index=True)
+    created_at = db.Column(db.DateTime, nullable=False, default=dt.now)
+    updated_at = db.Column(db.DateTime, nullable=False, default=dt.now, onupdate=dt.now)
 
     @property
     def place(self) -> Place:
