@@ -1,9 +1,11 @@
+from typing import List
 from datetime import datetime
-from spotto_league.database import db
 from typing import Dict, Any
 from spotto_league.database import SpottoDB
 from spotto_league.models.user import User
 from .base import Base
+
+db = SpottoDB()
 
 
 class LeagueMember(db.Model, Base):
@@ -21,3 +23,18 @@ class LeagueMember(db.Model, Base):
     def user(self) -> User:
         return SpottoDB().session.query(User).\
             filter_by(id = self.user_id).one()
+
+    @classmethod
+    def find_all_by_league_id(cls, league_id) -> List['LeagueMember']:
+        return db.session.query(cls).filter(cls.league_id == league_id).all()
+
+    @classmethod
+    def find_all_by_user_id(cls, user_id) -> List['LeagueMember']:
+        return db.session.query(cls).filter(cls.user_id == user_id).all()
+
+    @classmethod
+    def find_or_initialize_by_league_id_and_user_id(cls, league_id, user_id) -> 'LeagueMember':
+        league_member = LeagueMember()
+        league_member.league_id = league_id
+        league_member.user_id = user_id
+        return db.session.query(cls).filter(cls.league_id == league_id, cls.user_id == user_id).one_or_none() or league_member

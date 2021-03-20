@@ -8,6 +8,7 @@ from spotto_league.database import SpottoDB
 
 class PostRegisterController(BaseController):
     # override
+    @asyncio.coroutine
     def validate(self, request: BaseRequest, **kwargs) -> None:
         # TODO: 後でやる
         login_name = request.form.get("login_name")

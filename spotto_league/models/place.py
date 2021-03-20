@@ -1,11 +1,12 @@
 from datetime import datetime
-from spotto_league.database import db
-from datetime import datetime as dt
 from typing import List
 from spotto_league.database import SpottoDB
+from .base import Base
+
+db = SpottoDB()
 
 
-class Place(db.Model):
+class Place(db.Model, Base):
 
     __tablename__ = 'places'
 
@@ -15,3 +16,7 @@ class Place(db.Model):
     capacity = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
+
+    @classmethod
+    def all(cls) -> List['Place']:
+        return SpottoDB().session.query(cls).all()

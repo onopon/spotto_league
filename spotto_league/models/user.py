@@ -1,12 +1,14 @@
 from typing import Optional
 from datetime import datetime
-from spotto_league.database import db
 from spotto_league.modules.password_util import PasswordUtil
 import hashlib
 import flask_login
 from typing import Dict, Any
 from spotto_league.database import SpottoDB
 from .base import Base
+from .role import Role
+
+db = SpottoDB()
 
 
 class User(flask_login.UserMixin, db.Model, Base):
@@ -31,3 +33,13 @@ class User(flask_login.UserMixin, db.Model, Base):
         return {'id': self.id,
                 'login_name': self.login_name,
                 'name': self.name}
+
+    @property
+    def role(self) -> Optional[Role]:
+        return Role.find_by_user_id(self.id)
+
+    def is_admin(self) -> bool:
+        role = self.role
+        if not role:
+            return False
+        return role.is_admin()

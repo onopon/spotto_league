@@ -1,77 +1,18 @@
 {% extends 'base.html' %}
 {% block head %}
-<script src="{{ url_for("static", filename="js/league.js") }}?123"></script>
+<script src="{{ url_for("static", filename="js/league.js") }}?{{ timestamp }}"></script>
 {% endblock %}
 {% block title %}{{ league.name }}{% endblock %}
 
 {% block content %}
 <h1>{{ league.name }}</h1>
-<p>こんにちは、{{ login_user.name }}さん</p>
-<ul class="nav nav-tabs" id="myTab" role="tablist">
-  <li class="nav-item" role="presentation">
-    <a class="nav-link active" id="chart-tab" data-bs-toggle="tab" href="#chart" role="tab" aria-controls="chart" aria-selected="true">リーグ戦表</a>
-  </li>
-  <li class="nav-item" role="presentation">
-    <a class="nav-link" id="personal-tab" data-bs-toggle="tab" href="#personal" role="tab" aria-controls="personal" aria-selected="false">個人戦表</a>
-  </li>
-</ul>
-<div class="tab-content" id="myTabContent">
-  <div class="tab-pane fade show active" id="chart" role="tabpanel" aria-labelledby="chart-tab">
-    {% include 'league_chart.html' %}
-  </div>
-  <div class="tab-pane fade" id="personal" role="tabpanel" aria-labelledby="personal-tab">
-    {% include 'personal_record.html' %}
-  </div>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modal-title"></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="container" id="modal-body">
-        {% for count in range(league.game_count) %}
-          <div class="row">
-            <div class="col-sm-4">
-        			<div class="input-group number-spinner">
-        				<span class="input-group-btn">
-        					<button class="btn btn-default" data-dir="dwn"><i class="bi bi-dash-square"></i></button>
-        				</span>
-                <input type="number" class="score_1_{{ count }} form-control text-center score-left no-spin" value="0">
-        				<span class="input-group-btn">
-        					<button class="btn btn-default" data-dir="up"><i class="bi bi-plus-square"></i></button>
-        				</span>
-        			</div>
-        		</div>
-            <div class="col-sm-4">
-              <p>-</p>
-            </div>
-            <div class="col-sm-4">
-        			<div class="input-group number-spinner">
-        				<span class="input-group-btn">
-        					<button class="btn btn-default" data-dir="dwn"><i class="bi bi-dash-square"></i></button>
-        				</span>
-                <input type="number" class="score_2_{{ count }} form-control text-center score-right no-spin" value="0">
-        				<span class="input-group-btn">
-        					<button class="btn btn-default" data-dir="up"><i class="bi bi-plus-square"></i></button>
-        				</span>
-        			</div>
-        		</div>
-        	</div>
-        {% endfor %}
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
-        <button type="button" id="modal-save-btn" class="btn btn-primary" data-bs-dismiss="modal">更新</button>
-      </div>
-    </div>
-  </div>
-</div>
+{% if league.is_recruiting() %}
+{% elif league.is_in_session() %}
+  {% include 'league/in_session.html' %}  
+{% elif league.is_after_session() %}
+{% elif league.is_stopped_recruiting() %}
+  {% include 'league/stopped_recruiting.html' %}  
+{% endif %}
 <div id='league_id' hidden>{{ league.id }}</div>
 <div id='user_id' hidden>{{ login_user.id }}</div>
 {% endblock %}

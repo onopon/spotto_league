@@ -10,6 +10,7 @@ import flask_login
 class PostLoginController(BaseController):
     __slots__ = ['_user']
     # override
+    @asyncio.coroutine
     def validate(self, request: BaseRequest, **kwargs) -> None:
         login_name = request.form.get("login_name")
         password = request.form.get("password")

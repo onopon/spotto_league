@@ -7,7 +7,6 @@ from werkzeug.wrappers import BaseRequest, BaseResponse
 from flask import Flask, request, render_template
 from flask_login import current_user
 from spotto_league.models.league import League
-from spotto_league.models.user import User
 from spotto_league.models.league_member import LeagueMember
 from spotto_league.models.league_log import LeagueLog
 from spotto_league.models.league_log_detail import LeagueLogDetail
@@ -28,8 +27,7 @@ class LeagueController(BaseController):
         league = SpottoDB().session.query(League).get(league_id)
         user_hash, league_log_hash = self._get_user_hash_and_league_log_hash(league_id)
 
-        return render_template("league.html",
-                login_user=User.find_by_login_name(current_user.id),
+        return self.render_template("league.html",
                 league=league,
                 is_join=(current_user.login_name in [u.login_name for u in user_hash.values()]),
                 users=user_hash.values(),

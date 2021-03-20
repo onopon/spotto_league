@@ -1,13 +1,51 @@
 {% extends 'base.html' %}
-
+{% block head %}
+<script src="{{ url_for("static", filename="js/league_list.js") }}?{{ timestamp }}"></script>
+{% endblock %}
 {% block title %}Spotto League一覧{% endblock %}
 
 {% block content %}
-<h1>
-  Spottoリーグ一覧
-</h1>
+<h1>Spottoリーグ一覧</h1>
+<p>こんにちは、<a href='/user/{{ login_user.login_name }}/'>{{ login_user.name }}</a>さん</p>
+<h3>現在募集中のリーグ戦</h3>
+{% for league in league_list_hash['recruiting'] %}
+<form class="row g-3 recruiting">
+  <input type="hidden" name="league_id" value="{{ league.id }}">
+  <label class="col-sm-12 control-label">{{ league.date }} {{ league.start_at }} - {{ league.end_at }}</label>
+  <div class="row">
+    <div class="col-sm-6">
+      <p>{{ league.name }}</p>
+    </div>
+    <div class="col-sm-6">
+      {% if league.id in user_join_league_ids %}
+        <button class="btn btn-primary join invisible">参加希望を出す</button>
+        <button class="btn btn-secondary cancel">参加希望を取り消す</button>
+      {% else %}
+        <button class="btn btn-primary join">参加希望を出す</button>
+        <button class="btn btn-secondary cancel invisible">参加希望を取り消す</button>
+      {% endif %}
+    </div>
+  </div>
+</form>
+{% endfor %}
+
+<h3>募集を締め切ったリーグ戦</h3>
 <ul>
-{% for league in league_list %}
+{% for league in league_list_hash['stopped_recruiting'] %}
+  <li><a href='/league/{{ league.id }}/'>{{ league.date}} : {{ league.name }}</a></li>
+{% endfor %}
+</ul>
+
+<h3>開催中のリーグ戦</h3>
+<ul>
+{% for league in league_list_hash['in_session'] %}
+  <li><a href='/league/{{ league.id }}/'>{{ league.date}} : {{ league.name }}</a></li>
+{% endfor %}
+</ul>
+
+<h3>開催終了したリーグ戦</h3>
+<ul>
+{% for league in league_list_hash['after_session'] %}
   <li><a href='/league/{{ league.id }}/'>{{ league.date}} : {{ league.name }}</a></li>
 {% endfor %}
 </ul>
@@ -17,3 +55,4 @@
     </div>
 </form>
 {% endblock %}
+<div id='user_id' hidden>{{ login_user.id }}</div>

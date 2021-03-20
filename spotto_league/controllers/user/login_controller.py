@@ -7,6 +7,7 @@ from flask_login import current_user
 
 class LoginController(BaseController):
     # override
+    @asyncio.coroutine
     def validate(self, request: BaseRequest, **kwargs) -> None:
         pass
 
@@ -15,4 +16,4 @@ class LoginController(BaseController):
     def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
         if current_user.is_authenticated:
             return redirect(url_for('league_list'))
-        return render_template("user/login.html")
+        return self.render_template("user/login.html")

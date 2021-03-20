@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Spottoユーザ情報{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h1>
+    ユーザ情報
+  </h1>
+  <div class="form-group">
+    <label class="col-sm-2 control-label"> ログインID</label>
+    <div class="col-sm-10">
+      <p>{{ user.login_name }}</p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">ニックネーム</label>
+    <div class="col-sm-10">
+      <p>{{ user.name }}</p>
+    </div>
+  </div>
+  
+  {% if user.id == login_user.id %}
+  <p>表示しているユーザがログインユーザだった場合に、表示されます。</p>
+    {% if login_user.is_admin() %}
+      {% include 'user/admin.html' %}
+    {% endif %}
+  {% endif %}
+</div>
+{% endblock %}

@@ -12,7 +12,14 @@ from spotto_league.controllers.user.register_controller import RegisterControlle
 from spotto_league.controllers.user.post_register_controller import PostRegisterController as PostUserRegisterController
 from spotto_league.controllers.user.login_controller import LoginController as UserLoginController
 from spotto_league.controllers.user.post_login_controller import PostLoginController as PostUserLoginController
+from spotto_league.controllers.user.info_controller import InfoController as UserInfoController
 from spotto_league.controllers.post_league_log_controller import PostLeagueLogController as PostLeagueLogController
+from spotto_league.controllers.admin.league.register_controller import RegisterController as AdminLeagueRegisterController
+from spotto_league.controllers.admin.league.post_register_controller import PostRegisterController as PostAdminLeagueRegisterController
+from spotto_league.controllers.admin.league.league_controller import LeagueController as AdminLeagueController
+from spotto_league.controllers.admin.league.post_league_controller import PostLeagueController as PostAdminLeagueController
+from spotto_league.controllers.user.post_league_join_controller import PostLeagueJoinController as PostUserLeagueJoinController
+from spotto_league.controllers.user.post_league_cancel_controller import PostLeagueCancelController as PostUserLeagueCancelController
 from spotto_league.modules.password_util import PasswordUtil
 from spotto_league.models.user import User
 
@@ -92,6 +99,38 @@ def user_login():
 def user_logout():
     flask_login.logout_user()
     return redirect(url_for('user_login'))
+
+@app.route("/user/<string:login_name>/", methods=("GET", "POST"))
+@auth.login_required
+@flask_login.login_required
+def user_info(login_name: str):
+    return UserInfoController().render(request, login_name=login_name)
+
+@app.route("/user/league/join", methods=("GET", "POST"))
+def user_league_join():
+    if request.method == "POST":
+        return PostUserLeagueJoinController().render(request)
+
+@app.route("/user/league/cancel", methods=("GET", "POST"))
+def user_league_cancel():
+    if request.method == "POST":
+        return PostUserLeagueCancelController().render(request)
+
+@app.route("/admin/league/register/", methods=("GET", "POST"))
+@auth.login_required
+@flask_login.login_required
+def admin_league_register():
+    if request.method == "POST":
+        return PostAdminLeagueRegisterController().render(request)
+    return AdminLeagueRegisterController().render(request)
+
+@app.route("/admin/league/<int:league_id>/", methods=("GET", "POST"))
+@auth.login_required
+@flask_login.login_required
+def admin_league(league_id: int):
+    if request.method == "POST":
+        return PostAdminLeagueController().render(request, league_id=league_id)
+    return AdminLeagueController().render(request, league_id=league_id)
 
 '''
 for flask-login

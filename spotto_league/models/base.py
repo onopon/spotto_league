@@ -1,6 +1,7 @@
 from typing import Optional, Any
-from spotto_league.database import db
 from spotto_league.database import SpottoDB
+
+db = SpottoDB()
 
 
 class Base():
