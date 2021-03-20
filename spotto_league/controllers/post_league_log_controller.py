@@ -10,7 +10,7 @@ from spotto_league.models.user import User
 from spotto_league.models.league_member import LeagueMember
 from spotto_league.models.league_log import LeagueLog
 from spotto_league.models.league_log_detail import LeagueLogDetail
-from spotto_league.database import SpottoDB
+
 
 class PostLeagueLogController(BaseController):
     __slots__ = ["_league_log"]

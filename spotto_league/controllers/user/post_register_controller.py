@@ -3,7 +3,6 @@ from spotto_league.controllers.base_controller import BaseController
 from werkzeug.wrappers import BaseRequest, BaseResponse
 from flask import Flask, request, render_template
 from spotto_league.models.user import User
-from spotto_league.database import SpottoDB
 
 
 class PostRegisterController(BaseController):

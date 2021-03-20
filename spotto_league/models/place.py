@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import List
-from spotto_league.database import SpottoDB, db
+from spotto_league.database import db
 from .base import Base
 
 
@@ -17,4 +17,4 @@ class Place(db.Model, Base):
 
     @classmethod
     def all(cls) -> List['Place']:
-        return SpottoDB().session.query(cls).all()
+        return db.session.query(cls).all()

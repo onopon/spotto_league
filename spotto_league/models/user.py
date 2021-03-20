@@ -4,7 +4,7 @@ from spotto_league.modules.password_util import PasswordUtil
 import hashlib
 import flask_login
 from typing import Dict, Any
-from spotto_league.database import SpottoDB, db
+from spotto_league.database import db
 from .base import Base
 from .role import Role
 
@@ -25,7 +25,7 @@ class User(flask_login.UserMixin, db.Model, Base):
 
     @classmethod
     def find_by_login_name(cls, login_name) -> Optional['User']:
-        return SpottoDB().session.query(cls).filter(cls.login_name==login_name).one_or_none()
+        return db.session.query(cls).filter(cls.login_name==login_name).one_or_none()
 
     def to_hash(self) -> Dict[str ,Any]:
         return {'id': self.id,

@@ -10,7 +10,7 @@ from spotto_league.models.league import League
 from spotto_league.models.league_member import LeagueMember
 from spotto_league.models.league_log import LeagueLog
 from spotto_league.models.league_log_detail import LeagueLogDetail
-from spotto_league.database import SpottoDB
+from spotto_league.database import db
 
 
 class PostLeagueController(BaseController):
@@ -29,7 +29,7 @@ class PostLeagueController(BaseController):
     # override
     @asyncio.coroutine
     def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
-        session = SpottoDB().session
+        session = db.session
         league_member_ids = [int(m_id) for m_id in request.form.getlist('enabled_league_member_ids')]
         for member in self._league.members:
             if member.id in league_member_ids:

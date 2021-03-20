@@ -10,7 +10,7 @@ from spotto_league.models.league import League
 from spotto_league.models.league_member import LeagueMember
 from spotto_league.models.league_log import LeagueLog
 from spotto_league.models.league_log_detail import LeagueLogDetail
-from spotto_league.database import SpottoDB
+from spotto_league.database import db
 
 
 class LeagueController(BaseController):
@@ -24,7 +24,7 @@ class LeagueController(BaseController):
     @asyncio.coroutine
     def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
         league_id = kwargs["league_id"]
-        league = SpottoDB().session.query(League).get(league_id)
+        league = db.session.query(League).get(league_id)
         user_hash, league_log_hash = self._get_user_hash_and_league_log_hash(league_id)
 
         return self.render_template("league.html",
@@ -37,12 +37,12 @@ class LeagueController(BaseController):
     @asyncio.coroutine
     def get_json(self, request: BaseRequest, **kwargs) -> Dict[str, Any]:
         league_id = kwargs["league_id"]
-        league = SpottoDB().session.query(League).get(league_id)
+        league = db.session.query(League).get(league_id)
         _, league_log_hash = self._get_user_hash_and_league_log_hash(league_id)
         return json.dumps({'game_count': league.game_count, 'league_log_hash': league_log_hash})
 
     def _get_user_hash_and_league_log_hash(self, league_id):
-        league_members = SpottoDB().session.query(LeagueMember).\
+        league_members = db.session.query(LeagueMember).\
             filter_by(league_id=league_id, enabled=True).all()
         users_hash = {}
         for league_member in league_members:
@@ -63,7 +63,7 @@ class LeagueController(BaseController):
                          'count_2': 0,
                          'details_hash_list': []
                          }
-        league_logs = SpottoDB().session.query(LeagueLog).filter_by(league_id=league_id).all()
+        league_logs = db.session.query(LeagueLog).filter_by(league_id=league_id).all()
         for log in league_logs:
             details = log.details
             count_1 = [d.score_1 > d.score_2 for d in details].count(True)

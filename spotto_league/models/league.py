@@ -1,5 +1,5 @@
 from typing import List
-from spotto_league.database import SpottoDB, db
+from spotto_league.database import db
 from spotto_league.models.league_log import LeagueLog
 from spotto_league.models.place import Place
 from spotto_league.models.league_member import LeagueMember

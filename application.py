@@ -4,7 +4,7 @@ from flask import Flask, request, render_template, redirect, url_for
 from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import generate_password_hash, check_password_hash
 from spotto_league.database import init_db
-from spotto_league.database import SpottoDB
+from spotto_league.database import db
 from datetime import date
 from spotto_league.controllers.league_list_controller import LeagueListController
 from spotto_league.controllers.league_controller import LeagueController
@@ -137,7 +137,7 @@ for flask-login
 '''
 @login_manager.user_loader
 def user_loader(login_name):
-    name_tuples = SpottoDB().session.query(User.login_name).all()
+    name_tuples = db.session.query(User.login_name).all()
     login_names = [t[0] for t in name_tuples]
     if login_name not in login_names:
         return
@@ -152,7 +152,7 @@ for flask-login
 '''
 @login_manager.request_loader
 def request_loader(request):
-    name_tuples = SpottoDB().session.query(User.login_name).all()
+    name_tuples = db.session.query(User.login_name).all()
     login_names = [t[0] for t in name_tuples]
  
     login_name = request.form.get('login_name')
@@ -171,151 +171,151 @@ def init_data_for_debug():
     league.name = '第1回まぐカップ'
     league.date = date(2021, 2, 1)
     league.game_count = 3
-    SpottoDB().session.add(league)
+    db.session.add(league)
 
     league = spotto_league.models.league.League()
     league.name = '第2回まぐカップ'
     league.date = date(2021, 2, 8)
     league.game_count = 5
-    SpottoDB().session.add(league)
+    db.session.add(league)
 
     user = spotto_league.models.user.User()
     user.login_name = 'magu'
     user.password = 'password'
     user.name = 'まぐ'
-    SpottoDB().session.add(user)
+    db.session.add(user)
 
     user = spotto_league.models.user.User()
     user.login_name = 'uchida'
     user.password = 'password'
     user.name = 'うっちー'
-    SpottoDB().session.add(user)
+    db.session.add(user)
 
     user = spotto_league.models.user.User()
     user.login_name = 'watako'
     user.password = 'password'
     user.name = 'わたこう'
-    SpottoDB().session.add(user)
+    db.session.add(user)
 
     user = spotto_league.models.user.User()
     user.login_name = 'yukinori'
     user.password = 'password'
     user.name = 'ゆっきー'
-    SpottoDB().session.add(user)
+    db.session.add(user)
 
     user = spotto_league.models.user.User()
     user.login_name = 'onopon'
     user.password = 'password'
     user.name = 'おのぽん'
-    SpottoDB().session.add(user)
+    db.session.add(user)
 
     league_member = spotto_league.models.league_member.LeagueMember()
     league_member.league_id = 1
     league_member.user_id = 1
-    SpottoDB().session.add(league_member)
+    db.session.add(league_member)
     league_member = spotto_league.models.league_member.LeagueMember()
     league_member.league_id = 1
     league_member.user_id = 4
-    SpottoDB().session.add(league_member)
+    db.session.add(league_member)
     league_member = spotto_league.models.league_member.LeagueMember()
     league_member.league_id = 1
     league_member.user_id = 2
     league_member.enabled = False
-    SpottoDB().session.add(league_member)
+    db.session.add(league_member)
     league_member = spotto_league.models.league_member.LeagueMember()
     league_member.league_id = 1
     league_member.user_id = 5
-    SpottoDB().session.add(league_member)
+    db.session.add(league_member)
     league_member = spotto_league.models.league_member.LeagueMember()
     league_member.league_id = 1
     league_member.user_id = 3
-    SpottoDB().session.add(league_member)
+    db.session.add(league_member)
 
     league_member = spotto_league.models.league_member.LeagueMember()
     league_member.league_id = 2
     league_member.user_id = 1
-    SpottoDB().session.add(league_member)
+    db.session.add(league_member)
     league_member = spotto_league.models.league_member.LeagueMember()
     league_member.league_id = 2
     league_member.user_id = 2
-    SpottoDB().session.add(league_member)
+    db.session.add(league_member)
     league_member = spotto_league.models.league_member.LeagueMember()
     league_member.league_id = 2
     league_member.user_id = 4
-    SpottoDB().session.add(league_member)
+    db.session.add(league_member)
     league_member = spotto_league.models.league_member.LeagueMember()
     league_member.league_id = 2
     league_member.user_id = 5
-    SpottoDB().session.add(league_member)
+    db.session.add(league_member)
 
     league_log = spotto_league.models.league_log.LeagueLog()
     league_log.league_id = 1
     league_log.user_id_1 = 3
     league_log.user_id_2 = 4
-    SpottoDB().session.add(league_log)
+    db.session.add(league_log)
     league_log = spotto_league.models.league_log.LeagueLog()
     league_log.league_id = 1
     league_log.user_id_1 = 1
     league_log.user_id_2 = 5
-    SpottoDB().session.add(league_log)
+    db.session.add(league_log)
 
     league_log = spotto_league.models.league_log.LeagueLog()
     league_log.league_id = 2
     league_log.user_id_1 = 2
     league_log.user_id_2 = 5
-    SpottoDB().session.add(league_log)
+    db.session.add(league_log)
 
     league_log_detail = spotto_league.models.league_log_detail.LeagueLogDetail()
     league_log_detail.league_log_id = 1
     league_log_detail.score_1 = 11
     league_log_detail.score_2 = 9
-    SpottoDB().session.add(league_log_detail)
+    db.session.add(league_log_detail)
     league_log_detail = spotto_league.models.league_log_detail.LeagueLogDetail()
     league_log_detail.league_log_id = 1
     league_log_detail.score_1 = 11
     league_log_detail.score_2 = 5
-    SpottoDB().session.add(league_log_detail)
+    db.session.add(league_log_detail)
 
     league_log_detail = spotto_league.models.league_log_detail.LeagueLogDetail()
     league_log_detail.league_log_id = 2
     league_log_detail.score_1 = 12
     league_log_detail.score_2 = 10
-    SpottoDB().session.add(league_log_detail)
+    db.session.add(league_log_detail)
     league_log_detail = spotto_league.models.league_log_detail.LeagueLogDetail()
     league_log_detail.league_log_id = 2
     league_log_detail.score_1 = 8
     league_log_detail.score_2 = 11
-    SpottoDB().session.add(league_log_detail)
+    db.session.add(league_log_detail)
     league_log_detail = spotto_league.models.league_log_detail.LeagueLogDetail()
     league_log_detail.league_log_id = 3
     league_log_detail.score_1 = 15
     league_log_detail.score_2 = 13
-    SpottoDB().session.add(league_log_detail)
+    db.session.add(league_log_detail)
 
     league_log_detail = spotto_league.models.league_log_detail.LeagueLogDetail()
     league_log_detail.league_log_id = 3
     league_log_detail.score_1 = 11
     league_log_detail.score_2 = 3
-    SpottoDB().session.add(league_log_detail)
+    db.session.add(league_log_detail)
     league_log_detail = spotto_league.models.league_log_detail.LeagueLogDetail()
     league_log_detail.league_log_id = 3
     league_log_detail.score_1 = 11
     league_log_detail.score_2 = 2
-    SpottoDB().session.add(league_log_detail)
+    db.session.add(league_log_detail)
     league_log_detail = spotto_league.models.league_log_detail.LeagueLogDetail()
     league_log_detail.league_log_id = 3
     league_log_detail.score_1 = 10
     league_log_detail.score_2 = 12
-    SpottoDB().session.add(league_log_detail)
+    db.session.add(league_log_detail)
     league_log_detail = spotto_league.models.league_log_detail.LeagueLogDetail()
     league_log_detail.league_log_id = 3
     league_log_detail.score_1 = 8
     league_log_detail.score_2 = 11
-    SpottoDB().session.add(league_log_detail)
+    db.session.add(league_log_detail)
     league_log_detail = spotto_league.models.league_log_detail.LeagueLogDetail()
     league_log_detail.league_log_id = 3
     league_log_detail.score_1 = 11
     league_log_detail.score_2 = 4
-    SpottoDB().session.add(league_log_detail)
+    db.session.add(league_log_detail)
 
-    SpottoDB().session.commit()
+    db.session.commit()

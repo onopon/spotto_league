@@ -1,7 +1,7 @@
 from typing import List
 from datetime import datetime
 from typing import Dict, Any
-from spotto_league.database import SpottoDB, db
+from spotto_league.database import db
 from spotto_league.models.user import User
 from .base import Base
 
@@ -19,7 +19,7 @@ class LeagueMember(db.Model, Base):
 
     @property
     def user(self) -> User:
-        return SpottoDB().session.query(User).\
+        return db.session.query(User).\
             filter_by(id = self.user_id).one()
 
     @classmethod

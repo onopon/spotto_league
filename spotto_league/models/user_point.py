@@ -1,5 +1,5 @@
 from datetime import datetime
-from spotto_league.database import SpottoDB, db
+from spotto_league.database import db
 from .base import Base
 
 

@@ -3,7 +3,6 @@ import argparse
 import flask_login
 from werkzeug.security import generate_password_hash, check_password_hash
 from spotto_league.database import init_db
-from spotto_league.database import SpottoDB
 from datetime import date
 from spotto_league.models.user import User
 from spotto_league.models.role import Role, RoleType

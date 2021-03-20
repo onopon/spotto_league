@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Optional
 from sqlalchemy import Index
 from typing import List
-from spotto_league.database import SpottoDB, db
+from spotto_league.database import db
 from spotto_league.models.league_log_detail import LeagueLogDetail
 from .base import Base
 
@@ -22,7 +22,7 @@ class LeagueLog(db.Model, Base):
     def find_or_initialize(cls, league_id, user_id_1, user_id_2) -> Optional['LeagueLog']:
         id_1 = user_id_1 if user_id_1 < user_id_2 else user_id_2
         id_2 = user_id_2 if user_id_1 < user_id_2 else user_id_1
-        result = SpottoDB().session.query(cls).\
+        result = db.session.query(cls).\
                 filter_by(league_id = league_id, user_id_1 = id_1, user_id_2 = id_2).\
                 one_or_none()
         if not result:
@@ -34,7 +34,7 @@ class LeagueLog(db.Model, Base):
 
     @property
     def details(self) -> List[LeagueLogDetail]:
-        return SpottoDB().session.query(LeagueLogDetail).filter_by(league_log_id = self.id).all()
+        return db.session.query(LeagueLogDetail).filter_by(league_log_id = self.id).all()
 
     def is_valid(self, league_id, user_id_1, user_id_2) -> bool:
         id_1 = user_id_1 if user_id_1 < user_id_2 else user_id_2

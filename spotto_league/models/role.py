@@ -4,7 +4,7 @@ from spotto_league.modules.password_util import PasswordUtil
 import hashlib
 import flask_login
 from typing import Dict, Any
-from spotto_league.database import SpottoDB, db
+from spotto_league.database import db
 from .base import Base
 from enum import Enum
 
@@ -24,7 +24,7 @@ class Role(db.Model, Base):
 
     @classmethod
     def find_by_user_id(cls, user_id: int) -> Optional['Role']:
-        return SpottoDB().session.query(cls).filter(cls.user_id==user_id).one_or_none()
+        return db.session.query(cls).filter(cls.user_id==user_id).one_or_none()
 
     @classmethod
     def find_or_initialize_by_user_id(cls, user_id: int) -> 'Role':
