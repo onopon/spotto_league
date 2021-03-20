@@ -13,6 +13,7 @@ MODE_MAKE_PLACE = 1
 class PostRegisterController(BaseController):
     __slots__ = ["_place"]
     # override
+    @asyncio.coroutine
     def validate(self, request: BaseRequest, **kwargs) -> None:
         date_str = request.form.get("date")
         start_at_str = request.form.get("start_at")

@@ -38,7 +38,7 @@ class PostLeagueController(BaseController):
                 member.enabled = False
             member.session.close()
             session.add(member)
-        self._league.is_decided = True
+        self._league.ready()
         self._league.session.close()
         session.add(self._league)
         session.commit()
