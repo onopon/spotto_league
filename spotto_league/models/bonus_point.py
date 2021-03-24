@@ -3,9 +3,9 @@ from spotto_league.database import db
 from .base import Base
 
 
-class SpecialPoint(db.Model, Base):
+class BonusPoint(db.Model, Base):
 
-    __tablename__ = 'special_points'
+    __tablename__ = 'bonus_points'
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, nullable=False, index=True)
