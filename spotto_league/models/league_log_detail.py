@@ -1,6 +1,7 @@
 from datetime import datetime
 from .base import Base
 from spotto_league.database import db
+from typing import List
 
 
 class LeagueLogDetail(db.Model, Base):
@@ -16,3 +17,7 @@ class LeagueLogDetail(db.Model, Base):
 
     def is_zero_all(self):
         return all([self.score_1 == 0, self.score_2 == 0])
+
+    @classmethod
+    def find_all_by_league_log_ids(cls, league_log_ids: List[int]) -> List['LeagueLogDetail']:
+        return db.session.query(cls).filter(cls.league_log_id.in_(league_log_ids)).all()

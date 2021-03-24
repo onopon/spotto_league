@@ -40,6 +40,10 @@ class League(db.Model, Base):
         return LeagueMember.find_all_by_league_id(self.id)
 
     @property
+    def enable_members(self) -> List[LeagueMember]:
+        return [m for m in self.members if m.enabled]
+
+    @property
     def logs(self) -> List[LeagueLog]:
         return self.session.query(LeagueLog).\
                 filter_by(league_id=self.id).all()
@@ -49,6 +53,9 @@ class League(db.Model, Base):
 
     def finish(self) -> None:
         self.status = LeagueStatus.FINISHED.value
+
+    def is_on_today(self) -> bool:
+        return self.date == dt.now().date()
 
     def is_status_recruiting(self) -> bool:
         return LeagueStatus(self.status) == LeagueStatus.RECRUITING
@@ -63,23 +70,18 @@ class League(db.Model, Base):
     def all(cls) -> List['League']:
         return db.session.query(League).all()
 
-    @classmethod
-    def all_yet_recruiting(cls) -> List['League']:
-        return db.session.query(cls).filter(cls.end_at > dt.now(), cls.status == 0)
-
-
-    def is_recruiting(self) -> bool:
-        return self.is_status_recruiting() and dt.now() < self.join_end_at
+    def is_in_join_session(self) -> bool:
+        return dt.now() < self.join_end_at
 
     def is_stopped_recruiting(self) -> bool:
         return self.is_status_ready() or dt.now() > self.join_end_at
 
-    # TODO: is_ready() だけど時間外になってる状態のleagueデータを考える
+    def is_before_session(self) -> bool:
+        return dt.now() < dt.combine(self.date, self.start_at)
+
     def is_in_session(self) -> bool:
         now = dt.now()
-        return self.is_status_ready() and\
-                dt.combine(self.date, self.start_at) < now and\
-                now < dt.combine(self.date, self.end_at)
+        return dt.combine(self.date, self.start_at) <= now and now <= dt.combine(self.date, self.end_at)
 
     def is_after_session(self) -> bool:
-        return self.is_status_finished() and (dt.combine(self.date, self.end_at) < dt.now())
+        return dt.combine(self.date, self.end_at) < dt.now()

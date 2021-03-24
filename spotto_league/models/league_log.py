@@ -43,4 +43,6 @@ class LeagueLog(db.Model, Base):
                     self.user_id_1 == id_1,
                     self.user_id_2 == id_2])
 
+    def is_in_user_id(self, user_id: int) -> bool:
+        return self.user_id_1 == user_id or self.user_id_2 == user_id
 Index('index_user_id_1_and_2', LeagueLog.user_id_1, LeagueLog.user_id_2)
