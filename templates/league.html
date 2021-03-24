@@ -6,13 +6,20 @@
 
 {% block content %}
 <h1>{{ league.name }}</h1>
-{% if league.is_recruiting() %}
-{% elif league.is_in_session() %}
-  {% include 'league/in_session.html' %}  
-{% elif league.is_after_session() %}
-{% elif league.is_stopped_recruiting() %}
-  {% include 'league/stopped_recruiting.html' %}  
+{% if league.is_status_recruiting() %}
+  {% include 'league/before_session.html' %}
+{% elif league.is_status_ready() %}
+  {% if league.is_before_session() %}
+    {% include 'league/before_session.html' %}
+  {% elif league.is_in_session() %}
+    {% include 'league/in_session.html' %}  
+  {% else %}
+    {% include 'league/after_session.html' %}  
+  {% endif %}
+{% elif league.is_status_finished() %}
+  {% include 'league/after_session.html' %}  
 {% endif %}
+
 <div id='league_id' hidden>{{ league.id }}</div>
 <div id='user_id' hidden>{{ login_user.id }}</div>
 {% endblock %}

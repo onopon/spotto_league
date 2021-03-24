@@ -1,0 +1,34 @@
+{% if (league_list_hash['status_ready_after_session'] | count ) > 0 %}
+<div class="container">
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">
+      <h3>順位が未確定のリーグ戦</h3>
+    </li>
+    <li class="list-group-item disabled">
+      <div class="row">
+        <div class="col-sm-4">
+        </div>
+        <div class="col-sm-4">
+          参加可否
+        </div>
+      </div>
+    </li>
+  {% for league in league_list_hash['status_ready_after_session'] %}
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-sm-4">
+          <label class="control-label">{{ league.date }} {{ league.start_at }} - {{ league.end_at }}</label>
+          <a href='/league/{{ league.id }}/'>{{ league.name }}</a>
+        </div>
+        <div class="col-sm-4">
+          {% if league.id in user_join_enable_league_ids %}
+          <i class="bi bi-check-circle-fill"></i>
+          {% elif league.id in user_join_disable_league_ids %}
+          <i class="bi bi-dash-circle"></i>
+          {% endif %}
+        </div>
+    </li>
+  {% endfor %}
+  </ul>
+</div>
+{% endif %}

@@ -19,16 +19,30 @@ class LeagueListController(BaseController):
     def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
         league_list = League.all()
         league_list_hash = defaultdict(list)
-        user_join_league_ids = [m.league_id for m in LeagueMember.find_all_by_user_id(self.login_user.id)]
+        league_members = LeagueMember.find_all_by_user_id(self.login_user.id)
+        user_join_league_ids = []
+        user_join_enable_league_ids = []
+        user_join_disable_league_ids = []
+        for lm in league_members:
+            user_join_league_ids.append(lm.league_id)
+            if lm.enabled:
+                user_join_enable_league_ids.append(lm.league_id)
+            else:
+                user_join_disable_league_ids.append(lm.league_id)
         for league in league_list:
-            if league.is_recruiting():
-                league_list_hash['recruiting'].append(league)
-            elif league.is_in_session():
-                league_list_hash['in_session'].append(league)
-            elif league.is_after_session():
-                league_list_hash['affter_session'].append(league)
-            elif league.is_stopped_recruiting():
-                league_list_hash['stopped_recruiting'].append(league)
+            if league.is_on_today():
+                league_list_hash['today'].append(league)
+            elif league.is_status_recruiting():
+                league_list_hash['status_recruiting'].append(league)
+            elif league.is_status_ready():
+                if league.is_after_session():
+                    league_list_hash['status_ready_after_session'].append(league)
+                else:
+                    league_list_hash['status_ready'].append(league)
+            elif league.is_status_finished():
+                league_list_hash['status_finished'].append(league)
         return self.render_template("league_list.html",
                                     user_join_league_ids=user_join_league_ids,
+                                    user_join_enable_league_ids=user_join_enable_league_ids,
+                                    user_join_disable_league_ids=user_join_disable_league_ids,
                                     league_list_hash=league_list_hash)

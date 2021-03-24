@@ -23,8 +23,8 @@ $(function() {
           type: "POST",
           data: {'league_id': league_id}
         }).done(function(_){
-          recruitingForm.find('button.cancel').removeClass('invisible');
-          recruitingForm.find('button.join').addClass('invisible');
+          recruitingForm.find('button.cancel').removeClass('collapse');
+          recruitingForm.find('button.join').addClass('collapse');
         }).fail(function(){
           console.log('fail');
         });
@@ -36,8 +36,8 @@ $(function() {
           type: "POST",
           data: {'league_id': league_id}
         }).done(function(_){
-          recruitingForm.find('button.join').removeClass('invisible');
-          recruitingForm.find('button.cancel').addClass('invisible');
+          recruitingForm.find('button.join').removeClass('collapse');
+          recruitingForm.find('button.cancel').addClass('collapse');
         }).fail(function(){
           console.log('fail');
         });

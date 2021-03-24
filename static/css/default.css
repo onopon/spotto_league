@@ -2,6 +2,21 @@
   font-size: 1.2rem;
 }
 
+.bi-check-square {
+  font-size: 1.2rem;
+  color: #bbbbbb;
+}
+
+.bi-check-square-fill, .bi-check-circle-fill { 
+  font-size: 1.2rem;
+  color: #5cb85c;
+}
+
+.bi-dash-circle {
+  font-size: 1.2rem;
+  color: #d9534f;
+}
+
 .no-spin::-webkit-inner-spin-button,
 .no-spin::-webkit-outer-spin-button {
     -webkit-appearance: none;

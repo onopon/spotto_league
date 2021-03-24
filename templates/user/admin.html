@@ -3,15 +3,27 @@
       <a href="/admin/league/register">リーグ戦のスケジュールを登録する</a>
     </div>
 </div>
-<div class="row">
-  <div class="col-sm-6">
-    <h3>現在募集中のリーグ戦</h3>
-  </div>
+<div class="container">
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">
+      <h3>現在募集中のリーグ戦</h3>
+    </li>
+  {% for league in yet_recruiting_league_list %}
+    <li class="list-group-item">
+      <label class="control-label">{{ league.date }} {{ league.start_at }} - {{ league.end_at }}</label>
+      <a href='/admin/league/{{ league.id }}/'>{{ league.name }}</a>
+    </li>
+  {% endfor %}
+  </ul>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">
+      <h3>未終了のリーグ戦</h3>
+    </li>
+  {% for league in yet_finished_league_list %}
+    <li class="list-group-item">
+      <label class="control-label">{{ league.date }} {{ league.start_at }} - {{ league.end_at }}</label>
+      <a href='/admin/league/{{ league.id }}/'>{{ league.name }}</a>
+    </li>
+  {% endfor %}
+  </ul>
 </div>
-{% for league in yet_recruiting_league_list %}
-<div class="row">
-  <div class="col-sm-9">
-    <a href='/admin/league/{{ league.id }}/'>{{ league.date }} {{ league.start_at }} - {{ league.end_at }} {{ league.name }}</a>
-  </div>
-</div>
-{% endfor %}

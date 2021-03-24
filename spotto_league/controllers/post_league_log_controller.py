@@ -18,6 +18,7 @@ class PostLeagueLogController(BaseController):
         self._league_log = None
 
     # override
+    @asyncio.coroutine
     def validate(self, request: BaseRequest, **kwargs) -> None:
         league_id = int(request.form.get("league_id"))
         user_id_1 = int(request.form.get("user_id_1"))

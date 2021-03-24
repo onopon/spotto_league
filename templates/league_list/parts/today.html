@@ -1,0 +1,14 @@
+{% if (league_list_hash['today'] | count) > 0 %}
+<div class="container">
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">
+      <h3>本日開催のリーグ戦</h3>
+    </li>
+    {% for league in league_list_hash['today'] %}
+    <li class="list-group-item">
+      <a href='/league/{{ league.id }}/'>{{ league.date}} : {{ league.name }}</a>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}

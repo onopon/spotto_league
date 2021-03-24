@@ -11,7 +11,7 @@
     {% include 'league/parts/league_chart.html' %}
   </div>
   <div class="tab-pane fade" id="personal" role="tabpanel" aria-labelledby="personal-tab">
-    {% include 'league/parts/in_session/personal_record.html' %}
+    {% include 'league/parts/after_session/personal_record.html' %}
   </div>
 </div>
 
@@ -28,37 +28,17 @@
         {% for count in range(league.game_count) %}
           <div class="row">
             <div class="col-sm-4">
-        			<div class="input-group number-spinner">
-        				<span class="input-group-btn">
-        					<button class="btn btn-default" data-dir="dwn"><i class="bi bi-dash-square"></i></button>
-        				</span>
-                <input type="number" class="score_1_{{ count }} form-control text-center score-left no-spin" value="0">
-        				<span class="input-group-btn">
-        					<button class="btn btn-default" data-dir="up"><i class="bi bi-plus-square"></i></button>
-        				</span>
-        			</div>
+              <p class="score_1_{{ count }}"></p>
         		</div>
             <div class="col-sm-4">
               <p>-</p>
             </div>
             <div class="col-sm-4">
-        			<div class="input-group number-spinner">
-        				<span class="input-group-btn">
-        					<button class="btn btn-default" data-dir="dwn"><i class="bi bi-dash-square"></i></button>
-        				</span>
-                <input type="number" class="score_2_{{ count }} form-control text-center score-right no-spin" value="0">
-        				<span class="input-group-btn">
-        					<button class="btn btn-default" data-dir="up"><i class="bi bi-plus-square"></i></button>
-        				</span>
-        			</div>
+              <p class="score_2_{{ count }}"></p>
         		</div>
         	</div>
         {% endfor %}
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
-        <button type="button" id="modal-save-btn" class="btn btn-primary" data-bs-dismiss="modal">更新</button>
       </div>
     </div>
   </div>
