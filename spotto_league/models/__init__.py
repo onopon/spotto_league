@@ -7,6 +7,8 @@ from .league_log_detail import LeagueLogDetail
 from .league_member import LeagueMember
 from .role import Role
 from .place import Place
+from .special_point import SpecialPoint
+from .league_point import LeaguePoint
 
 __all__ = [
     User,
@@ -16,5 +18,7 @@ __all__ = [
     LeagueLogDetail,
     LeagueMember,
     Role,
-    Place
+    Place,
+    SpecialPoint,
+    LeaguePoint
 ]
