@@ -1,0 +1,55 @@
+<div class="container">
+  <div class="row">
+    <div class="form-group">
+      <h1>
+        {{ league.name }} への参加希望者リスト
+      </h1>
+    </div>
+  </div>
+  {% set members = league.members %}
+  <form class="row g-3" method="post">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item disabled">
+        <div class="row">
+          <div class="col-sm-6">
+            名前
+          </div>
+          <div class="col-sm-3">
+            参加希望押下日時
+          </div>
+          <div class="col-sm-3">
+            参加許可
+          </div>
+        </div>
+      </li>
+      {% for member in members %}
+      <li class="list-group-item">
+        <div class="row">
+          <div class="col-sm-6">
+            {{ member.user.name }}
+          </div>
+          <div class="col-sm-3">
+            {{ member.created_at }}
+          </div>
+          <div class="col-sm-3">
+            <input class="form-check-input" type="checkbox" name="enabled_league_member_ids" value="{{ member.id }}" {% if member.enabled %}checked{% endif %}>
+          </div>
+        </div>
+      </li>
+     {% endfor %}
+    </ul>
+    {% if (members | count) > 0 %}
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button class="btn btn-primary">反映</button>
+      </div>
+    </div>
+    {% else %}
+    <div class="form-group">
+      <div class="col-sm-10">
+        <p>まだ参加希望者はいません。</p>
+      </div>
+    </div>
+    {% endif %}
+  </form>
+</div>

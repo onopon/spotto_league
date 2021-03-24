@@ -30,16 +30,18 @@ class PostLeagueController(BaseController):
     @asyncio.coroutine
     def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
         session = db.session
+        self._league.session.close()
         league_member_ids = [int(m_id) for m_id in request.form.getlist('enabled_league_member_ids')]
         for member in self._league.members:
+#            member.session.close()
             if member.id in league_member_ids:
                 member.enabled = True
             else:
                 member.enabled = False
-            member.session.close()
-            session.add(member)
+            member.save()
+#            session.add(member)
         self._league.ready()
-        self._league.session.close()
-        session.add(self._league)
-        session.commit()
+        self._league.save()
+#        session.add(self._league)
+#        session.commit()
         return redirect(url_for('league_list', login_name=current_user.login_name))

@@ -1,0 +1,53 @@
+<div class="container">
+  <div class="row">
+    <div class="form-group">
+      <h1>
+        {{ league.name }} の結果
+      </h1>
+    </div>
+  </div>
+  {% set members = league.members %}
+  <form class="row g-3" method="post">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item disabled">
+        <div class="row">
+          <div class="col-sm-6">
+            名前
+          </div>
+          <div class="col-sm-2">
+            勝敗
+          </div>
+          <div class="col-sm-1">
+            順位
+          </div>
+          <div class="col-sm-3">
+            同率の時の理由？
+          </div>
+        </div>
+      </li>
+      {% for rank in rank_list %}
+      <li class="list-group-item">
+        <div class="row">
+          <div class="col-sm-6">
+            {{ rank.user.name }}
+          </div>
+          <div class="col-sm-2">
+            {{ rank.win }} - {{ rank.lose }}
+          </div>
+          <div class="col-sm-1">
+            {{ rank.rank }}
+          </div>
+          <div class="col-sm-3">
+            {{ rank.reason }}
+          </div>
+        </div>
+      </li>
+     {% endfor %}
+    </ul>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button class="btn btn-primary">順位を確定する</button>
+      </div>
+    </div>
+  </form>
+</div>

@@ -10,6 +10,7 @@ from spotto_league.models.league import League
 from spotto_league.models.league_member import LeagueMember
 from spotto_league.models.league_log import LeagueLog
 from spotto_league.models.league_log_detail import LeagueLogDetail
+from spotto_league.entities.rank import Rank
 
 
 class LeagueController(BaseController):
@@ -24,4 +25,5 @@ class LeagueController(BaseController):
     # override
     @asyncio.coroutine
     def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
-        return self.render_template("admin/league/league.html", league=self._league)
+        rank_list = Rank.make_rank_list(self._league)
+        return self.render_template("admin/league/league.html", league=self._league, rank_list=rank_list)

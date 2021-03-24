@@ -15,7 +15,7 @@
     </div>
   </div>
   <form class="row g-3" method="post">
-    <input id="place-tab-value" type="hidden" name="placetab" value="1">
+    <input id="place-tab-value" type="hidden" name="placetab" value="0">
     <div class="form-group">
       <label class="col-sm-2 control-label">開催日</label>
       <div class="row">
@@ -72,7 +72,7 @@
     <div class="tab-content" id="myTabContent">
       <div class="tab-pane fade show active" id="placelist" role="tabpanel" aria-labelledby="placelist-tab">
         <div class="col-sm-4">
-          <select class="place-select">
+          <select name="place-select" class="place-select">
             {% for place in places %}
             <option value="{{ place.id }}">{{ place.name }}(収容人数： {{ place.capacity }})</option>
             {% endfor %}
