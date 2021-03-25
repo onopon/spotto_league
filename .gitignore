@@ -3,7 +3,7 @@ venv/
 *.pyc
 __pycache__/
 
-instance/
+instance/config/production.py
 
 .pytest_cache/
 .coverage
