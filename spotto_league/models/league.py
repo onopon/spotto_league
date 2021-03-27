@@ -3,6 +3,11 @@ from spotto_league.database import db
 from spotto_league.models.league_log import LeagueLog
 from spotto_league.models.place import Place
 from spotto_league.models.league_member import LeagueMember
+from spotto_league.models.league_point import (
+        RATING_BORDER_MEMBER_COUNT,
+        BASE_GROUP_ID,
+        ONE_AND_HALF_TIMES_GROUP_ID
+)
 from .base import Base
 import datetime
 from datetime import datetime as dt
@@ -47,6 +52,16 @@ class League(db.Model, Base):
     def logs(self) -> List[LeagueLog]:
         return self.session.query(LeagueLog).\
                 filter_by(league_id=self.id).all()
+
+    @property
+    def recommend_league_point_group_id(self) -> int:
+        member_count = len(self.members)
+        if member_count < RATING_BORDER_MEMBER_COUNT:
+            return BASE_GROUP_ID
+        return ONE_AND_HALF_TIMES_GROUP_ID
+
+    def league_point_group_id_is(self, group_id: int) -> bool:
+        return group_id == self.recommend_league_point_group_id
 
     def ready(self) -> None:
         self.status = LeagueStatus.READY.value

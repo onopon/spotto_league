@@ -7,43 +7,62 @@
     </div>
   </div>
   {% set members = league.members %}
-  <form class="row g-3" method="post">
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item disabled">
-        <div class="row">
-          <div class="col-sm-6">
-            名前
-          </div>
-          <div class="col-sm-2">
-            勝敗
-          </div>
-          <div class="col-sm-1">
-            順位
-          </div>
-          <div class="col-sm-3">
-            同率の時の理由？
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item disabled">
+      <div class="row">
+        <div class="col-sm-6">
+          名前
+        </div>
+        <div class="col-sm-2">
+          勝敗
+        </div>
+        <div class="col-sm-1">
+          順位
+        </div>
+        <div class="col-sm-3">
+          同率の時の理由？
+        </div>
+      </div>
+    </li>
+    {% for rank in rank_list %}
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-sm-6">
+          {{ rank.user.name }}
+        </div>
+        <div class="col-sm-2">
+          {{ rank.win }} - {{ rank.lose }}
+        </div>
+        <div class="col-sm-1">
+          {{ rank.rank }}
+        </div>
+        <div class="col-sm-3">
+          {{ rank.reason }}
+        </div>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+  <form action="{{ url_for('admin_league_finish', league_id=league.id) }}" method="post">
+    <div class="form-group">
+      <div class="row">
+        <div class="col-sm-2">
+          獲得ポイント倍率
+        </div>
+        <div class="col-sm-4">
+          <div class="btn-group" role="group">
+            <input type="radio" name="league_point_group_id" value="1" id="radioBtn1" class="btn-check" autocomplete="off" {% if league.league_point_group_id_is(1) %} checked {% endif %}>
+            <label class="btn btn-outline-primary" for="radioBtn1">x1.0</label>
+
+            <input type="radio" name="league_point_group_id" value="2" id="radioBtn2" class="btn-check" autocomplete="off" {% if league.league_point_group_id_is(2) %} checked {% endif %}>
+            <label class="btn btn-outline-primary" for="radioBtn2">x1.5</label>
+
+            <input type="radio" name="league_point_group_id" value="3" id="radioBtn3" class="btn-check" autocomplete="off">
+            <label class="btn btn-outline-danger" for="radioBtn3">x2.0</label>
           </div>
         </div>
-      </li>
-      {% for rank in rank_list %}
-      <li class="list-group-item">
-        <div class="row">
-          <div class="col-sm-6">
-            {{ rank.user.name }}
-          </div>
-          <div class="col-sm-2">
-            {{ rank.win }} - {{ rank.lose }}
-          </div>
-          <div class="col-sm-1">
-            {{ rank.rank }}
-          </div>
-          <div class="col-sm-3">
-            {{ rank.reason }}
-          </div>
-        </div>
-      </li>
-     {% endfor %}
-    </ul>
+      </div>
+    </div>
     <div class="form-group">
       <div class="col-sm-offset-2 col-sm-10">
         <button class="btn btn-primary">順位を確定する</button>

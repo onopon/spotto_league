@@ -18,6 +18,7 @@ from spotto_league.controllers.admin.league.register_controller import RegisterC
 from spotto_league.controllers.admin.league.post_register_controller import PostRegisterController as PostAdminLeagueRegisterController
 from spotto_league.controllers.admin.league.league_controller import LeagueController as AdminLeagueController
 from spotto_league.controllers.admin.league.post_league_controller import PostLeagueController as PostAdminLeagueController
+from spotto_league.controllers.admin.league.post_league_finish_controller import PostLeagueFinishController as PostAdminLeagueFinishController
 from spotto_league.controllers.user.post_league_join_controller import PostLeagueJoinController as PostUserLeagueJoinController
 from spotto_league.controllers.user.post_league_cancel_controller import PostLeagueCancelController as PostUserLeagueCancelController
 from spotto_league.modules.password_util import PasswordUtil
@@ -132,6 +133,12 @@ def admin_league(league_id: int):
         return PostAdminLeagueController().render(request, league_id=league_id)
     return AdminLeagueController().render(request, league_id=league_id)
 
+@app.route("/admin/league/<int:league_id>/finish", methods=("GET", "POST"))
+@auth.login_required
+@flask_login.login_required
+def admin_league_finish(league_id: int):
+    if request.method == "POST":
+        return PostAdminLeagueFinishController().render(request, league_id=league_id)
 '''
 for flask-login
 '''

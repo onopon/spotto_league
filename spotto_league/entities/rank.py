@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict, Any
 from itertools import groupby
 from spotto_league.models.user import User
 from spotto_league.models.league import League
@@ -13,8 +13,8 @@ class Rank():
                  '_user_id',
                  '_logs',
                  '_details',
-                 '_win',
-                 '_lose',
+                 '_win_user_ids',
+                 '_lose_user_ids',
                  '_got_game',
                  '_lost_game',
                  '_got_point',
@@ -30,8 +30,8 @@ class Rank():
         self._user_id = league_member.user_id
         self._logs = logs
         self._details = details
-        self._win = 0
-        self._lose = 0
+        self._win_user_ids = []
+        self._lose_user_ids = []
         self._got_game = 0
         self._lost_game = 0
         self._got_point = 0
@@ -49,18 +49,18 @@ class Rank():
                 self._got_point += sum([d.score_1 for d in details])
                 self._lost_point += sum([d.score_2 for d in details])
                 if count_1 > count_2:
-                    self._win += 1
+                    self._win_user_ids.append(log.user_id_2)
                 else:
-                    self._lose += 1
+                    self._lose_user_ids.append(log.user_id_2)
             else:
                 self._got_game += count_2
                 self._lost_game += count_1
                 self._got_point += sum([d.score_2 for d in details])
                 self._lost_point += sum([d.score_1 for d in details])
                 if count_1 > count_2:
-                    self._lose += 1
+                    self._lose_user_ids.append(log.user_id_1)
                 else:
-                    self._win += 1
+                    self._win_user_ids.append(log.user_id_1)
 
     def set_rank_and_reason(self, rank: int, reason: str = "") -> None:
         self._rank = rank
@@ -76,11 +76,11 @@ class Rank():
 
     @property
     def win(self) -> int:
-        return self._win
+        return len(self._win_user_ids)
 
     @property
     def lose(self) -> int:
-        return self._lose
+        return len(self._lose_user_ids)
 
     @property
     def logs(self) -> List[LeagueLog]:
@@ -104,7 +104,7 @@ class Rank():
 
     @property
     def win_point(self) -> float:
-        return round(self.win / (self._win + self._lose), 4)
+        return round(self.win / (self.win + self.lose), 4)
 
     @property
     def game_of_difference(self) -> int:
@@ -113,6 +113,14 @@ class Rank():
     @property
     def point_of_difference(self) -> int:
         return self._got_point - self._lost_point
+
+    def did_win(self, user_id:int) -> bool:
+        return user_id in self._win_user_ids
+
+    def to_hash(self) -> Dict[str, Any]:
+        return {'rank': self.rank,
+                'win': self.win,
+                'lose': self.lose}
 
     @classmethod
     def make_rank_list(cls, league: League) -> List['Rank']:

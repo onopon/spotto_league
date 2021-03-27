@@ -1,6 +1,8 @@
 from datetime import datetime
 from spotto_league.database import db
 from .base import Base
+from spotto_league.models.league_point import LeaguePoint
+from spotto_league.models.bonus_point import BonusPoint
 
 
 class UserPoint(db.Model, Base):
@@ -16,3 +18,13 @@ class UserPoint(db.Model, Base):
     memo = db.Column(db.String(255))
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
+
+    def set_league_point(self, league_point: LeaguePoint) -> None:
+        self.point = league_point.point
+        self.reason_class = 'LeaguePoint'
+        self.reason_id = league_point.id
+
+    def set_bonus_point(self, bonus_point: BonusPoint) -> None:
+        self.point = bonus_point.point
+        self.reason_class = 'BonusPoint'
+        self.reason_id = bonus_point.id

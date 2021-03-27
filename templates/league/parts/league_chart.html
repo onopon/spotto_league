@@ -5,6 +5,8 @@
       {% for user in users %}
       <th scope="col">{{ user.name }}</th>
       {% endfor %}
+      <th scope="col">戦績</th>
+      <th scope="col">順位</th>
     </tr>
   </thead>
   <tbody>
@@ -20,6 +22,12 @@
         </td>
         {% endif %}
       {% endfor %}
+        <td class="win-lose">
+          {{ rank_hash[user.id]['win'] }} - {{ rank_hash[user.id]['lose'] }}
+        </td>
+        <td class="rank">
+          {{ rank_hash[user.id]['rank'] }}
+        </td>
     {% endfor %}
   </tbody>
 </table>

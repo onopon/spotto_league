@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 from spotto_league.database import db
 from .base import Base
@@ -23,3 +23,7 @@ class BonusPoint(db.Model, Base):
         bonus_point = cls()
         bonus_point.user_id = user_id
         return cls.find_by_id(user_id) or bonus_point
+
+    @classmethod
+    def find_all_by_user_ids(cls, user_ids: List[int]) -> List['BonusPoint']:
+        return db.session.query(cls).filter(cls.user_id.in_(user_ids)).all()
