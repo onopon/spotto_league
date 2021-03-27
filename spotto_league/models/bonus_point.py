@@ -11,6 +11,7 @@ class BonusPoint(db.Model, Base):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, nullable=False, index=True)
     point = db.Column(db.Integer, nullable=False)
+    available_count = db.Column(db.Integer, nullable=False, default=4)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
 
