@@ -3,7 +3,7 @@ from datetime import datetime
 from spotto_league.modules.password_util import PasswordUtil
 import hashlib
 import flask_login
-from typing import Dict, Any
+from typing import Dict, Any, List
 from spotto_league.database import db
 from .base import Base
 from .role import Role
@@ -22,6 +22,10 @@ class User(flask_login.UserMixin, db.Model, Base):
 
     def set_password(self, password: str) -> None:
         self.password = PasswordUtil.make_hex(password)
+
+    @classmethod
+    def all(cls) -> List['User']:
+        return db.session.query(User).all()
 
     @classmethod
     def find_by_login_name(cls, login_name) -> Optional['User']:

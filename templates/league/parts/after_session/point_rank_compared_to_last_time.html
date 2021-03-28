@@ -1,0 +1,7 @@
+{% if point_rank.is_stay() %}
+<i class="bi bi-caret-right-fill"></i>
+{% elif point_rank.is_down() %}
+<i class="bi bi-caret-down-fill"></i> {{ point_rank.current_rank - point_rank.before_rank }}
+{% elif point_rank.is_up() %}
+<i class="bi bi-caret-up-fill"></i> {{ point_rank.before_rank - point_rank.current_rank }}
+{% endif %}

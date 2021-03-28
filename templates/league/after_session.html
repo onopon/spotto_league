@@ -5,6 +5,12 @@
   <li class="nav-item" role="presentation">
     <a class="nav-link" id="personal-tab" data-bs-toggle="tab" href="#personal" role="tab" aria-controls="personal" aria-selected="false">個人戦表</a>
   </li>
+  <li class="nav-item" role="presentation">
+    <a class="nav-link" id="ranking-tab" data-bs-toggle="tab" href="#ranking" role="tab" aria-controls="ranking" aria-selected="false">順位表</a>
+  </li>
+  <li class="nav-item" role="presentation">
+    <a class="nav-link" id="point-ranking-tab" data-bs-toggle="tab" href="#point_ranking" role="tab" aria-controls="point-ranking" aria-selected="false">ポイント順位表</a>
+  </li>
 </ul>
 <div class="tab-content" id="myTabContent">
   <div class="tab-pane fade show active" id="chart" role="tabpanel" aria-labelledby="chart-tab">
@@ -12,6 +18,12 @@
   </div>
   <div class="tab-pane fade" id="personal" role="tabpanel" aria-labelledby="personal-tab">
     {% include 'league/parts/after_session/personal_record.html' %}
+  </div>
+  <div class="tab-pane fade" id="ranking" role="tabpanel" aria-labelledby="chart-tab">
+    {% include 'league/parts/ranking.html' %}
+  </div>
+  <div class="tab-pane fade" id="point_ranking" role="tabpanel" aria-labelledby="personal-tab">
+    {% include 'league/parts/after_session/point_rank.html' %}
   </div>
 </div>
 

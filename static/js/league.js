@@ -33,7 +33,7 @@ $(function() {
       let count_2 = detail.score_2;
       $(`#modal-body .score_1_${i}`).val(count_1);
       $(`#modal-body .score_2_${i}`).val(count_2);
-      if (count_1 != 0 && count_2 != 0) {
+      if (!(count_1 == 0 && count_2 == 0)) {
         $(`#modal-body p.score_1_${i}`).text(count_1);
         $(`#modal-body p.score_2_${i}`).text(count_2);
       }

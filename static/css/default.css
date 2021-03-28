@@ -17,6 +17,18 @@
   color: #d9534f;
 }
 
+.bi-caret-down-fill {
+  color: #4291F5;
+}
+
+.bi-caret-up-fill {
+  color: #EB5447;
+}
+
+.bi-caret-right-fill {
+  color: #AEB3BB;
+}
+
 .no-spin::-webkit-inner-spin-button,
 .no-spin::-webkit-outer-spin-button {
     -webkit-appearance: none;

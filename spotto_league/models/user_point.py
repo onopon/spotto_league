@@ -1,8 +1,10 @@
+from typing import Optional, List
 from datetime import datetime
 from spotto_league.database import db
 from .base import Base
 from spotto_league.models.league_point import LeaguePoint
 from spotto_league.models.bonus_point import BonusPoint
+from sqlalchemy import and_
 
 
 class UserPoint(db.Model, Base):
@@ -28,3 +30,11 @@ class UserPoint(db.Model, Base):
         self.point = bonus_point.point
         self.reason_class = 'BonusPoint'
         self.reason_id = bonus_point.id
+
+    @classmethod
+    def find_all_in_season(self, year: Optional[int] = None) -> List["UserPoint"]:
+        if not year:
+            year = datetime.today().year
+        return db.session.query(UserPoint).filter(and_(
+            UserPoint.created_at >= datetime(year, 1, 1, 0, 0, 0),
+            UserPoint.created_at <= datetime(year, 12, 31, 23, 59, 59))).all()

@@ -11,6 +11,7 @@ from spotto_league.models.league_member import LeagueMember
 from spotto_league.models.league_log import LeagueLog
 from spotto_league.models.league_log_detail import LeagueLogDetail
 from spotto_league.entities.rank import Rank
+from spotto_league.entities.point_rank import PointRank
 from spotto_league.database import db
 
 
@@ -28,14 +29,22 @@ class LeagueController(BaseController):
         league = db.session.query(League).get(league_id)
         user_hash, league_log_hash = self._get_user_hash_and_league_log_hash(league_id)
         ranks = Rank.make_rank_list(league)
-        rank_hash = dict(zip([r.user_id for r in ranks], [r.to_hash() for r in ranks]))
+        rank_user_ids = [r.user_id for r in ranks]
+        rank_hash = dict(zip(rank_user_ids, [r.to_hash() for r in ranks]))
+
+        params = {}
+        params['league'] = league
+        params['is_join'] = current_user.login_name in [u.login_name for u in user_hash.values()]
+        params['users'] = user_hash.values()
+        params['league_log_hash'] = league_log_hash
+        params['rank_user_ids'] = rank_user_ids
+        params['rank_hash'] = rank_hash
+
+        if league.is_status_finished():
+            params['point_ranks'] = PointRank.make_point_rank_list(league)
 
         return self.render_template("league.html",
-                league=league,
-                is_join=(current_user.login_name in [u.login_name for u in user_hash.values()]),
-                users=user_hash.values(),
-                league_log_hash=league_log_hash,
-                rank_hash=rank_hash)
+                **params)
 
     # override
     @asyncio.coroutine
@@ -44,8 +53,8 @@ class LeagueController(BaseController):
         league = db.session.query(League).get(league_id)
         _, league_log_hash = self._get_user_hash_and_league_log_hash(league_id)
         ranks = Rank.make_rank_list(league)
-
-        rank_hash = dict(zip([r.user_id for r in ranks], [r.to_hash() for r in ranks]))
+        rank_user_ids = [r.user_id for r in ranks]
+        rank_hash = dict(zip(rank_user_ids, [r.to_hash() for r in ranks]))
         return json.dumps({'game_count': league.game_count,
                            'league_log_hash': league_log_hash,
                            'rank_hash': rank_hash})

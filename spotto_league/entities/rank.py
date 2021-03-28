@@ -104,6 +104,8 @@ class Rank():
 
     @property
     def win_point(self) -> float:
+        if self.win + self.lose == 0:
+            return 0.0
         return round(self.win / (self.win + self.lose), 4)
 
     @property
@@ -119,6 +121,7 @@ class Rank():
 
     def to_hash(self) -> Dict[str, Any]:
         return {'rank': self.rank,
+                'user_name': self.user.name,
                 'win': self.win,
                 'lose': self.lose}
 
