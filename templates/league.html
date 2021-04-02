@@ -1,25 +1,65 @@
 {% extends 'base.html' %}
 {% block head %}
 <script src="{{ url_for("static", filename="js/league.js") }}?{{ timestamp }}"></script>
+<link rel="stylesheet" href="{{ url_for("static", filename="css/chart.css") }}?{{ timestamp }}">
 {% endblock %}
 {% block title %}{{ league.name }}{% endblock %}
 
 {% block content %}
-<h1>{{ league.name }}</h1>
-{% if league.is_status_recruiting() %}
-  {% include 'league/before_session.html' %}
-{% elif league.is_status_ready() %}
-  {% if league.is_before_session() %}
+{% set place = league.place %}
+<div class="container">
+  <ul class="list-group list-group-flush mb-3">
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col h3">{{ league.name }}</div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-2 pale-gray small">日時</div>
+        <div class="col-10">{{ league.date_for_display }}</div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      {% include 'league/parts/row_member_count_and_capacity.html' %}
+    </li>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-2 pale-gray small">場所</div>
+        <div class="col-10"><a href="{{ place.url }}" target="_blank" rel="noopener noreferrer">{{ place.name }}</a></div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="row align-items-center">
+        <div class="col-2 pale-gray small">ゲームカウント</div>
+        <div class="col-10">{{ league.game_count }} ゲームマッチ</div>
+      </div>
+    </li>
+  </ul>
+
+  {% if league.is_status_recruiting() %}
     {% include 'league/before_session.html' %}
-  {% elif league.is_in_session() %}
-    {% include 'league/in_session.html' %}  
-  {% else %}
+  {% elif league.is_status_ready() %}
+    {% if league.is_before_session() %}
+      {% include 'league/before_session.html' %}
+    {% elif league.is_in_session() %}
+      {% include 'league/in_session.html' %}  
+    {% else %}
+      {% include 'league/after_session.html' %}  
+    {% endif %}
+  {% elif league.is_status_finished() %}
     {% include 'league/after_session.html' %}  
   {% endif %}
-{% elif league.is_status_finished() %}
-  {% include 'league/after_session.html' %}  
-{% endif %}
+</div>
 
 <div id='league_id' hidden>{{ league.id }}</div>
 <div id='user_id' hidden>{{ login_user.id }}</div>
+<div class="container">
+  <hr></hr>
+  <div class="row mt-4">
+    <div class="col-3 col-sm-2">
+      <a class='btn' href='javascript:history.back()'>戻る</a>
+    </div>
+  </div>
+</div>
 {% endblock %}

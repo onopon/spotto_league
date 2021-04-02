@@ -5,24 +5,51 @@
 {% block title %}Spotto League一覧{% endblock %}
 
 {% block content %}
-<div class="container">
-  <h1>Spottoリーグ一覧</h1>
-  <p>こんにちは、<a href='/user/{{ login_user.login_name }}/'>{{ login_user.name }}</a>さん</p>
-  
+<div id='league_list' class="container">
+  <div class='row'>
+    <div class='col-3 d-sm-block d-md-none pt-2'>
+      <img class='logo' src='/static/images/logo.png' />
+    </div>
+    <div class='col-md-2 d-none d-md-block pt-2'>
+      <img class='logo' src='/static/images/logo.png' />
+    </div>
+  </div>
+  <div class='row mt-3'>
+    <p class="h6">こんにちは、<a class="deep-blue" href='/user/{{ login_user.login_name }}/'>{{ login_user.name }}</a>さん</p>
+  </div>
+ 
   {% include 'league_list/parts/today.html' %}
-  
-  {% include 'league_list/parts/status_recruiting.html' %}
 
-  {% include 'league_list/parts/status_ready.html' %}
-  
-  {% include 'league_list/parts/status_ready_after_session.html' %}
+  <ul class="nav nav-tabs mt-4" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <a class="nav-link active" id="recruiting-tab" data-bs-toggle="tab" href="#recruiting" role="tab" aria-controls="recruiting" aria-selected="true">募集中</a>
+    </li>
+    <li class="nav-item" role="presentation">
+      <a class="nav-link" id="ready-tab" data-bs-toggle="tab" href="#ready" role="tab" aria-controls="ready" aria-selected="false">近々開催</a>
+    </li>
+    <li class="nav-item" role="presentation">
+      <a class="nav-link" id="finished-tab" data-bs-toggle="tab" href="#finished" role="tab" aria-controls="finished" aria-selected="false">開催終了</a>
+    </li>
+  </ul>
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="recruiting" role="tabpanel" aria-labelledby="recruiting-tab">
+      {% include 'league_list/parts/status_recruiting.html' %}
+    </div>
+    <div class="tab-pane fade" id="ready" role="tabpanel" aria-labelledby="ready-tab">
+      {% include 'league_list/parts/status_ready.html' %}
+    </div>
+    <div class="tab-pane fade" id="finished" role="tabpanel" aria-labelledby="finished-tab">
+      {% include 'league_list/parts/status_finished.html' %}
+    </div>
+  </div>
 
-  {% include 'league_list/parts/status_finished.html' %}
-  <form class="form-horizontal" action="/user/logout" method="get">
+  <div class='row justify-content-center p-4'>
+    <form action="/user/logout" method="get">
       <div class="col-sm-offset-2 col-sm-10">
         <button class="btn btn-default">ログアウト</button>
       </div>
-  </form>
-  {% endblock %}
+    </form>
+  </div>
   <div id='user_id' hidden>{{ login_user.id }}</div>
 </div>
+{% endblock %}

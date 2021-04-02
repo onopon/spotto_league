@@ -1,14 +1,21 @@
 {% if (league_list_hash['today'] | count) > 0 %}
-<div class="container">
-  <ul class="list-group list-group-flush">
-    <li class="list-group-item">
-      <h3>本日開催のリーグ戦</h3>
-    </li>
-    {% for league in league_list_hash['today'] %}
-    <li class="list-group-item">
-      <a href='/league/{{ league.id }}/'>{{ league.date}} : {{ league.name }}</a>
-    </li>
-    {% endfor %}
-  </ul>
-</div>
+<ul class="today nav nav-tabs mt-4">
+  <li class="nav-item">
+    <a class="nav-link active h5" id="recruiting-tab" aria-selected="true">本日開催</a>
+  </li>
+</ul>
+<ul class="list-group list-group-flush">
+  {% for league in league_list_hash['today'] %}
+  <li class="list-group-item">
+    <div class="row">
+      <div class="col">
+        <a class='h5 deep-blue' href='/league/{{ league.id }}/'>{{ league.time_for_display }}　{{ league.name }}</a>
+        {% if league.id in user_join_enable_league_ids %}
+        <i class="bi bi-patch-check-fill m-1"></i>
+        {% endif %}
+      </div>
+    </div>
+  </li>
+  {% endfor %}
+</ul>
 {% endif %}

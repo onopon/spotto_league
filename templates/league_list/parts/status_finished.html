@@ -1,30 +1,25 @@
 <div class="container">
   <ul class="list-group list-group-flush">
-    <li class="list-group-item">
-      <h3>開催終了したリーグ戦</h3>
-    </li>
-    <li class="list-group-item disabled">
+    <li class="list-group-item pale-gray small">
       <div class="row">
-        <div class="col-sm-4">
-        </div>
-        <div class="col-sm-4">
+        <div class="col-4 offset-8 small text-center">
           参加状況
         </div>
       </div>
     </li>
-  {% for league in league_list_hash['status_finished'] %}
+    {% for league in league_list_hash['status_finished'] %}
     <li class="list-group-item">
-      <div class="row">
-        <div class="col-sm-4">
-          <label class="control-label">{{ league.date }} {{ league.start_at }} - {{ league.end_at }}</label>
-          <a href='/league/{{ league.id }}/'>{{ league.name }}</a>
+      <div class="row align-items-center">
+        <div class="col-8">
+          {% include 'league_list/parts/row_league_date_and_name.html' %}
         </div>
-        <div class="col-sm-4">
+        <div class="col-4 text-center">
           {% if league.id in user_join_enable_league_ids %}
           <i class="bi bi-check-circle-fill"></i>
           {% endif %}
         </div>
+      </div>
     </li>
-  {% endfor %}
+    {% endfor %}
   </ul>
 </div>

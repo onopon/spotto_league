@@ -1,21 +1,43 @@
+{% if league.is_status_recruiting() %}
+{% set members = league.members %}
+{% else %}
 {% set members = league.enable_members %}
-<div class="container">
-  <ul class="list-group list-group-flush">
-    <li class="list-group-item disabled">
-      <div class="row">
-        <div class="col-sm-12">
-          参加者リスト
-        </div>
+{% endif %}
+<ul class="list-group list-group-flush mt-4">
+  <li class="list-group-item disabled">
+    <div class="row small">
+      <div class="col-6 small pale-gray">
+        参者希望者リスト
       </div>
-    </li>
-    {% for member in members %}
-    <li class="list-group-item">
-      <div class="row">
-        <div class="col-sm-12">
-          {{ member.user.name }}
-        </div>
+      <div class="col-6 small pale-gray">
+        参者希望ボタン押下日時
       </div>
-    </li>
-   {% endfor %}
-  </ul>
-</div>
+    </div>
+  </li>
+  {% if (members | count) > 0 %}
+  {% for member in members %}
+  <li class="list-group-item">
+    <div class="row">
+      {% if login_user.name == member.user.name %}
+      <div class="col-6">
+        <b><a class="deep-blue" href='/user/{{ member.user.login_name }}/'>{{ member.user.name }}</a></b>
+      </div>
+      {% else %}
+      <div class="col-6">
+        <a href='/user/{{ member.user.login_name }}/'>{{ member.user.name }}</a>
+      </div>
+      {% endif %}
+      <div class="col-6">
+        {{ member.created_at }}
+      </div>
+    </div>
+  </li>
+  {% endfor %}
+  {% else %}
+  <li class="list-group-item">
+    <div class="row">
+      <div class="col-12">参加希望者はまだいません。</div>
+    </div>
+  </li>
+  {% endif %}
+</ul>

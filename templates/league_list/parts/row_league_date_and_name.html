@@ -1,0 +1,11 @@
+{% if league.is_status_ready() and league.is_after_session() %}
+<div class="row small orange">
+  <div class="col small">※ 順位未確定</div>
+</div>
+{% endif %}
+<div class="row small gray">
+  <div class="col">{{ league.date_for_display }}</div>
+</div>
+<div class="row">
+  <div class="col"><a href='/league/{{ league.id }}/'>{{ league.name }}</a></div>
+</div>

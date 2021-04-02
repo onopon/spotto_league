@@ -1,62 +1,90 @@
 <div class="container">
 {% if is_join %}
-  <div class="row">
-    <div class="col-sm-4">
-      <p>戦績: {{ rank_hash[login_user.id]['win'] }} - {{ rank_hash[login_user.id]['lose'] }}</p>
-    </div>
-    <div class="col-sm-4">
-      <p>順位: {{ rank_hash[login_user.id]['rank'] }}</p>
-    </div>
+  <div class="row mb-3">
+    <ul class="list-group list-group-flush mb-3">
+      <li class="list-group-item">
+        <div class="row">
+          <div class="col-2 pale-gray small">戦績</div>
+          <div class="col-10">{{ rank_hash[login_user.id]['win'] }} - {{ rank_hash[login_user.id]['lose'] }}</div>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="row align-items-center">
+          <div class="col-2 pale-gray small">暫定順位</div>
+          <div class="col-10">{{ rank_hash[login_user.id]['rank'] }}</div>
+        </div>
+      </li>
+    </ul>
   </div>
 
+  <div class="row">
   {% for user in users %}
     {% if not login_user.id == user.id %}
     {% set hash = league_log_hash["{}-{}".format(login_user.id, user.id)] %}
-      <h2> vs {{ user.name }}</h2>
-      <div class="{{ login_user.id }}-{{ user.id }}">
-        <h3 class="game-count">{{ hash['count_1'] }} - {{ hash['count_2'] }}</h3>
-      </div>
-
-        <form class="personal-record {{ login_user.id }}-{{ user.id }}">
-          <input type="hidden" name="rival_id" value="{{ user.id }}">
-      {% for count in range(league.game_count) %}
-      {% set score_hash = hash.details_hash_list[count] %}
-      {% if not score_hash %}
-        {% set score_hash = {'score_1': 0, 'score_2': 0} %}
-      {% endif %}
+    <div class="col-lg-6">
+      <ul class="list-group list-group-flush mb-3">
+        <li class="list-group-item h6">
+          vs <a href='/user/{{ user.login_name }}/'>{{ user.name }}</a>
+        </li>
+        <li class="list-group-item">
+          <div class="row align-items-center {{ login_user.id }}-{{ user.id }}">
+            <div class="col-3 pale-gray small"><span class="small">ゲームカウント</span></div>
+            <div class="col-9 game-count">{{ hash['count_1'] }} - {{ hash['count_2'] }}</div>
+          </div>
+        </li>
+        <li class="list-group-item">
           <div class="row">
-            <div class="col-sm-4">
-        			<div class="input-group number-spinner">
-        				<span class="input-group-btn">
-        					<button class="btn btn-default" data-dir="dwn"><i class="bi bi-dash-square"></i></button>
-        				</span>
-                <input type="number" class="score_1_{{ count }} form-control text-center score-left no-spin" value="{{ score_hash['score_1'] }}">
-        				<span class="input-group-btn">
-        					<button class="btn btn-default" data-dir="up"><i class="bi bi-plus-square"></i></button>
-        				</span>
-        			</div>
-        		</div>
-            <div class="col-sm-4">
-              <p>-</p>
+            <div class="col-lg-10 offset-lg-1">
+              <form class="personal-record {{ login_user.id }}-{{ user.id }}">
+                <input type="hidden" name="rival_id" value="{{ user.id }}">
+                {% for count in range(league.game_count) %}
+                {% set score_hash = hash.details_hash_list[count] %}
+                {% if not score_hash %}
+                {% set score_hash = {'score_1': 0, 'score_2': 0} %}
+                {% endif %}
+                <div class="row align-items-center text-center">
+                  <div class="col-5">
+                    <div class="input-group number-spinner">
+                      <span class="input-group-btn">
+                        <button class="btn btn-default" data-dir="dwn"><i class="bi bi-dash-square"></i></button>
+                      </span>
+                      <input type="number" class="score_1_{{ count }} form-control text-center score-left no-spin" value="{{ score_hash['score_1'] }}">
+                      <span class="input-group-btn">
+                        <button class="btn btn-default" data-dir="up"><i class="bi bi-plus-square"></i></button>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-2">
+                    -
+                  </div>
+                  <div class="col-5">
+                    <div class="input-group number-spinner">
+                      <span class="input-group-btn">
+                        <button class="btn btn-default" data-dir="dwn"><i class="bi bi-dash-square"></i></button>
+                      </span>
+                      <input type="number" class="score_2_{{ count }} form-control text-center score-right no-spin" value="{{ score_hash['score_2'] }}">
+                      <span class="input-group-btn">
+                        <button class="btn btn-default" data-dir="up"><i class="bi bi-plus-square"></i></button>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+                <div class="col-12">
+                  <div class="d-flex align-items-end flex-column">
+                    <button type="submit" class="btn mt-3" name="btnProfileUpdate">更新</button>
+                  </div>
+                </div>
+              </form>
             </div>
-            <div class="col-sm-4">
-        			<div class="input-group number-spinner">
-        				<span class="input-group-btn">
-        					<button class="btn btn-default" data-dir="dwn"><i class="bi bi-dash-square"></i></button>
-        				</span>
-                <input type="number" class="score_2_{{ count }} form-control text-center score-right no-spin" value="{{ score_hash['score_2'] }}">
-        				<span class="input-group-btn">
-        					<button class="btn btn-default" data-dir="up"><i class="bi bi-plus-square"></i></button>
-        				</span>
-        			</div>
-        		</div>
-        	</div>
-      {% endfor %}
-          <button type="submit" class="btn btn-primary" name="btnProfileUpdate">更新</button>
-        </form>
+          </div>
+        </li>
+      </ul>
+    </div>
     {% endif %}
   {% endfor %}
+  </div>
 {% else %}
-  <p>このリーグ戦には不参加です。</p>
+  <span class="small pale-gray">このリーグ戦には不参加です。</span>
 {% endif %}
 </div>

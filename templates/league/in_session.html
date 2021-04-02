@@ -6,7 +6,7 @@
     <a class="nav-link" id="personal-tab" data-bs-toggle="tab" href="#personal" role="tab" aria-controls="personal" aria-selected="false">個人戦表</a>
   </li>
 </ul>
-<div class="tab-content" id="myTabContent">
+<div class="tab-content mt-3" id="myTabContent">
   <div class="tab-pane fade show active" id="chart" role="tabpanel" aria-labelledby="chart-tab">
     {% include 'league/parts/league_chart.html' %}
   </div>
@@ -26,8 +26,9 @@
       <div class="modal-body">
         <div class="container" id="modal-body">
         {% for count in range(league.game_count) %}
-          <div class="row">
-            <div class="col-sm-4">
+          <div class="row align-items-center">
+            <div class="col-1"></div>
+            <div class="col-4">
         			<div class="input-group number-spinner">
         				<span class="input-group-btn">
         					<button class="btn btn-default" data-dir="dwn"><i class="bi bi-dash-square"></i></button>
@@ -38,10 +39,10 @@
         				</span>
         			</div>
         		</div>
-            <div class="col-sm-4">
-              <p>-</p>
+            <div class="col-2 text-center">
+              -
             </div>
-            <div class="col-sm-4">
+            <div class="col-4">
         			<div class="input-group number-spinner">
         				<span class="input-group-btn">
         					<button class="btn btn-default" data-dir="dwn"><i class="bi bi-dash-square"></i></button>
@@ -57,7 +58,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+        <button type="button" class="btn pale-gray" data-bs-dismiss="modal">キャンセル</button>
         <button type="button" id="modal-save-btn" class="btn btn-primary" data-bs-dismiss="modal">更新</button>
       </div>
     </div>

@@ -1,0 +1,15 @@
+{% set place = league.place %}
+{% set members = league.members %}
+<div class="row align-items-center">
+{% if league.is_status_recruiting() %}
+  <div class="col-2 pale-gray small">応募人数</div>
+  {% if place.capacity > (members | count) %}
+    <div class="col-10">{{ members | count }} / {{ place.capacity }} 人</div>
+  {% else %}
+    <div class="col-10">{{ members | count }} / {{ place.capacity }} 人</div>
+  {% endif %}
+{% else %}
+  <div class="col-2 pale-gray small">参加人数</div>
+  <div class="col-10">{{ users | count }} 人</div>
+{% endif %}
+</div>

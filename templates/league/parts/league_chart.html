@@ -1,33 +1,43 @@
-<table id="target-table" class="table table-bordered">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      {% for user in users %}
-      <th scope="col">{{ user.name }}</th>
-      {% endfor %}
-      <th scope="col">戦績</th>
-      <th scope="col">順位</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for user in users %}
+<div class="table-responsive">
+  <table id="target-table" class="table table-bordered table-fixed align-middle text-center">
+    <thead>
       <tr>
-        <th scope="row">{{ user.name }}</th>
-      {% for user_2 in users %}
+        <th scope=""></th>
+        {% for user in users %}
+        {% if login_user.id == user.id %}
+        <th class="user-name" scope="col"><a class="deep-blue" href='/user/{{ user.login_name }}/'>{{ user.name }}</a></th>
+        {% else %}
+        <th class="user-name" scope="col"><a href='/user/{{ user.login_name }}/'>{{ user.name }}</a></th>
+        {% endif %}
+        {% endfor %}
+        <th scope="col">戦績</th>
+        <th scope="col">順位</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+      <tr>
+        {% if login_user.id == user.id %}
+        <th class="user-name" scope="row"><a class="deep-blue" href='/user/{{ user.login_name }}/'>{{ user.name }}</a></th>
+        {% else %}
+        <th class="user-name" scope="row"><a href='/user/{{ user.login_name }}/'>{{ user.name }}</a></th>
+        {% endif %}
+        {% for user_2 in users %}
         {% if user.id == user_2.id %}
-          <td>斜線</td>
+        <td></td>
         {% else %}
         <td class="{{ user.id }}-{{ user_2.id }}">
-          <p class="game-count">{{ league_log_hash["{}-{}".format(user.id, user_2.id)]['count_1'] }} - {{ league_log_hash["{}-{}".format(user.id, user_2.id)]['count_2'] }}</p>
+          <span class="game-count">{{ league_log_hash["{}-{}".format(user.id, user_2.id)]['count_1'] }} - {{ league_log_hash["{}-{}".format(user.id, user_2.id)]['count_2'] }}</span>
         </td>
         {% endif %}
-      {% endfor %}
+        {% endfor %}
         <td class="win-lose">
           {{ rank_hash[user.id]['win'] }} - {{ rank_hash[user.id]['lose'] }}
         </td>
         <td class="rank">
           {{ rank_hash[user.id]['rank'] }}
         </td>
-    {% endfor %}
-  </tbody>
-</table>
+        {% endfor %}
+    </tbody>
+  </table>
+</div>

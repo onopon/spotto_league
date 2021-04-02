@@ -1,17 +1,14 @@
 <div class="container">
   <ul class="list-group list-group-flush">
-    <li class="list-group-item disabled">
-      <div class="row">
-        <div class="col-sm-2">
+    <li class="list-group-item pale-gray small">
+      <div class="row small">
+        <div class="col-2 text-center">
           今回順位
         </div>
-        <div class="col-sm-2">
+        <div class="col-2 text-center">
           前回比
         </div>
-        <div class="col-sm-4">
-          選手名
-        </div>
-        <div class="col-sm-3">
+        <div class="col-2 text-center">
           ポイント
         </div>
       </div>
@@ -19,17 +16,21 @@
     {% for point_rank in point_ranks %}
     <li class="list-group-item">
       <div class="row">
-        <div class="col-sm-2">
+        <div class="col-2 text-center">
           {{ point_rank.current_rank }}
         </div>
-        <div class="col-sm-2">
+        <div class="col-2 text-center">
           {% include 'league/parts/after_session/point_rank_compared_to_last_time.html' %}
         </div>
-        <div class="col-sm-4">
-          {{ point_rank.user.name }}
-        </div>
-        <div class="col-sm-3">
+        <div class="col-2 text-end">
           {{ point_rank.current_point }}
+        </div>
+        <div class="col-4">
+          {% if login_user.id == point_rank.user.id %}
+          <b><a class="deep-blue" href='/user/{{ point_rank.user.rogin_name }}/'>{{ point_rank.user.name }}</a></b>
+          {% else %}
+          <a href='/user/{{ point_rank.user.rogin_name }}/'>{{ point_rank.user.name }}</a>
+          {% endif %}
         </div>
       </div>
     </li>
