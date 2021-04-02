@@ -1,4 +1,5 @@
 import os
+import locale
 import flask_login
 from flask import Flask, request, render_template, redirect, url_for
 from flask_httpauth import HTTPBasicAuth
@@ -29,6 +30,7 @@ login_manager = flask_login.LoginManager()
 
 
 def create_app():
+    locale.setlocale(locale.LC_TIME, 'ja_JP.UTF-8')
     app = Flask(__name__, instance_relative_config=True)
     # 標準設定ファイル読み込み
     app.config.from_object("settings")
