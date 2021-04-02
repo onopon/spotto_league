@@ -122,6 +122,7 @@ class Rank():
     def to_hash(self) -> Dict[str, Any]:
         return {'rank': self.rank,
                 'user_name': self.user.name,
+                'login_name': self.user.login_name,
                 'win': self.win,
                 'lose': self.lose}
 

@@ -36,7 +36,7 @@ class LeagueListController(BaseController):
                 league_list_hash['status_recruiting'].append(league)
             elif league.is_status_ready():
                 if league.is_after_session():
-                    league_list_hash['status_ready_after_session'].append(league)
+                    league_list_hash['status_finished'].append(league)
                 else:
                     league_list_hash['status_ready'].append(league)
             elif league.is_status_finished():

@@ -11,6 +11,7 @@ from spotto_league.models.league_point import (
 from .base import Base
 import datetime
 from datetime import datetime as dt
+from time import strftime
 from enum import Enum
 
 
@@ -59,6 +60,27 @@ class League(db.Model, Base):
         if member_count < RATING_BORDER_MEMBER_COUNT:
             return BASE_GROUP_ID
         return ONE_AND_HALF_TIMES_GROUP_ID
+
+    @property
+    def date_for_display(self) -> str:
+        w_list = ['月', '火', '水', '木', '金', '土', '日']
+        date_str = self.date.strftime('%m月%d日')
+        time_format = ('%H:%M')
+        start_at_str = "{}:{}".format(str(self.start_at.hour).zfill(2), str(self.start_at.minute).zfill(2))
+        end_at_str = "{}:{}".format(str(self.end_at.hour).zfill(2), str(self.end_at.minute).zfill(2))
+        return "{}（{}）{} - {}".format(date_str, w_list[self.date.weekday()], start_at_str, end_at_str)
+
+    @property
+    def time_for_display(self) -> str:
+        time_format = ('%H:%M')
+        start_at_str = "{}:{}".format(str(self.start_at.hour).zfill(2), str(self.start_at.minute).zfill(2))
+        end_at_str = "{}:{}".format(str(self.end_at.hour).zfill(2), str(self.end_at.minute).zfill(2))
+        return "{} - {}".format(start_at_str, end_at_str)
+
+    @property
+    def join_end_at_for_display(self) -> str:
+        return self.join_end_at.strftime('%m月%d日（%a） %H:%M')
+
 
     def league_point_group_id_is(self, group_id: int) -> bool:
         return group_id == self.recommend_league_point_group_id
