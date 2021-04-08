@@ -26,19 +26,14 @@
           <span class="align-bottom">{{ league.place.capacity }} 人</span>
         </div>
         <div class="col-2">
-          <form class="recruiting">
-            <input type="hidden" name="league_id" value="{{ league.id }}">
-            <input type="hidden" name="join_end_at" value="{{ league.join_end_at }}">
-          {% if league.id in user_join_league_ids %}
-            <button class="btn btn-default join collapse"><i class="bi bi-check-square"></i></button>
-            <button class="btn btn-default cancel"><i class="bi bi-check-square-fill"></i></button>
-          {% else %}
-            <button class="btn btn-default join"><i class="bi bi-check-square"></i></button>
-            <button class="btn btn-default cancel collapse"><i class="bi bi-check-square-fill"></i></button>
-          {% endif %}
-          </form>
+          {% include 'league_list/parts/form_join_button.html' %}
         </div>
         <div class="col-4">
+          {% if not league.is_in_join_session() %}
+          <div class="row small orange">
+            <div class="col small">※ 締め切りました</div>
+          </div>
+          {% endif %}
           {{ league.join_end_at_for_display }}
         </div>
       </div>
