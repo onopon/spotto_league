@@ -1,41 +1,126 @@
 {% extends 'base.html' %}
-
+{% block head %}
+<script src="{{ url_for("static", filename="js/user/register.js") }}?{{ timestamp }}"></script>
+{% endblock %}
 {% block title %}Spottoユーザ登録{% endblock %}
 
 {% block content %}
-<h1>
-  ユーザ登録画面
-</h1>
+<div id='register' class='container'>
+  <div class='row caption justify-content-center'>
+    <div class="col-12 pt-2 mb-4">
+      <span class="h4">ユーザ登録画面</span>
+    </div>
+  </div>
 
-<form class="form-horizontal" method="post">
-  <div class="form-group">
-    <label class="col-sm-2 control-label"> ログインID</label>
-    <div class="col-sm-10">
-      <input class="form-control" type="text" name="login_name">
+  <form method="post">
+    <input type="hidden" name="is_from_register" value=1>
+    <div class='row caption'>
+      <span class="h6">ログイン情報</span>
     </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label">ニックネーム</label>
-    <div class="col-sm-10">
-      <input class="form-control" type="text" name="name">
+    <div class='container block mb-4'>
+      <div class='row justify-content-center'>
+        <div class="col-12 has-validation">
+          <div class='row small mb-1'>
+            <div class="col form-title">
+              ログインID<label class="invalid" for="login-name"></label>
+            </div>
+          </div>
+          <input type="text" class="form-control" id="login-name" name="login_name" placeholder="spotto">
+        </div>
+      </div>
+
+      <div class='row justify-content-center mt-2'>
+        <div class="col-12 has-validation">
+          <div class='row small mb-1'>
+            <div class="col form-title">
+              パスワード<label class="invalid" for="password"></label>
+            </div>
+          </div>
+          <input type="password" class="form-control" id="password" name="password" placeholder="6文字以上ご入力ください。">
+        </div>
+      </div>
+
+      <div class='row justify-content-center mt-2'>
+        <div class="col-12 has-validation">
+          <div class='row small mb-1'>
+            <div class="col form-title">
+              パスワード（確認用）
+            </div>
+          </div>
+          <input type="password" class="form-control" id="confirm-password" name="confirm_password" placeholder="再度ご入力ください。">
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label">パスワード</label>
-    <div class="col-sm-10">
-      <input class="form-control" type="password" name="password">
+
+    <div class='row caption'>
+      <span class="h6">ユーザ情報</span>
     </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label">パスワード（確認用）</label>
-    <div class="col-sm-10">
-      <input class="form-control" type="password" name="confirm_password">
+    <div class='container block mb-4'>
+      <div class='row justify-content-center'>
+        <div class="col-12 has-validation">
+          <div class='row small mb-1'>
+            <div class="col form-title">
+              ニックネーム<label class="invalid" for="name"></label>
+            </div>
+          </div>
+          <input type="text" class="form-control" id="name" name="name" placeholder="まぐ">
+        </div>
+      </div>
+
+      <div class='row justify-content-center mt-2'>
+        <div class="col-12 has-validation">
+          <div class='row small mb-1'>
+            <div class="col form-title">
+              性別<label class="invalid small" for="gender">※ どちらか選択してください。</label><i class="bi bi-check2-circle d-none"></i>
+            </div>
+          </div>
+          <div class="form-check">
+            <input type="radio" class="form-check-input" name="gender" value=1>
+            <label class="form-check-label" for="radio_man">
+              男性
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="gender" value=2>
+            <label class="form-check-label" for="radio_woman">
+              女性
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class='row justify-content-center mt-2'>
+        <div class="col-12 has-validation">
+          <div class='row small mb-1'>
+            <div class="col form-title">
+              生年月日<label class="invalid" for="birthday"></label><i class="bi bi-check2-circle d-none"></i>
+            </div>
+          </div>
+          <div class="col-10 col-sm-10 col-md-7 col-lg-5 col-xl-5">
+            <div class="input-group align-items-center">
+              <input type="number" class="form-control" id="birth-year" name="year" placeholder="1989">
+              <div class="align-items-center txt">年</div>
+              <input type="number" class="form-control" id="birth-month" name="month" placeholder="9">
+              <div class="align-items-center txt">月</div>
+              <input type="number" class="form-control" id="birth-day" name="day" placeholder="3">
+              <div class="align-items-center txt">日</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
-  </div>
-  <div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
-      <button class="btn btn-default">登録</button>
+
+    <div class='register'>
+      <div class='row justify-content-center mt-4'>
+        <div class="form-group">
+          <div class="offset-10 col-2 offset-lg-11 col-lg-1">
+            <button class="btn btn-default">登録</button>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-</form>
+  </form>
+</div>
+
 {% endblock %}

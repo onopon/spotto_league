@@ -5,17 +5,49 @@
 {% block title %}Spotto League一覧{% endblock %}
 
 {% block content %}
-<div id='league_list' class="container">
-  <div class='row'>
-    <div class='col-3 d-sm-block d-md-none pt-2'>
+
+<div class='col-3 d-sm-block d-md-none'></div>
+
+<div id='league-list' class="container">
+  <div class='row pt-2 align-items-center'>
+    <div class='col-3 col-md-2'>
       <img class='logo' src='/static/images/logo.png' />
     </div>
-    <div class='col-md-2 d-none d-md-block pt-2'>
-      <img class='logo' src='/static/images/logo.png' />
+    <div class='col-9'>
+      <div class='container block mt-3'>
+      {% if is_from_register %}
+        <div class='row h5'>
+          <col-12>
+            SPOTTOへようこそ、<a class="deep-blue" href='/user/{{ login_user.login_name }}/'>{{ login_user.name }}</a>さん！
+          </col>
+        </div>
+        <div class='row'>
+          <col-12>
+            登録お疲れ様でした！
+          </col>
+        </div>
+        <div class='row mt-4 small'>
+          <col-12>
+            練習会に参加する場合は、対象の募集中の項目の<span class="deep-blue">参加希望にチェック</span>をつけてください。
+          </col>
+        </div>
+        <div class='row small'>
+          <col-12>
+            定員と参加希望者数の兼ね合いを見つつ、練習会への参加許可を行います。
+          </col>
+        </div>
+        <div class='row mt-4'>
+          <col-12>
+            それでは試合頑張ってくださいねっ！
+          </col>
+        </div>
+      {% else %}
+        <div class='row'>
+          <col-12>こんにちは、<a class="deep-blue" href='/user/{{ login_user.login_name }}/'>{{ login_user.name }}</a>さん！</col>
+        </div>
+      {% endif %}
+      </div>
     </div>
-  </div>
-  <div class='row mt-3'>
-    <p class="h6">こんにちは、<a class="deep-blue" href='/user/{{ login_user.login_name }}/'>{{ login_user.name }}</a>さん</p>
   </div>
  
   {% include 'league_list/parts/today.html' %}

@@ -14,4 +14,4 @@ class RegisterController(BaseController):
     # override
     @asyncio.coroutine
     def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
-        return render_template("user/register.html")
+        return self.render_template("user/register.html")

@@ -9,6 +9,7 @@ from spotto_league.database import db
 from datetime import date
 from spotto_league.controllers.league_list_controller import LeagueListController
 from spotto_league.controllers.league_controller import LeagueController
+from spotto_league.controllers.user.exists_controller import ExistsController as UserExistsController
 from spotto_league.controllers.user.register_controller import RegisterController as UserRegisterController
 from spotto_league.controllers.user.post_register_controller import PostRegisterController as PostUserRegisterController
 from spotto_league.controllers.user.login_controller import LoginController as UserLoginController
@@ -87,6 +88,11 @@ def user_register():
     if request.method == "POST":
         return PostUserRegisterController().render(request)
     return UserRegisterController().render(request)
+
+@app.route("/user/<string:login_name>/exists", methods=("GET", "POST"))
+@auth.login_required
+def user_exists(login_name: str):
+    return UserExistsController().render(request, login_name=login_name)
 
 @app.route("/user/login", methods=("GET", "POST"))
 @auth.login_required

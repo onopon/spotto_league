@@ -17,6 +17,7 @@ class LeagueListController(BaseController):
     # override
     @asyncio.coroutine
     def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
+        is_from_register = bool(request.form.get("is_from_register", 0))
         league_list = League.all()
         league_list_hash = defaultdict(list)
         league_members = LeagueMember.find_all_by_user_id(self.login_user.id)
@@ -42,6 +43,7 @@ class LeagueListController(BaseController):
             elif league.is_status_finished():
                 league_list_hash['status_finished'].append(league)
         return self.render_template("league_list.html",
+                                    is_from_register=is_from_register,
                                     user_join_league_ids=user_join_league_ids,
                                     user_join_enable_league_ids=user_join_enable_league_ids,
                                     user_join_disable_league_ids=user_join_disable_league_ids,

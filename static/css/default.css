@@ -7,6 +7,10 @@
  やや強調： #D7D7D7
  */
 
+#register input::placeholder {
+  color: #999999;
+}
+
 a, a:hover {
   color: #91C9F4;
 }
@@ -127,7 +131,7 @@ a.deep-blue:hover {
   color: #bbbbbb;
 }
 
-.bi-check-square-fill, .bi-check-circle-fill, .bi-patch-check-fill { 
+.bi-check-square-fill, .bi-check-circle-fill, .bi-patch-check-fill, .bi-check2-circle {
   font-size: 1.2rem;
   color: #5cb85c;
 }
@@ -162,8 +166,87 @@ a.deep-blue:hover {
 
 #login .form-control {
   border: 1px solid #91C9F4;
-  background-color: #FFFFFF;
+  background-color: #FEFEFE;
   border-radius: 25px;
+}
+
+button.disabled {
+ background: #D7D7D7
+}
+
+#register .row.caption {
+  width: 95%;
+  color: #91C9F4;
+  padding-left: 2.5%;
+}
+
+#register .register {
+  width: 97.5%;
+}
+
+#register #birth-year {
+  width: 20%;
+}
+
+#register .input-group .txt {
+  text-align: center;
+  margin-left: 2%;
+  margin-right: 2%;
+}
+#register .register .btn {
+  width: 100%;
+}
+
+#register .container.block {
+  width: 95%;
+  background: #D7D7D7;
+  padding: 3.0%;
+  border-radius: 10px;
+}
+
+#register .form-control.is-valid,
+#register .form-control.is-invalid {
+  background-position: right 3% top 50%;
+}
+
+#register .form-control.is-invalid {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50px' height='50px' fill='%23d9534f' class='bi bi-dash-circle' viewBox='0 0 16 16'%3E%3Cpath d='M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z'/%3E%3Cpath d='M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z'/%3E%3C/svg%3E");
+}
+
+#register .form-control.is-valid {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50px' height='50px' fill='%235cb85c' class='bi bi-check2-circle' viewBox='0 0 16 16'%3E%3Cpath d='M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0z'/%3E%3Cpath d='M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l7-7z'/%3E%3C/svg%3E");
+}
+
+#register .form-control {
+  border: 0px solid #91C9F4;
+  background-color: #FEFEFE;
+  border-radius: 40px;
+  padding-left: 30px;
+}
+
+#register label {
+  margin-left: 30px;
+}
+
+#register .bi-check2-circle {
+  position: absolute;
+  margin-top: -2px;
+  margin-left: -20px;
+}
+
+#league-list .container.block {
+  width: 100%;
+  border: 3px solid #91C9F4;
+  padding: 3%;
+  border-radius: 10px;
+}
+
+label.invalid {
+  color: #d9534f;
+}
+
+#register .form-title {
+  color: #FEFEFE;
 }
 
 .today, .today .list-group-item {
@@ -200,4 +283,40 @@ a.deep-blue:hover {
 .join.btn:focus {
   border: 0px;
   background: transparent;
+}
+
+/* xxl */
+@media (max-width: 1399.98px) {
+  #register .form-control.is-valid,
+  #register .form-control.is-invalid {
+    background-size: 2.5%;
+  }
+}
+
+/* xl */
+@media (max-width: 1199.98px) {
+}
+
+/* md */
+@media (max-width: 991.98px) {
+  #register .form-control.is-valid,
+  #register .form-control.is-invalid {
+    background-size: 5%;
+  }
+}
+
+/* sm */
+@media (max-width: 767.98px) {
+  #register .form-control.is-valid,
+  #register .form-control.is-invalid {
+    background-position: right 4% top 50%;
+  }
+  #register .form-control.is-valid,
+  #register .form-control.is-invalid {
+    background-size: 5%;
+  }
+}
+
+/* xs */
+@media (max-width: 575.98px) {
 }
