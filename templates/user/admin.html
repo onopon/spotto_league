@@ -1,29 +1,47 @@
-<div class="row">
-    <div class="col-sm-9">
-      <a href="/admin/league/register">リーグ戦のスケジュールを登録する</a>
+<div id="admin" class="container mt-5">
+  <div class="row">
+    <div class="col-12 orange h4">
+      管理者メニュー
     </div>
-</div>
-<div class="container">
-  <ul class="list-group list-group-flush">
+  </div>
+  <ul class="list-group list-group-flush mb-3">
     <li class="list-group-item">
-      <h3>現在募集中のリーグ戦</h3>
+      <a href="/admin/league/register">リーグ戦のスケジュールを登録する</a>
     </li>
-  {% for league in yet_recruiting_league_list %}
-    <li class="list-group-item">
-      <label class="control-label">{{ league.date }} {{ league.start_at }} - {{ league.end_at }}</label>
-      <a href='/admin/league/{{ league.id }}/'>{{ league.name }}</a>
+  </ul>
+  <ul class="nav nav-tabs mt-4">
+    <li class="nav-item">
+      <a class="nav-link active">現在募集中のリーグ戦</a>
     </li>
-  {% endfor %}
   </ul>
   <ul class="list-group list-group-flush">
+    {% for league in yet_recruiting_league_list %}
     <li class="list-group-item">
-      <h3>未終了のリーグ戦</h3>
+      <div class="row">
+        <div class="col">
+          <a href='/admin/league/{{ league.id }}/'>{{ league.time_for_display }}　{{ league.name }}</a>
+        </div>
+      </div>
     </li>
-  {% for league in yet_finished_league_list %}
-    <li class="list-group-item">
-      <label class="control-label">{{ league.date }} {{ league.start_at }} - {{ league.end_at }}</label>
-      <a href='/admin/league/{{ league.id }}/'>{{ league.name }}</a>
-    </li>
-  {% endfor %}
+    {% endfor %}
   </ul>
+
+  {% if (yet_finished_league_list | count) > 0 %}
+  <ul class="nav nav-tabs mt-4 strong">
+    <li class="nav-item">
+      <a class="nav-link active">未終了のリーグ戦</a>
+    </li>
+  </ul>
+  <ul class="list-group list-group-flush">
+    {% for league in yet_finished_league_list %}
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col">
+          <a class='deep-blue' href='/admin/league/{{ league.id }}/'>{{ league.time_for_display }}　{{ league.name }}</a>
+        </div>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
 </div>

@@ -55,3 +55,15 @@ class User(flask_login.UserMixin, db.Model, Base):
         if not role:
             return False
         return role.is_admin()
+
+    @property
+    def birthday_for_display(self) -> str:
+        return self.birthday.strftime('%Y年%m月%d日')
+
+    @property
+    def gender_for_display(self) -> str:
+        if (Gender(self.gender) == Gender.MALE):
+            return "男性"
+        elif (Gender(self.gender) == Gender.FEMALE):
+            return "女性"
+        return ""

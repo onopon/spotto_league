@@ -153,6 +153,22 @@ a.deep-blue:hover {
   color: #AEB3BB;
 }
 
+.bi-bookmark-star-fill {
+  font-size: 1.2rem;
+}
+
+.bi-bookmark-star-fill.rank-1 {
+  color: #FFD700;
+}
+
+.bi-bookmark-star-fill.rank-2 {
+  color: #C9CACA;
+}
+
+.bi-bookmark-star-fill.rank-3 {
+  color: #815A2B;
+}
+
 .no-spin::-webkit-inner-spin-button,
 .no-spin::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -253,16 +269,22 @@ label.invalid {
   background-color: #FEFEFE;
 }
 
-.today.nav-tabs {
+#admin .nav-tabs.strong, .today.nav-tabs {
   border-bottom: 1px solid #6086E5;
 }
 
-.today.nav-tabs .nav-link.active {
+#admin .nav-tabs.strong .nav-link, .today.nav-tabs .nav-link.active {
   border: 1px solid #6086E5;
   background-color: #6086E5;
   border-bottom: 1px solid #6086E5;
 }
 
+#admin {
+  width: 96%;
+  border: 3px solid #FF9A68;
+  padding: 3%;
+  border-radius: 5px;
+}
 .number-spinner .btn,
 .number-spinner .btn:hover,
 .number-spinner .btn:active,
@@ -283,6 +305,10 @@ label.invalid {
 .join.btn:focus {
   border: 0px;
   background: transparent;
+}
+
+#user-info .h1 {
+  margin-bottom: 0;
 }
 
 /* xxl */

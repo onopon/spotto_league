@@ -4,7 +4,8 @@ from werkzeug.wrappers import BaseRequest, BaseResponse
 from flask import Flask, request, redirect, url_for
 from flask_login import current_user
 from spotto_league.models.user import User
-from spotto_league.models.league import League
+from spotto_league.models.league import League, LeagueStatus
+from spotto_league.entities.point_rank import PointRank
 from datetime import datetime as dt
 
 class InfoController(BaseController):
@@ -20,9 +21,11 @@ class InfoController(BaseController):
     # override
     @asyncio.coroutine
     def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
+        date = dt.now().date()
         render_hash = {}
         render_hash['user'] = self._user
-        date = dt.now().date()
+        point_rank_list = PointRank.make_point_rank_list_in_season(date.year)
+        render_hash['point_rank'] = next((pr for pr in point_rank_list if pr.user.id == self._user.id), None)
         if self._user.id == self.login_user.id:
             if self.login_user.is_admin():
                 leagues = League.all()
