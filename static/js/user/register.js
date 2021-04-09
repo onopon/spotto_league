@@ -1,13 +1,4 @@
 $(function() {
-  let validateCount = 0;
-  function validateCountUp() {
-    validateCount++;
-  }
-
-  function validateCountDown() {
-    validateCount = Math.max(0, validateCount - 1);
-  }
-
   function existsUser(userName) {
     return $.ajax({
       url: `/user/${userName}/exists`,
@@ -122,7 +113,7 @@ $(function() {
     var day = $("#birth-day");
     try {
       if (year.val().length == 0 || month.val().length == 0 || day.val().length == 0) {
-        $(".register button").addClass('disabled');
+        disabledButton();
       }
 
       if (year.val().length > 0){
@@ -201,7 +192,7 @@ $(function() {
   function invalidForBirth(inputEle, text) {
     inputEle.parent().parent().parent().find('label.invalid').text(text);
     inputEle.parent().parent().parent().find('i.bi').addClass('d-none');
-    $(".register button").addClass('disabled');
+    disabledButton();
   }
 
   function validForBirth(inputEle, isAllGreen = false) {
@@ -220,7 +211,7 @@ $(function() {
     inputEle.parent().find('label.invalid').text(text);
     inputEle.removeClass('is-valid');
     inputEle.addClass('is-invalid');
-    $(".register button").addClass('disabled');
+    disabledButton();
   }
 
   function valid(inputEle) {
@@ -234,7 +225,59 @@ $(function() {
     if ($('#register .is-valid').length == 6) {
       $(".register button").removeClass('disabled');
     }
+    if ($('#user-modify-password .is-valid').length == 2) {
+      $(".modify button").removeClass('disabled');
+    }
+    if ($('#user-modify .is-valid').length == 3) {
+      $(".modify button").removeClass('disabled');
+    }
+  }
+
+  function disabledButton() {
+    $(".register button").addClass('disabled');
+    $(".modify button").addClass('disabled');
   }
 
   $(".register button").addClass('disabled');
+
+  $("#first-name").blur(function() {
+    validateFullName();
+  });
+
+  $("#last-name").blur(function() {
+    validateFullName();
+  });
+
+  function validateFullName() {
+    var firstName = $('#first-name');
+    var lastName = $('#last-name');
+    try {
+      if (firstName.val().length > 0 && lastName.val().length > 0) {
+        checkSpace(firstName.val());
+        checkSpace(lastName.val());
+        checkSpecificSymbols(firstName.val());
+        checkSpecificSymbols(lastName.val());
+        firstName.parent().parent().parent().find('label.invalid').text("");
+        firstName.parent().parent().parent().find('i.bi').removeClass('d-none');
+        tryEnableUpdateButton();
+      } else if (firstName.val().length > 0 && lastName.val().length == 0 ||
+        firstName.val().length == 0 && lastName.val().length > 0) {
+        throw new ValidationError('本名はいずれの項目も入力してください。');
+      } else if (firstName.val().length == 0 && lastName.val().length == 0) {
+        firstName.parent().parent().parent().find('label.invalid').text("");
+        firstName.parent().parent().parent().find('i.bi').addClass('d-none');
+        tryEnableUpdateButton();
+      }
+    } catch (e) {
+      firstName.parent().parent().parent().find('label.invalid').text(e.message);
+      firstName.parent().parent().parent().find('i.bi').addClass('d-none');
+      disabledButton();
+      return false;
+    }
+    return true;
+  }
+
+  $('#user-modify form').submit(function(){
+    return validateFullName();
+  })
 });

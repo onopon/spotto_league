@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block head %}
+<script src="{{ url_for("static", filename="js/user/register.js") }}?{{ timestamp }}"></script>
+{% endblock %}
+
+{% block title %}Spotto | ユーザ情報の修正{% endblock %}
+
+{% block content %}
+<div id="user-modify" class="container">
+  <div class='row caption justify-content-center'>
+    <div class="col-12 pt-2 mb-4">
+      <span class="h4">ユーザ情報の修正</span>
+    </div>
+  </div>
+
+  <div class='row caption'>
+    <span class="h6">ログイン情報</span>
+  </div>
+  <div class='container block mb-4'>
+    <div class='row justify-content-center'>
+      <div class="col-12 has-validation">
+        <div class='row small mb-1'>
+          <div class="col form-title">
+            ログインID<label class="deep-blue small">※ ログインIDの変更はできません。</label>
+          </div>
+        </div>
+        <span class="h5">{{ login_user.login_name }}</span>
+      </div>
+    </div>
+  </div>
+  <form method="post">
+    {% include 'user/parts/user_info_form.html' %}
+
+    <hr></hr>
+    <div class="row justify-content-end mt-4">
+      <div class="offset-6 col-3 offset-sm-8 col-sm-1 align-items-center">
+        <a class='btn back' href='javascript:history.back()'>戻る</a>
+      </div>
+      <div class="modify col-3 offset-sm-1 col-sm-2">
+        <button class="btn btn-default align-items-end">更新</button>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -12,7 +12,7 @@ from enum import Enum
 class RoleType(Enum):
     ADMIN = 1
     MEMBER = 2
-    GUEST = 3
+    PENDING_MEMBER_APPROVAL = 3
 
 class Role(db.Model, Base):
 

@@ -21,9 +21,9 @@
         </div>
         <div class="col-6 text-start">
           {% if login_user.id == r_user_id %}
-          <b><a class="deep-blue" href='/user/{{ rank_hash[r_user_id]["login_name"] }}/'>{{ rank_hash[r_user_id]['user_name'] }}</a></b>
+          <b><a class="deep-blue" href='/user/info/{{ rank_hash[r_user_id]["login_name"] }}/'>{{ rank_hash[r_user_id]['user_name'] }}</a></b>
           {% else %}
-          <a href='/user/{{ rank_hash[r_user_id]["login_name"] }}/'>{{ rank_hash[r_user_id]['user_name'] }}</a>
+          <a href='/user/info/{{ rank_hash[r_user_id]["login_name"] }}/'>{{ rank_hash[r_user_id]['user_name'] }}</a>
           {% endif %}
         </div>
       </div>

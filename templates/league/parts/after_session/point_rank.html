@@ -27,9 +27,9 @@
         </div>
         <div class="col-4">
           {% if login_user.id == point_rank.user.id %}
-          <b><a class="deep-blue" href='/user/{{ point_rank.user.login_name }}/'>{{ point_rank.user.name }}</a></b>
+          <b><a class="deep-blue" href='/user/info/{{ point_rank.user.login_name }}/'>{{ point_rank.user.name }}</a></b>
           {% else %}
-          <a href='/user/{{ point_rank.user.login_name }}/'>{{ point_rank.user.name }}</a>
+          <a href='/user/info/{{ point_rank.user.login_name }}/'>{{ point_rank.user.name }}</a>
           {% endif %}
         </div>
       </div>

@@ -18,7 +18,7 @@
       {% if is_from_register %}
         <div class='row h5'>
           <col-12>
-            SPOTTOへようこそ、<a class="deep-blue" href='/user/{{ login_user.login_name }}/'>{{ login_user.name }}</a>さん！
+            SPOTTOへようこそ、<a class="deep-blue" href='/user/info/{{ login_user.login_name }}/'>{{ login_user.name }}</a>さん！
           </col>
         </div>
         <div class='row'>
@@ -43,7 +43,7 @@
         </div>
       {% else %}
         <div class='row'>
-          <col-12>こんにちは、<a class="deep-blue" href='/user/{{ login_user.login_name }}/'>{{ login_user.name }}</a>さん！</col>
+          <col-12>こんにちは、<a class="deep-blue" href='/user/info/{{ login_user.login_name }}/'>{{ login_user.name }}</a>さん！</col>
         </div>
       {% endif %}
       </div>

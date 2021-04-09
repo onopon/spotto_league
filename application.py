@@ -15,6 +15,10 @@ from spotto_league.controllers.user.post_register_controller import PostRegister
 from spotto_league.controllers.user.login_controller import LoginController as UserLoginController
 from spotto_league.controllers.user.post_login_controller import PostLoginController as PostUserLoginController
 from spotto_league.controllers.user.info_controller import InfoController as UserInfoController
+from spotto_league.controllers.user.modify_controller import ModifyController as UserModifyController
+from spotto_league.controllers.user.modify_password_controller import ModifyPasswordController as UserModifyPasswordController
+from spotto_league.controllers.user.post_modify_controller import PostModifyController as PostUserModifyController
+from spotto_league.controllers.user.post_modify_password_controller import PostModifyPasswordController as PostUserModifyPasswordController
 from spotto_league.controllers.post_league_log_controller import PostLeagueLogController as PostLeagueLogController
 from spotto_league.controllers.admin.league.register_controller import RegisterController as AdminLeagueRegisterController
 from spotto_league.controllers.admin.league.post_register_controller import PostRegisterController as PostAdminLeagueRegisterController
@@ -109,11 +113,27 @@ def user_logout():
     flask_login.logout_user()
     return redirect(url_for('user_login'))
 
-@app.route("/user/<string:login_name>/", methods=("GET", "POST"))
+@app.route("/user/info/<string:login_name>/", methods=("GET", "POST"))
 @auth.login_required
 @flask_login.login_required
 def user_info(login_name: str):
     return UserInfoController().render(request, login_name=login_name)
+
+@app.route("/user/modify/", methods=("GET", "POST"))
+@auth.login_required
+@flask_login.login_required
+def user_modify():
+    if request.method == "POST":
+        return PostUserModifyController().render(request)
+    return UserModifyController().render(request)
+
+@app.route("/user/modify/password/", methods=("GET", "POST"))
+@auth.login_required
+@flask_login.login_required
+def user_modify_password():
+    if request.method == "POST":
+        return PostUserModifyPasswordController().render(request)
+    return UserModifyPasswordController().render(request)
 
 @app.route("/user/league/join", methods=("GET", "POST"))
 def user_league_join():
@@ -147,6 +167,7 @@ def admin_league(league_id: int):
 def admin_league_finish(league_id: int):
     if request.method == "POST":
         return PostAdminLeagueFinishController().render(request, league_id=league_id)
+
 '''
 for flask-login
 '''
@@ -179,158 +200,3 @@ def request_loader(request):
     user.id = login_name
     flask_login.login_user(user)
     return user
-
-
-def init_data_for_debug():
-    league = spotto_league.models.league.League()
-    league.name = '第1回まぐカップ'
-    league.date = date(2021, 2, 1)
-    league.game_count = 3
-    db.session.add(league)
-
-    league = spotto_league.models.league.League()
-    league.name = '第2回まぐカップ'
-    league.date = date(2021, 2, 8)
-    league.game_count = 5
-    db.session.add(league)
-
-    user = spotto_league.models.user.User()
-    user.login_name = 'magu'
-    user.password = 'password'
-    user.name = 'まぐ'
-    db.session.add(user)
-
-    user = spotto_league.models.user.User()
-    user.login_name = 'uchida'
-    user.password = 'password'
-    user.name = 'うっちー'
-    db.session.add(user)
-
-    user = spotto_league.models.user.User()
-    user.login_name = 'watako'
-    user.password = 'password'
-    user.name = 'わたこう'
-    db.session.add(user)
-
-    user = spotto_league.models.user.User()
-    user.login_name = 'yukinori'
-    user.password = 'password'
-    user.name = 'ゆっきー'
-    db.session.add(user)
-
-    user = spotto_league.models.user.User()
-    user.login_name = 'onopon'
-    user.password = 'password'
-    user.name = 'おのぽん'
-    db.session.add(user)
-
-    league_member = spotto_league.models.league_member.LeagueMember()
-    league_member.league_id = 1
-    league_member.user_id = 1
-    db.session.add(league_member)
-    league_member = spotto_league.models.league_member.LeagueMember()
-    league_member.league_id = 1
-    league_member.user_id = 4
-    db.session.add(league_member)
-    league_member = spotto_league.models.league_member.LeagueMember()
-    league_member.league_id = 1
-    league_member.user_id = 2
-    league_member.enabled = False
-    db.session.add(league_member)
-    league_member = spotto_league.models.league_member.LeagueMember()
-    league_member.league_id = 1
-    league_member.user_id = 5
-    db.session.add(league_member)
-    league_member = spotto_league.models.league_member.LeagueMember()
-    league_member.league_id = 1
-    league_member.user_id = 3
-    db.session.add(league_member)
-
-    league_member = spotto_league.models.league_member.LeagueMember()
-    league_member.league_id = 2
-    league_member.user_id = 1
-    db.session.add(league_member)
-    league_member = spotto_league.models.league_member.LeagueMember()
-    league_member.league_id = 2
-    league_member.user_id = 2
-    db.session.add(league_member)
-    league_member = spotto_league.models.league_member.LeagueMember()
-    league_member.league_id = 2
-    league_member.user_id = 4
-    db.session.add(league_member)
-    league_member = spotto_league.models.league_member.LeagueMember()
-    league_member.league_id = 2
-    league_member.user_id = 5
-    db.session.add(league_member)
-
-    league_log = spotto_league.models.league_log.LeagueLog()
-    league_log.league_id = 1
-    league_log.user_id_1 = 3
-    league_log.user_id_2 = 4
-    db.session.add(league_log)
-    league_log = spotto_league.models.league_log.LeagueLog()
-    league_log.league_id = 1
-    league_log.user_id_1 = 1
-    league_log.user_id_2 = 5
-    db.session.add(league_log)
-
-    league_log = spotto_league.models.league_log.LeagueLog()
-    league_log.league_id = 2
-    league_log.user_id_1 = 2
-    league_log.user_id_2 = 5
-    db.session.add(league_log)
-
-    league_log_detail = spotto_league.models.league_log_detail.LeagueLogDetail()
-    league_log_detail.league_log_id = 1
-    league_log_detail.score_1 = 11
-    league_log_detail.score_2 = 9
-    db.session.add(league_log_detail)
-    league_log_detail = spotto_league.models.league_log_detail.LeagueLogDetail()
-    league_log_detail.league_log_id = 1
-    league_log_detail.score_1 = 11
-    league_log_detail.score_2 = 5
-    db.session.add(league_log_detail)
-
-    league_log_detail = spotto_league.models.league_log_detail.LeagueLogDetail()
-    league_log_detail.league_log_id = 2
-    league_log_detail.score_1 = 12
-    league_log_detail.score_2 = 10
-    db.session.add(league_log_detail)
-    league_log_detail = spotto_league.models.league_log_detail.LeagueLogDetail()
-    league_log_detail.league_log_id = 2
-    league_log_detail.score_1 = 8
-    league_log_detail.score_2 = 11
-    db.session.add(league_log_detail)
-    league_log_detail = spotto_league.models.league_log_detail.LeagueLogDetail()
-    league_log_detail.league_log_id = 3
-    league_log_detail.score_1 = 15
-    league_log_detail.score_2 = 13
-    db.session.add(league_log_detail)
-
-    league_log_detail = spotto_league.models.league_log_detail.LeagueLogDetail()
-    league_log_detail.league_log_id = 3
-    league_log_detail.score_1 = 11
-    league_log_detail.score_2 = 3
-    db.session.add(league_log_detail)
-    league_log_detail = spotto_league.models.league_log_detail.LeagueLogDetail()
-    league_log_detail.league_log_id = 3
-    league_log_detail.score_1 = 11
-    league_log_detail.score_2 = 2
-    db.session.add(league_log_detail)
-    league_log_detail = spotto_league.models.league_log_detail.LeagueLogDetail()
-    league_log_detail.league_log_id = 3
-    league_log_detail.score_1 = 10
-    league_log_detail.score_2 = 12
-    db.session.add(league_log_detail)
-    league_log_detail = spotto_league.models.league_log_detail.LeagueLogDetail()
-    league_log_detail.league_log_id = 3
-    league_log_detail.score_1 = 8
-    league_log_detail.score_2 = 11
-    db.session.add(league_log_detail)
-    league_log_detail = spotto_league.models.league_log_detail.LeagueLogDetail()
-    league_log_detail.league_log_id = 3
-    league_log_detail.score_1 = 11
-    league_log_detail.score_2 = 4
-    db.session.add(league_log_detail)
-
-    db.session.commit()

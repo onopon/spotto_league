@@ -45,6 +45,12 @@
         <div class="col-9">{{ user.created_at }}</div>
       </div>
     </li>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-3 pale-gray small">最終更新日時</div>
+        <div class="col-9">{{ user.updated_at }}</div>
+      </div>
+    </li>
   {% if user.id == login_user.id %}
     <li class="list-group-item">
       <div class="row">

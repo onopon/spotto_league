@@ -20,11 +20,11 @@
     <div class="row">
       {% if login_user.name == member.user.name %}
       <div class="col-6">
-        <b><a class="deep-blue" href='/user/{{ member.user.login_name }}/'>{{ member.user.name }}</a></b>
+        <b><a class="deep-blue" href='/user/info/{{ member.user.login_name }}/'>{{ member.user.name }}</a></b>
       </div>
       {% else %}
       <div class="col-6">
-        <a href='/user/{{ member.user.login_name }}/'>{{ member.user.name }}</a>
+        <a href='/user/info/{{ member.user.login_name }}/'>{{ member.user.name }}</a>
       </div>
       {% endif %}
       <div class="col-6">
