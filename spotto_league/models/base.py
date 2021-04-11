@@ -4,6 +4,7 @@ from spotto_league.database import db
 
 class Base():
     __slots__ = ['_session']
+    # 後ほど削除予定
     @property
     def session(self) -> db.session:
         session = db.session.object_session(self)
@@ -20,11 +21,13 @@ class Base():
         return db.session.query(cls).filter(cls.id==target_id).one_or_none()
 
     def save(self) -> None:
-        self.session.add(self)
-        self.session.commit()
+        session = db.session.object_session(self) or db.session
+        session.add(self)
+        session.commit()
 
     def delete(self) -> None:
         if not self.id:
             return
-        self.session.delete(self)
-        self.session.commit()
+        session = db.session.object_session(self) or db.session
+        session.delete(self)
+        session.commit()

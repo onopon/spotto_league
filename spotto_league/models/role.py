@@ -32,7 +32,7 @@ class Role(db.Model, Base):
     def find_or_initialize_by_user_id(cls, user_id: int) -> 'Role':
         role = Role()
         role.user_id = user_id
-        return Role.find_by_id(user_id) or role
+        return Role.find_by_user_id(user_id) or role
 
     def is_admin(self) -> bool:
         return RoleType(self.role_type) == RoleType.ADMIN

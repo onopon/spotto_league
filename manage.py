@@ -11,7 +11,6 @@ migrate = Migrate(app, db)
 # https://github.com/miguelgrinberg/Flask-Migrate/issues/50#issuecomment-79080496
 # dbが作られた後にmodelをimportしないと、migrateの対象となってくれない
 import spotto_league.models
-# import spotto_league.models
 
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)
