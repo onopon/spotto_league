@@ -142,53 +142,6 @@ $(function() {
     }
   }
 
-  function isValidDigit(str, digit) {
-    return str.length == digit;
-  }
-
-  function isValidMonth(val) {
-    return isBetweenValue(val, 1, 12);
-  }
-
-  function isValidDay(val) {
-    return isBetweenValue(val, 1, 31);
-  }
-
-  function isBetweenValue(target, min, max) {
-    return min <= target && target <= max;
-  }
-
-  function checkSpecificSymbols(str) {
-    var reg = new RegExp(/[!"#$%&'()\*\+\-\.,\/:;<=>?@\[\\\]^_`{|}~]/g);
-    if(reg.test(str)) {
-      throw new ValidationError(`特殊記号（!"#$%&'()*+-.,:;<=>?@[]\^-{}|~）は利用できません。`);
-    }
-  }
-
-  function checkPassword(password, confirmPassword) {
-    if (password != confirmPassword) {
-      throw new ValidationError('パスワードが異なります。');
-    }
-  }
-
-  function checkSpace(str) {
-    if (str.match(/\s/g)) {
-      throw new ValidationError('空白は使わないでください。');
-    }
-  }
-
-  function checkLength(str, length) {
-    if (str.length < length) {
-      throw new ValidationError(`${length}文字以上入力してください。`);
-    }
-  }
-
-  function checkAlphabetAndNumber(str) {
-    if (str.match(/[^A-Za-z0-9]+/)) {
-      throw new ValidationError('英数字のみ入力してください。');
-    }
-  }
-
   function invalidForBirth(inputEle, text) {
     inputEle.parent().parent().parent().find('label.invalid').text(text);
     inputEle.parent().parent().parent().find('i.bi').addClass('d-none');
@@ -227,18 +180,22 @@ $(function() {
     }
     if ($('#user-modify-password .is-valid').length == 2) {
       $(".modify button").removeClass('disabled');
+      $(".update.btn").removeClass('disabled');
     }
     if ($('#user-modify .is-valid').length == 3) {
       $(".modify button").removeClass('disabled');
+      $(".update.btn").removeClass('disabled');
     }
   }
 
   function disabledButton() {
     $(".register button").addClass('disabled');
     $(".modify button").addClass('disabled');
+    $(".update.btn").addClass('disabled');
   }
 
   $(".register button").addClass('disabled');
+  $("#user-modify-password .update.btn").addClass('disabled');
 
   $("#first-name").blur(function() {
     validateFullName();
@@ -280,4 +237,33 @@ $(function() {
   $('#user-modify form').submit(function(){
     return validateFullName();
   })
+
+  $('$admin-league-register #placelist-tab').click(function() {
+    $('#place-tab-value').val('0');
+  });
+
+  $('$admin-league-register #newplace-tab').click(function() {
+    $('#place-tab-value').val('1');
+  });
+
+  $("#admin-league-register .update.btn").addClass('disabled');
+
+  $('#admin-league-register input[name="name"]').blur(function() {
+    $date = $('#admin-league-register input[name="date"]');
+    $startAt = $('#admin-league-register input[name="start_at"]');
+    $endAt = $('#admin-league-register input[name="end_at"]');
+    let dates = date.val().split('/');
+    let startTimes = startAt.val().split(':');
+    let endTimes = startAt.val().split(':');
+    let year = parseInt(dates[0]);
+    let month = parseInt(dates[1]);
+    let day = parseInt(dates[2]);
+    if (year == 0 && month == 0 && day == 0) {
+      $label = $date.parent().parent().parent().find('label.invalid');
+      $label.show();
+      $label.text('hogehoge');
+    } else {
+      $label.hide();
+    }
+  });
 });

@@ -1,42 +1,35 @@
 <div class="container">
-  <div class="row">
-    <div class="form-group">
-      <h1>
-        {{ league.name }} の結果
-      </h1>
-    </div>
-  </div>
   {% set members = league.members %}
   <ul class="list-group list-group-flush">
+    <li class="list-group-item">
+      <div class="col h3">{{ league.name }} の結果</div>
+    </li>
     <li class="list-group-item disabled">
       <div class="row">
-        <div class="col-sm-6">
-          名前
-        </div>
-        <div class="col-sm-2">
+        <div class="offset-5 col-2 text-center offset-md-3">
           勝敗
         </div>
-        <div class="col-sm-1">
+        <div class="col-2 text-center">
           順位
         </div>
-        <div class="col-sm-3">
-          同率の時の理由？
+        <div class="col-3">
+          順位づけの理由
         </div>
       </div>
     </li>
     {% for rank in rank_list %}
     <li class="list-group-item">
       <div class="row">
-        <div class="col-sm-6">
+        <div class="col-5 col-md-3">
           {{ rank.user.name }}
         </div>
-        <div class="col-sm-2">
+        <div class="col-2 text-center">
           {{ rank.win }} - {{ rank.lose }}
         </div>
-        <div class="col-sm-1">
+        <div class="col-2 text-center">
           {{ rank.rank }}
         </div>
-        <div class="col-sm-3">
+        <div class="col-3">
           {{ rank.reason }}
         </div>
       </div>
@@ -45,11 +38,11 @@
   </ul>
   <form action="{{ url_for('admin_league_finish', league_id=league.id) }}" method="post">
     <div class="form-group">
-      <div class="row">
-        <div class="col-sm-2">
+      <div class="row align-items-center">
+        <div class="col-4 col-sm-3 col-lg-2">
           獲得ポイント倍率
         </div>
-        <div class="col-sm-4">
+        <div class="col-8 col-sm-9 col-lg-10">
           <div class="btn-group" role="group">
             <input type="radio" name="league_point_group_id" value="1" id="radioBtn1" class="btn-check" autocomplete="off" {% if league.league_point_group_id_is(1) %} checked {% endif %}>
             <label class="btn btn-outline-primary" for="radioBtn1">x1.0</label>
@@ -63,9 +56,16 @@
         </div>
       </div>
     </div>
-    <div class="form-group">
-      <div class="col-sm-offset-2 col-sm-10">
-        <button class="btn btn-primary">順位を確定する</button>
+    <div class="row justify-content-end mt-4">
+      <div class="offset-3 col-9 offset-md-6 col-md-6 col-xl-4 offset-xl-8 align-items-center">
+        <div class="row align-items-end">
+          <div class="offset-3 col-3">
+            <a class='btn back' href='javascript:history.back()'>戻る</a>
+          </div>
+          <div class="offset-1 col-5">
+            <button class="btn register btn-default align-items-end">確定する</button>
+          </div>
+        </div>
       </div>
     </div>
   </form>

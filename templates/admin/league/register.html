@@ -1,114 +1,141 @@
 {% extends 'base.html' %}
 {% block head %}
-<script src="{{ url_for("static", filename="js/admin/league_register.js") }}?{{ timestamp }}"></script>
+<script src="{{ url_for("static", filename="js/form.js") }}?{{ timestamp }}"></script>
+<link rel="stylesheet" href="{{ url_for("static", filename="css/admin.css") }}?{{ timestamp }}">
 {% endblock %}
 
 {% block title %}Spottoリーグ戦情報登録{% endblock %}
 
 {% block content %}
-<div class="container">
-  <div class="row">
-    <div class="form-group">
-      <h1>
-        リーグ戦情報登録画面
-      </h1>
-    </div>
-  </div>
+<div id="admin-league-register" class="container">
   <form class="row g-3" method="post">
     <input id="place-tab-value" type="hidden" name="placetab" value="0">
-    <div class="form-group">
-      <label class="col-sm-2 control-label">開催日</label>
-      <div class="row">
-        <div class="col-sm-4">
-          <input class="form-control" type="date" name="date">
-        </div>
-        <div class="col-sm-3">
-          <input class="form-control" type="time" name="start_at">
-        </div>
-        <div class="col-sm-2">
-          <p>〜</p>
-        </div>
-        <div class="col-sm-3">
-          <input class="form-control" type="time" name="end_at">
-        </div>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label class="col-sm-2 control-label">リーグ戦名</label>
-      <div class="col-sm-10">
-        <input class="form-control" type="text" name="name">
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label class="col-sm-2 control-label">ゲームカウント</label>
-      <div class="row">
-        <div class="col-sm-2">
-          <input class="form-control" type="number" name="game_count">
-        </div>
-        <div class="col-sm-8">
-          <p>セットマッチ</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label class="col-sm-2 control-label">募集締め切り日</label>
-      <div class="col-sm-10">
-        <input class="form-control" type="datetime-local" name="join_end_at">
-      </div>
-    </div>
-
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
-      <li class="nav-item" role="presentation">
-        <a class="nav-link active" id="placelist-tab" data-bs-toggle="tab" href="#placelist" role="tab" aria-controls="placelist" aria-selected="true">以前使ったことのある場所</a>
+    <ul class="list-group list-group-flush mb-3">
+      <li class="list-group-item">
+        <div class="col h3">リーグ戦情報登録画面</div>
       </li>
-      <li class="nav-item" role="presentation">
-        <a class="nav-link" id="newplace-tab" data-bs-toggle="tab" href="#newplace" role="tab" aria-controls="newplace" aria-selected="false">初めて使う場所</a>
+      <li class="list-group-item">
+        <div class="row align-items-center">
+          <div class="col-2 pale-gray small">開催日<i class="bi bi-check2-circle float-end is-valid"></i></div>
+          <div class="col-10">
+            <label class="invalid"></label>
+            <div class="row">
+              <div class="col-12 col-md-6">
+                <input class="form-control" type="date" name="date">
+              </div>
+              <div class="col-12 offset-md-0 col-md-6 mt-2 mt-md-0">
+                <div class="row align-items-center">
+                  <div class="col-5"><input class="form-control" type="time" name="start_at"></div>
+                  <div class="col-2 text-center">〜</div>
+                  <div class="col-5"><input class="form-control" type="time" name="end_at"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="row align-items-center">
+          <div class="col-2 pale-gray small">リーグ戦名<i class="bi bi-check2-circle float-end is-valid"></i></div>
+          <div class="col-10">
+            <label class="invalid"></label>
+            <input class="form-control" type="text" name="name">
+          </div>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="row align-items-center">
+          <div class="col-2 pale-gray small">ゲームカウント<i class="bi bi-check2-circle float-end is-valid"></i></div>
+          <div class="col-10">
+            <div class="row align-items-center">
+              <label class="invalid"></label>
+              <div class="col-2 col-lg-1"><input class="form-control" type="number" name="game_count"></div>
+              <div class="col-10 col-lg-11">セットマッチ</div>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="row align-items-center">
+          <div class="col-2 pale-gray small">募集締切日<i class="bi bi-check2-circle float-end is-valid"></i></div>
+          <div class="col-10">
+            <label class="invalid"></label>
+            <input class="form-control" type="datetime-local" name="join_end_at">
+          </div>
+        </div>
+      </li>
+
+      <li class="list-group-item" id="place">
+        <div class="row align-items-center">
+          <div class="col-2 pale-gray small">開催場<i class="bi bi-check2-circle float-end is-valid"></i></div>
+          <div class="col-10">
+            <label class="invalid"></label>
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+              <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="placelist-tab" data-bs-toggle="tab" href="#placelist" role="tab" aria-controls="placelist" aria-selected="true">2回目以降の利用</a>
+              </li>
+              <li class="nav-item" role="presentation">
+                <a class="nav-link" id="newplace-tab" data-bs-toggle="tab" href="#newplace" role="tab" aria-controls="newplace" aria-selected="false">初めての利用</a>
+              </li>
+            </ul>
+
+            <div class="tab-content mt-3" id="myTabContent">
+              <div class="tab-pane fade show active" id="placelist" role="tabpanel" aria-labelledby="placelist-tab">
+                <div class="col-4">
+                  <select name="place-select" class="place-select">
+                    {% for place in places %}
+                    <option value="{{ place.id }}">{{ place.name }}(収容人数： {{ place.capacity }})</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="tab-pane fade" id="newplace" role="tabpanel" aria-labelledby="newplace-tab">
+                <ul class="list-group list-group-flush mb-3">
+                  <li class="list-group-item">
+                    <div class="row align-items-center">
+                      <div class="col-3 col-lg-2 pale-gray small">場所名</div>
+                      <div class="col-9 col-lg-10">
+                        <input class="form-control" type="text" name="place-name">
+                      </div>
+                    </div>
+                  </li>
+                  <li class="list-group-item">
+                    <div class="row align-items-center">
+                      <div class="col-3 col-lg-2 pale-gray small">URL</div>
+                      <div class="col-9 col-lg-10">
+                        <input class="form-control" type="text" name="url">
+                      </div>
+                    </div>
+                  </li>
+                  <li class="list-group-item">
+                    <div class="row align-items-center">
+                      <div class="col-3 col-lg-2 pale-gray small">収容人数</div>
+                      <div class="col-9">
+                        <div class="row align-items-center">
+                          <div class="col-4 col-lg-2"><input class="form-control" type="number" name="capacity"></div>
+                          <div class="col-8 col-lg-10">人</div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
       </li>
     </ul>
-
-    <div class="tab-content" id="myTabContent">
-      <div class="tab-pane fade show active" id="placelist" role="tabpanel" aria-labelledby="placelist-tab">
-        <div class="col-sm-4">
-          <select name="place-select" class="place-select">
-            {% for place in places %}
-            <option value="{{ place.id }}">{{ place.name }}(収容人数： {{ place.capacity }})</option>
-            {% endfor %}
-          </select>
-        </div>
-      </div>
-      <div class="tab-pane fade" id="newplace" role="tabpanel" aria-labelledby="newplace-tab">
-        <div class="form-group">
-          <label class="col-sm-2 control-label">場所</label>
-          <div class="col-sm-10">
-            <input class="form-control" type="text" name="place-name">
+    <hr></hr>
+    <div class="row justify-content-end mt-4">
+      <div class="offset-3 col-9 offset-md-6 col-md-6 col-xl-4 offset-xl-8 align-items-center">
+        <div class="row align-items-end">
+          <div class="offset-3 col-3">
+            <a class='btn back' href='javascript:history.back()'>戻る</a>
+          </div>
+          <div class="offset-1 col-5">
+            <button class="btn register btn-default align-items-end">登録</button>
           </div>
         </div>
-        <div class="form-group">
-          <label class="col-sm-2 control-label">URL</label>
-          <div class="col-sm-10">
-            <input class="form-control" type="text" name="url">
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-sm-2 control-label">収容人数</label>
-          <div class="row">
-            <div class="col-sm-2">
-              <input class="form-control" type="number" name="capacity">
-            </div>
-            <div class="col-sm-8">
-              <p>人</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <div class="col-sm-offset-2 col-sm-10">
-        <button class="btn btn-default">登録</button>
       </div>
     </div>
   </form>

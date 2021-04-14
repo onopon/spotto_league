@@ -15,11 +15,41 @@
     </li>
   </ul>
   <ul class="list-group list-group-flush">
+    <li class="list-group-item pale-gray small">
+      <div class="row">
+        <div class="col-4">
+        </div>
+        <div class="col-2 small">
+          定員
+        </div>
+        <div class="col-4 small">
+          募集締切日
+        </div>
+      </div>
+    </li>
     {% for league in yet_recruiting_league_list %}
     <li class="list-group-item">
-      <div class="row">
-        <div class="col">
-          <a href='/admin/league/{{ league.id }}/'>{{ league.time_for_display }}　{{ league.name }}</a>
+      <div class="row align-items-center">
+        <div class="col-4">
+          <div class="row small gray">
+            <div class="col">{{ league.date_for_display }}</div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <a href='/admin/league/{{ league.id }}/'>{{ league.name }}</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-2">
+          <span class="align-bottom">{{ league.place.capacity }} 人</span>
+        </div>
+        <div class="col-4">
+          {% if not league.is_in_join_session() %}
+          <div class="row small orange">
+            <div class="col small">※ 締め切りました</div>
+          </div>
+          {% endif %}
+          {{ league.join_end_at_for_display }}
         </div>
       </div>
     </li>
@@ -35,9 +65,21 @@
   <ul class="list-group list-group-flush">
     {% for league in yet_finished_league_list %}
     <li class="list-group-item">
-      <div class="row">
+      {% if league.is_after_session() %}
+      <div class="row small orange">
+        <div class="col small">開催終了しています。</div>
+      </div>
+      {% endif %}
+      <div class="row align-items-center">
         <div class="col">
-          <a class='deep-blue' href='/admin/league/{{ league.id }}/'>{{ league.time_for_display }}　{{ league.name }}</a>
+          <div class="row small gray">
+            <div class="col">{{ league.date_for_display }}</div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <a href='/admin/league/{{ league.id }}/'>{{ league.name }}</a>
+            </div>
+          </div>
         </div>
       </div>
     </li>

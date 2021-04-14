@@ -97,6 +97,10 @@ footer{
   color: #FF9A68;
 }
 
+.red {
+  color: #d9534f;
+}
+
 .pale-gray-bg {
   background: #999999;
 }
@@ -111,6 +115,10 @@ footer{
 
 .orange-bg {
   background: #FF9A68;
+}
+
+.red-bg {
+  color: #d9534f;
 }
 
 a.deep-blue:hover {
@@ -283,15 +291,6 @@ button.disabled {
   min-width: 70px;
 }
 
-#user-modify .modify .btn,
-#user-modify-password .modify .btn {
-  min-width: 100px;
-  max-width: 120px;
-  width: 85%;
-  border: 1px solid #6086E5;
-  background: #6086E5;
-}
-
 #user-modify #last-name {
   margin-right: 15px;
 }
@@ -347,6 +346,16 @@ label.invalid {
 .join.btn:focus {
   border: 0px;
   background: transparent;
+}
+
+.btn.back {
+  width: 100%;
+}
+
+.btn.update, .btn.register {
+  width: 100%;
+  border: 1px solid #6086E5;
+  background: #6086E5;
 }
 
 #user-info .h1 {

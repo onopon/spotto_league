@@ -2,29 +2,35 @@
   <ul class="list-group list-group-flush text-center">
     <li class="list-group-item pale-gray small">
       <div class="row small">
-        <div class="col-2">
+        <div class="offset-5 col-2 text-center offset-md-3">
+          勝敗
+        </div>
+        <div class="col-2 text-center">
           順位
         </div>
-        <div class="col-2">
-          勝敗
+        <div class="col-3">
+          順位づけの理由
         </div>
       </div>
     </li>
     {% for r_user_id in rank_user_ids %}
     <li class="list-group-item">
       <div class="row">
-        <div class="col-2">
-          {{ rank_hash[r_user_id]['rank'] }}
-        </div>
-        <div class="col-2">
-          {{ rank_hash[r_user_id]['win'] }} - {{ rank_hash[r_user_id]['lose'] }}
-        </div>
-        <div class="col-6 text-start">
+        <div class="col-4 col-md-3 text-start">
           {% if login_user.id == r_user_id %}
           <b><a class="deep-blue" href='/user/info/{{ rank_hash[r_user_id]["login_name"] }}/'>{{ rank_hash[r_user_id]['user_name'] }}</a></b>
           {% else %}
           <a href='/user/info/{{ rank_hash[r_user_id]["login_name"] }}/'>{{ rank_hash[r_user_id]['user_name'] }}</a>
           {% endif %}
+        </div>
+        <div class="col-2 text-center">
+          {{ rank_hash[r_user_id]['win'] }} - {{ rank_hash[r_user_id]['lose'] }}
+        </div>
+        <div class="col-2 text-center">
+          {{ rank_hash[r_user_id]['rank'] }}
+        </div>
+        <div class="col-4">
+          {{ rank_hash[r_user_id]['reason'] }}
         </div>
       </div>
     </li>

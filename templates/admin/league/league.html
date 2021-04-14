@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 {% block head %}
-<script src="{{ url_for("static", filename="js/admin/league_register.js") }}?{{ timestamp }}"></script>
+<script src="{{ url_for("static", filename="js/admin/league.js") }}?{{ timestamp }}"></script>
 {% endblock %}
 
 {% block title %}{{ league.name }}{% endblock %}
 {% if league.is_status_recruiting() %}
-  {% include 'admin/league/parts/status_recruiting.html' %}
+ {% include 'admin/league/parts/status_recruiting.html' %}
 {% elif league.is_status_ready() %}
   {% include 'admin/league/parts/status_ready.html' %}
 {% else %}

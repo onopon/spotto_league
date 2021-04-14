@@ -1,23 +1,19 @@
-<div class="container">
-  <div class="row">
-    <div class="form-group">
-      <h1>
-        {{ league.name }} への参加希望者リスト
-      </h1>
-    </div>
-  </div>
+<div id="admin-league" class="container">
   {% set members = league.members %}
   <form class="row g-3" method="post">
-    <ul class="list-group list-group-flush">
+    <ul class="list-group list-group-flush mb-3">
+      <li class="list-group-item">
+        <div class="col h3">{{ league.name }} への参加希望者リスト</div>
+      </li>
       <li class="list-group-item disabled">
         <div class="row">
-          <div class="col-sm-6">
+          <div class="col-6">
             名前
           </div>
-          <div class="col-sm-3">
+          <div class="col-3">
             参加希望押下日時
           </div>
-          <div class="col-sm-3">
+          <div class="col-3">
             参加許可
           </div>
         </div>
@@ -25,31 +21,46 @@
       {% for member in members %}
       <li class="list-group-item">
         <div class="row">
-          <div class="col-sm-6">
+          <div class="col-6">
             {{ member.user.name }}
           </div>
-          <div class="col-sm-3">
+          <div class="col-3">
             {{ member.created_at }}
           </div>
-          <div class="col-sm-3">
+          <div class="col-3">
             <input class="form-check-input" type="checkbox" name="enabled_league_member_ids" value="{{ member.id }}" {% if member.enabled %}checked{% endif %}>
           </div>
         </div>
       </li>
      {% endfor %}
+     <li class="list-group-item">
+       <div class="row">
+         <div class="offset-9 col-3">
+           <span id="check-count">0</span> / {{ league.place.capacity }}
+         </div>
+       </div>
+     </li>
     </ul>
     {% if (members | count) > 0 %}
-    <div class="form-group">
-      <div class="col-sm-offset-2 col-sm-10">
-        <button class="btn btn-primary">反映</button>
+    <div class="row justify-content-end mt-4">
+      <div class="offset-3 col-9 offset-md-6 col-md-6 col-xl-4 offset-xl-8 align-items-center">
+        <div class="row align-items-end">
+          <div class="offset-3 col-3">
+            <a class='btn back' href='javascript:history.back()'>戻る</a>
+          </div>
+          <div class="offset-1 col-5">
+            <button class="btn register btn-default align-items-end">反映</button>
+          </div>
+        </div>
       </div>
     </div>
     {% else %}
     <div class="form-group">
-      <div class="col-sm-10">
+      <div class="col-10">
         <p>まだ参加希望者はいません。</p>
       </div>
     </div>
     {% endif %}
   </form>
+  <div id='capacity' hidden>{{ league.place.capacity }}</div>
 </div>

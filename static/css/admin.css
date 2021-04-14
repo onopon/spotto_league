@@ -1,0 +1,8 @@
+#admin-league-register .invalid {
+  display: none;
+}
+
+#admin-league-register .bi-check2-circle {
+  font-size: 1.0rem;
+  display: none;
+}
