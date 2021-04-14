@@ -9,7 +9,7 @@ from spotto_league.modules.league_settlement_calculator import LeagueSettlementC
 
 
 class Rank():
-    __slots__ = ['_league_member_id',
+    __slots__ = ['_league_member',
                  '_user_id',
                  '_logs',
                  '_details',
@@ -26,7 +26,7 @@ class Rank():
                  league_member: LeagueMember,
                  logs: List[LeagueLog],
                  details: List[LeagueLogDetail]):
-        self._league_member_id = league_member.id
+        self._league_member = league_member
         self._user_id = league_member.user_id
         self._logs = logs
         self._details = details
@@ -62,13 +62,29 @@ class Rank():
                 else:
                     self._win_user_ids.append(log.user_id_1)
 
-    def set_rank_and_reason(self, rank: int, reason: str = "") -> None:
+    def set_rank(self, rank: int) -> None:
         self._rank = rank
+
+    def set_reason_for_priority(self, reason_of_prioritiy: str) -> None:
+        reason = '単独'
+        if (reason_of_prioritiy == 'game_of_difference'):
+            reason = "ゲーム数による得失点差: {}".format(self.game_of_difference)
+        elif (reason_of_prioritiy == 'point_of_difference'):
+            reason = "獲得ポイント数による得失点差: {}".format(self.point_of_difference)
+        elif (reason_of_prioritiy == 'league_member_id'):
+            reason = "参加表明時刻の差: {}".format(self.league_member.created_at)
+        self._reason = reason
+
+    def set_reason(self, reason: str) -> None:
         self._reason = reason
 
     @property
+    def league_member(self) -> LeagueMember:
+        return self._league_member
+
+    @property
     def league_member_id(self) -> int:
-        return self._league_member_id
+        return self._league_member.id
 
     @property
     def user_id(self) -> int:
@@ -124,7 +140,8 @@ class Rank():
                 'user_name': self.user.name,
                 'login_name': self.user.login_name,
                 'win': self.win,
-                'lose': self.lose}
+                'lose': self.lose,
+                'reason': self._reason}
 
     @classmethod
     def make_rank_list(cls, league: League) -> List['Rank']:
@@ -141,7 +158,7 @@ class Rank():
         rank_list.sort(key=lambda r: r.win_point, reverse=True)
         sorted_rank_list = cls.sort_rank_list(rank_list, 'win_point')
         for i, rank in enumerate(sorted_rank_list):
-            rank.set_rank_and_reason(i+1)
+            rank.set_rank(i+1)
         return sorted_rank_list
 
     @classmethod
@@ -151,19 +168,24 @@ class Rank():
             ranks = list(group)
             # 単独で順位が確定してる場合
             if len(ranks) == 1:
+                [r.set_reason_for_priority(grouping_point) for r in ranks]
                 sorted_rank_list.extend(ranks)
                 continue
             # ポイントが並んでいる選手が2人いる場合
             elif len(ranks) == 2:
                 (rank_1, rank_2) = ranks
-                logs = [l for l in logrank_1.logs if l.is_in_user_id(rank_2.user_id)]
+                logs = [l for l in rank_1.logs if l.is_in_user_id(rank_2.user_id)]
                 # 直接対決があった場合は勝った方の順位を優先
                 if len(logs) > 0:
                     details = [d for d in self.details if d.league_log_id == logs[0].id]
                     win_user_id = LeagueSettlementCalculator.get_win_of_head_to_head_user_id(log[0], details)
                     if rank_1.user_id == win_user_id:
+                        rank_1.set_reason("{} と {} の直接対決".format(rank_1.user.name, rank_2.user.name))
+                        rank_2.set_reason("{} と {} の直接対決".format(rank_1.user.name, rank_2.user.name))
                         sorted_rank_list.extend([rank_1, rank_2])
                     else:
+                        rank_2.set_reason("{} と {} の直接対決".format(rank_2.user.name, rank_1.user.name))
+                        rank_1.set_reason("{} と {} の直接対決".format(rank_2.user.name, rank_1.user.name))
                         sorted_rank_list.extend([rank_2, rank_1])
                     continue
             # 直接対決がない or 3つ巴以上が起きている場合
