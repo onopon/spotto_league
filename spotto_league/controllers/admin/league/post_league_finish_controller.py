@@ -44,7 +44,7 @@ class PostLeagueFinishController(BaseController):
             user_point = UserPoint()
             user_point.league_id = self._league.id
             user_point.user_id = rank.user_id
-            user_point.set_league_point(league_point)
+            user_point.set_league_point(self._league, league_point)
             user_point.save()
 
             win_bonus_points = list(filter(lambda b: rank.did_win(b.user_id), bonus_points))
@@ -54,6 +54,7 @@ class PostLeagueFinishController(BaseController):
                 user_point.user_id = rank.user_id
                 user_point.set_bonus_point(bonus_point)
                 user_point.save()
+            self._league.league_point_group_id = group_id
             self._league.finish()
             self._league.save()
         return redirect(url_for('league_list', login_name=current_user.login_name))
