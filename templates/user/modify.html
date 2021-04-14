@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block head %}
-<script src="{{ url_for("static", filename="js/user/register.js") }}?{{ timestamp }}"></script>
+<script src="{{ url_for("static", filename="js/form.js") }}?{{ timestamp }}"></script>
 {% endblock %}
 
 {% block title %}Spotto | ユーザ情報の修正{% endblock %}
@@ -32,14 +32,7 @@
     {% include 'user/parts/user_info_form.html' %}
 
     <hr></hr>
-    <div class="row justify-content-end mt-4">
-      <div class="offset-6 col-3 offset-sm-8 col-sm-1 align-items-center">
-        <a class='btn back' href='javascript:history.back()'>戻る</a>
-      </div>
-      <div class="modify col-3 offset-sm-1 col-sm-2">
-        <button class="btn btn-default align-items-end">更新</button>
-      </div>
-    </div>
+    {% include 'user/parts/row_back_and_update_button.html' %}
   </form>
 </div>
 {% endblock %}
