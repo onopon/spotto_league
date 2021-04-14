@@ -6,7 +6,8 @@ from spotto_league.models.league_member import LeagueMember
 from spotto_league.models.league_point import (
         RATING_BORDER_MEMBER_COUNT,
         BASE_GROUP_ID,
-        ONE_AND_HALF_TIMES_GROUP_ID
+        ONE_AND_HALF_TIMES_GROUP_ID,
+        LeaguePoint
 )
 from .base import Base
 import datetime
@@ -34,6 +35,7 @@ class League(db.Model, Base):
     join_end_at = db.Column(db.DateTime, nullable=False, default=dt.now)
     status = db.Column(db.Integer, nullable=False, default=False, index=True)
     place_id = db.Column(db.Integer, nullable=False, index=True)
+    league_point_group_id = db.Column(db.Integer)
     created_at = db.Column(db.DateTime, nullable=False, default=dt.now)
     updated_at = db.Column(db.DateTime, nullable=False, default=dt.now, onupdate=dt.now)
 
@@ -62,6 +64,12 @@ class League(db.Model, Base):
         return ONE_AND_HALF_TIMES_GROUP_ID
 
     @property
+    def league_points(self) -> List[LeaguePoint]:
+        if not self.league_point_group_id:
+            return []
+        return LeaguePoint.find_all_by_group_id(self.league_point_group_id)
+
+    @property
     def date_for_display(self) -> str:
         w_list = ['月', '火', '水', '木', '金', '土', '日']
         date_str = self.date.strftime('%m月%d日')
@@ -80,7 +88,6 @@ class League(db.Model, Base):
     @property
     def join_end_at_for_display(self) -> str:
         return self.join_end_at.strftime('%m月%d日（%a） %H:%M')
-
 
     def league_point_group_id_is(self, group_id: int) -> bool:
         return group_id == self.recommend_league_point_group_id
