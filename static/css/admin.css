@@ -6,3 +6,11 @@
   font-size: 1.0rem;
   display: none;
 }
+
+#admin-league-register select.place-select {
+	font-size: 100%;
+	line-height: 1.1em;
+	border-radius: 5px;
+  padding: 3%;
+  border: 2px solid #91C9F4;
+}
