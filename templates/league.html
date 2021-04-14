@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block head %}
 <script src="{{ url_for("static", filename="js/league.js") }}?{{ timestamp }}"></script>
+<script src="{{ url_for("static", filename="js/description.js") }}?{{ timestamp }}"></script>
 <link rel="stylesheet" href="{{ url_for("static", filename="css/chart.css") }}?{{ timestamp }}">
 {% endblock %}
 {% block title %}{{ league.name }}{% endblock %}

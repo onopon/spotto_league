@@ -3,13 +3,13 @@
     <li class="list-group-item pale-gray small">
       <div class="row small">
         <div class="col-2 text-center">
-          今回順位
+          今回順位<i class="bi bi-question-circle-fill what-is-ranking orange"></i>
         </div>
         <div class="col-2 text-center">
           前回比
         </div>
         <div class="col-2 text-center">
-          ポイント
+          ポイント<i class="bi bi-question-circle-fill what-is-point orange"></i>
         </div>
       </div>
     </li>
@@ -22,7 +22,8 @@
         <div class="col-2 text-center">
           {% include 'league/parts/after_session/point_rank_compared_to_last_time.html' %}
         </div>
-        <div class="col-2 text-end">
+        <div class="col-2 text-end current_point">
+          <div class='user_id' hidden>{{ point_rank.user.id }}</div>
           {{ point_rank.current_point }}
         </div>
         <div class="col-4">

@@ -2,6 +2,7 @@ from typing import Optional, List
 from datetime import datetime
 from spotto_league.database import db
 from .base import Base
+from spotto_league.models.league import League
 from spotto_league.models.league_point import LeaguePoint
 from spotto_league.models.bonus_point import BonusPoint
 from sqlalchemy import and_
@@ -21,10 +22,15 @@ class UserPoint(db.Model, Base):
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
 
-    def set_league_point(self, league_point: LeaguePoint) -> None:
+    def set_base_point(self, point: int, memo: str = '') -> None:
+        self.point = point
+        self.reason_class = 'BasePoint'
+        self.memo = memo
+
+    def set_league_point(self, league: League, league_point: LeaguePoint) -> None:
         self.point = league_point.point
-        self.reason_class = 'LeaguePoint'
-        self.reason_id = league_point.id
+        self.reason_class = 'League'
+        self.reason_id = league.id
 
     def set_bonus_point(self, bonus_point: BonusPoint) -> None:
         self.point = bonus_point.point

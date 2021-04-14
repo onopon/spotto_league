@@ -3,6 +3,7 @@ $(function() {
   let user_id = $('#user_id').text();
   let game_count;
   let league_log_hash;
+  let point_rank_hash;
   let targetId;
   class GameData {
     constructor(league_id, hash, score_1_list, score_2_list) {
@@ -92,6 +93,7 @@ $(function() {
   function setData(jsonData) {
     game_count = jsonData.game_count;
     league_log_hash = jsonData.league_log_hash;
+    point_rank_hash = jsonData.point_rank_hash;
   }
 
   loadLeague(league_id);
@@ -137,5 +139,19 @@ $(function() {
     let gameData = new GameData(league_id, league_log_hash[target_id], leftScores, rightScores);
     postLeagueLog(gameData);
     return false;
+  });
+
+  $('div.current_point').click(function () {
+    let userId = $(this).find('.user_id').text();
+    let prh = point_rank_hash[userId];
+    let basePoint = prh.current_points_hash.BasePoint.reduce(function(a,b){ return a + b; }, 0);
+    let bonusPoint = prh.current_points_hash.BonusPoint.reduce(function(a,b){ return a + b; }, 0);
+    let league_points = prh.current_points_hash.LeaguePoint;
+    $('#pointDetailModal .modal-title').text(`${prh.user_name} さんのポイント内訳`);
+    $('#pointDetailModal .base-point').text(`${basePoint}`);
+    $('#pointDetailModal .league-point-frame').text(`${prh.current_points_hash.LeaguePoint.length} / 8`);
+    $('#pointDetailModal .league-point').text(league_points.join("\n"));
+    $('#pointDetailModal .bonus-point').text(`${bonusPoint}`);
+    $('#pointDetailModal').modal('show'); 
   });
 });
