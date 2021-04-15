@@ -177,8 +177,8 @@ class Rank():
                 logs = [l for l in rank_1.logs if l.is_in_user_id(rank_2.user_id)]
                 # 直接対決があった場合は勝った方の順位を優先
                 if len(logs) > 0:
-                    details = [d for d in self.details if d.league_log_id == logs[0].id]
-                    win_user_id = LeagueSettlementCalculator.get_win_of_head_to_head_user_id(log[0], details)
+                    details = [d for d in logs[0].details if d.league_log_id == logs[0].id]
+                    win_user_id = LeagueSettlementCalculator.get_win_of_head_to_head_user_id(logs[0], details)
                     if rank_1.user_id == win_user_id:
                         rank_1.set_reason("{} と {} の直接対決".format(rank_1.user.name, rank_2.user.name))
                         rank_2.set_reason("{} と {} の直接対決".format(rank_1.user.name, rank_2.user.name))
@@ -191,6 +191,6 @@ class Rank():
             # 直接対決がない or 3つ巴以上が起きている場合
             sort_priorities = ['game_of_difference', 'point_of_difference', 'league_member_id']
             sort_priority = sort_priorities[count]
-            ranks.sort(key=lambda r: getattr(r, sort_priority))
+            ranks.sort(key=lambda r: getattr(r, sort_priority), reverse=True)
             sorted_rank_list.extend(cls.sort_rank_list(ranks, sort_priority, count+1))
         return sorted_rank_list

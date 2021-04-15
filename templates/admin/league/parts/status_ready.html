@@ -6,13 +6,20 @@
     </li>
     <li class="list-group-item disabled">
       <div class="row">
-        <div class="offset-5 col-2 text-center offset-md-3">
-          勝敗
+        <div class="offset-3 col-3 text-center offset-md-2">
+          <div class="row">
+            <div class="col">勝敗</div>
+          </div>
+          <div class="row small">
+            <div class="col small">
+              <span class="small">(ゲーム得失点差, ポイント得失点差)</span>
+            </div>
+          </div>
         </div>
-        <div class="col-2 text-center">
+        <div class="col-1 text-center">
           順位
         </div>
-        <div class="col-3">
+        <div class="col-5">
           順位づけの理由
         </div>
       </div>
@@ -20,16 +27,21 @@
     {% for rank in rank_list %}
     <li class="list-group-item">
       <div class="row">
-        <div class="col-5 col-md-3">
+        <div class="col-3 col-md-2">
           {{ rank.user.name }}
         </div>
-        <div class="col-2 text-center">
+        <div class="col-3 text-center">
           {{ rank.win }} - {{ rank.lose }}
+          <div class="row small pale-gray">
+            <div class="col">
+              ({{ rank.game_of_difference }}, {{ rank.point_of_difference }})
+            </div>
+          </div>
         </div>
-        <div class="col-2 text-center">
+        <div class="col-1 text-center">
           {{ rank.rank }}
         </div>
-        <div class="col-3">
+        <div class="col-5">
           {{ rank.reason }}
         </div>
       </div>

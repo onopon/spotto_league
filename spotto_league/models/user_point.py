@@ -29,7 +29,7 @@ class UserPoint(db.Model, Base):
 
     def set_league_point(self, league: League, league_point: LeaguePoint) -> None:
         self.point = league_point.point
-        self.reason_class = 'League'
+        self.reason_class = 'LeaguePoint'
         self.reason_id = league.id
 
     def set_bonus_point(self, bonus_point: BonusPoint) -> None:
