@@ -3,6 +3,9 @@ import locale
 import flask_login
 from flask import Flask, request, render_template, redirect, url_for
 from flask_httpauth import HTTPBasicAuth
+from sqlalchemy import exc
+from sqlalchemy import event
+from sqlalchemy.pool import Pool
 from werkzeug.security import generate_password_hash, check_password_hash
 from spotto_league.database import init_db
 from spotto_league.database import db
@@ -60,7 +63,7 @@ app = create_app()
 @auth.verify_password
 def verify_password(username, password):
     basic_user = os.environ.get('BASIC_USER', app.config["DEFAULT_BASIC_USER"])
-    basic_pass = os.environ.get('BASIC_PASS', app.config["DEFAULT_SECRET_KEY"])
+    basic_pass = os.environ.get('BASIC_PASS', app.config["DEFAULT_BASIC_PASS"])
     if username == basic_user and\
         check_password_hash(generate_password_hash(basic_pass), password):
         return username
@@ -204,3 +207,25 @@ def request_loader(request):
     user.id = login_name
     flask_login.login_user(user)
     return user
+
+'''
+for SqlAlchemy on production
+https://qiita.com/yukiB/items/67336716b242df3be350
+'''
+@app.teardown_appcontext
+def session_clear(exception):
+    session = db.session
+    if exception and session.is_active:
+        session.rollback()
+    else:
+        session.commit()
+    session.close()
+
+@event.listens_for(Pool, "checkout")
+def ping_connection(dbapi_connection, connection_record, connection_proxy):
+    cursor = dbapi_connection.cursor()
+    try:
+        cursor.execute("SELECT 1")
+    except:
+        raise exc.DisconnectionError()
+    cursor.close()
