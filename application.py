@@ -22,6 +22,7 @@ from spotto_league.controllers.user.modify_controller import ModifyController as
 from spotto_league.controllers.user.modify_password_controller import ModifyPasswordController as UserModifyPasswordController
 from spotto_league.controllers.user.post_modify_controller import PostModifyController as PostUserModifyController
 from spotto_league.controllers.user.post_modify_password_controller import PostModifyPasswordController as PostUserModifyPasswordController
+from spotto_league.controllers.user.ranking_controller import RankingController as UserRankingController
 from spotto_league.controllers.post_league_log_controller import PostLeagueLogController as PostLeagueLogController
 from spotto_league.controllers.admin.league.register_controller import RegisterController as AdminLeagueRegisterController
 from spotto_league.controllers.admin.league.post_register_controller import PostRegisterController as PostAdminLeagueRegisterController
@@ -151,6 +152,17 @@ def user_league_join():
 def user_league_cancel():
     if request.method == "POST":
         return PostUserLeagueCancelController().render(request)
+
+@app.route("/user/ranking/<int:year>/", methods=("GET", "POST"))
+@auth.login_required
+def user_ranking(year: int):
+    return UserRankingController().render(request, year=year)
+
+@app.route("/user/ranking/<int:year>/json", methods=("GET", "POST"))
+@auth.login_required
+@flask_login.login_required
+def user_ranking_json_data(year: int):
+    return UserRankingController().render_as_json(request, year=year)
 
 @app.route("/admin/league/register/", methods=("GET", "POST"))
 @auth.login_required

@@ -23,6 +23,7 @@ class InfoController(BaseController):
     def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
         date = dt.now().date()
         render_hash = {}
+        render_hash['year'] = date.year
         render_hash['user'] = self._user
         point_rank_list = PointRank.make_point_rank_list_in_season(date.year)
         render_hash['point_rank'] = next((pr for pr in point_rank_list if pr.user.id == self._user.id), None)

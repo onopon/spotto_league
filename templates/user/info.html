@@ -73,7 +73,12 @@
   <ul class="list-group list-group-flush mb-3">
     <li class="list-group-item">
       <div class="row">
-        <div class="col-3 pale-gray small">ランキング</div>
+        <div class="col"><a href="/user/ranking/{{ year }}/">チーム全体の順位</a></div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-3 pale-gray small">順位</div>
         {% if point_rank.current_rank <= 3 %}
         <div class="col-9">{{ point_rank.current_rank }} 位 <i class="bi bi-bookmark-star-fill rank-{{ point_rank.current_rank }}"></i></div>
         {% else %}
@@ -85,6 +90,18 @@
       <div class="row">
         <div class="col-3 pale-gray small">ポイント</div>
         <div class="col-9">{{ point_rank.current_point }} pt</div>
+      </div>
+      <div class="row mt-2 small">
+        <div class="offset-3 col-3 pale-gray">ベースポイント</div>
+        <div class="col-6">{{ point_rank.current_base_point or 0 }} pt</div>
+      </div>
+      <div class="row small">
+        <div class="offset-3 col-3 pale-gray small">リーグポイント</div>
+        <div class="col-6">{{ point_rank.current_league_points }} pt ({{ point_rank.current_league_points | length }} / 8)</div>
+      </div>
+      <div class="row small">
+        <div class="offset-3 col-3 pale-gray small">ボーナスポイント</div>
+        <div class="col-6">{{ point_rank.current_bonus_point }} pt</div>
       </div>
     </li>
   </ul>

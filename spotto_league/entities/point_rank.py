@@ -48,6 +48,16 @@ class PointRank():
         return sum([sum(points) for points in values])
 
     @property
+    def current_base_point(self) -> int:
+        values = list(self._current_points_hash[POINT_HASH_KEY_BASE])
+        return sum(values)
+
+    @property
+    def current_bonus_point(self) -> int:
+        values = list(self._current_points_hash[POINT_HASH_KEY_BONUS])
+        return sum(values)
+
+    @property
     def before_league_points(self) -> List[int]:
         return self._before_points_hash[POINT_HASH_KEY_LEAGUE]
 

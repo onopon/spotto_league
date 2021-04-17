@@ -139,7 +139,10 @@ a.deep-blue:hover {
   color: #bbbbbb;
 }
 
-.bi-check-square-fill, .bi-check-circle-fill, .bi-patch-check-fill, .bi-check2-circle {
+.bi-check-square-fill,
+.bi-check-circle-fill,
+.bi-patch-check-fill,
+.bi-check2-circle {
   font-size: 1.2rem;
   color: #5cb85c;
 }
