@@ -17,7 +17,7 @@ class PostRegisterController(BaseController):
         year = int(request.form.get("year"))
         month = int(request.form.get("month"))
         day = int(request.form.get("day"))
-        targets = [login_name, name, gender, year, month, day]
+        targets = [login_name, name, gender, str(year), str(month), str(day)]
         if any([len(target) == 0 for target in targets]):
             raise Exception("必要なデータが入力されていません。")
 
