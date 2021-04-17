@@ -8,7 +8,7 @@ HOST = os.environ.get('DB_HOSTNAME')
 DB = os.environ.get('DB_NAME')
 
 # SQLAlchemy
-SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://{user}:{password}@{host}/flask_sample?charset=utf8'.format(**{
+SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://{user}:{password}@{host}/{db}?charset=utf8'.format(**{
     'user': USER,
     'password': PASSWORD,
     'host': HOST,
