@@ -24,7 +24,7 @@
         </div>
         <div class="col-2 text-end current_point">
           <div class='user_id' hidden>{{ point_rank.user.id }}</div>
-          {{ point_rank.current_point }}
+          {{ point_rank.current_point }} <i class="light-blue bi bi-info-circle-fill"></i>
         </div>
         <div class="col-4">
           {% if login_user.id == point_rank.user.id %}
