@@ -16,7 +16,7 @@ class InfoController(BaseController):
     def validate(self, request: BaseRequest, **kwargs) -> None:
         self._user = User.find_by_login_name(kwargs["login_name"])
         if not self._user:
-            raise Exception
+            raise Exception("{}というユーザは存在しません。".format(kwargs["login_name"]))
 
     # override
     @asyncio.coroutine

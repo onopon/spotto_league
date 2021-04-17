@@ -24,12 +24,12 @@ class PostLeagueFinishController(BaseController):
     def validate(self, request: BaseRequest, **kwargs) -> None:
         self._league = League.find_by_id(kwargs["league_id"])
         if not self._league:
-            raise Exception
+            raise Exception("League: {} does not exist". kwargs["league_id"])
         if not self._league.is_status_ready():
-            raise Exception
+            raise Exception("League status is not ready")
 
         if not request.form.get('league_point_group_id'):
-            raise Exception
+            raise Exception("league_point_group_id does not exist")
 
     # override
     @asyncio.coroutine

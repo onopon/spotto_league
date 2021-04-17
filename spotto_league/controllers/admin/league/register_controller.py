@@ -14,9 +14,9 @@ class RegisterController(BaseController):
     def validate(self, request: BaseRequest, **kwargs) -> None:
         self._user = User.find_by_login_name(current_user.login_name)
         if not self._user:
-            raise Exception
+            raise Exception("User: {} does not exist.".format(current_user.login_name))
         if not self._user.is_admin():
-            raise Exception
+            raise Exception("User: {} is not admin.".format(current_user.login_name))
 
     # override
     @asyncio.coroutine

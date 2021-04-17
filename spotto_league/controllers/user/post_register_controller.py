@@ -11,13 +11,21 @@ class PostRegisterController(BaseController):
     # override
     @asyncio.coroutine
     def validate(self, request: BaseRequest, **kwargs) -> None:
-        # TODO: 後でやる
         login_name = request.form.get("login_name")
         name = request.form.get("name")
+        gender = int(request.form.get("gender"))
+        year = int(request.form.get("year"))
+        month = int(request.form.get("month"))
+        day = int(request.form.get("day"))
+        targets = [login_name, name, gender, year, month, day]
+        if any([len(target) == 0 for target in targets]):
+            raise Exception("必要なデータが入力されていません。")
+
+
         password = request.form.get("password")
         confirm_password = request.form.get("confirm_password")
         if (password != confirm_password):
-            raise Exception()
+            raise Exception("パスワードが一致しません。")
 
     # override
     @asyncio.coroutine

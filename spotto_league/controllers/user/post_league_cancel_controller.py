@@ -16,7 +16,7 @@ class PostLeagueCancelController(BaseController):
         try:
             League.find(league_id)
         except:
-            raise Exception()
+            raise Exception("League: {} does not exist.".format(league_id))
 
     # override
     @asyncio.coroutine

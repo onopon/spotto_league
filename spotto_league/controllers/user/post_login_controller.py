@@ -16,10 +16,14 @@ class PostLoginController(BaseController):
         password = request.form.get("password")
         user = User.find_by_login_name(login_name)
         if not user:
-            raise Exception()
+            raise Exception("ログイン失敗")
         if not PasswordUtil.is_same(password, user.password):
-            raise Exception()
+            raise Exception("ログイン失敗")
         self._user = user
+
+    @asyncio.coroutine
+    def get_layout_as_exception(self, request: BaseRequest, error: Exception, **kwargs) -> None:
+        return self.render_template("user/login.html", is_miss_login = True)
 
     # override
     @asyncio.coroutine

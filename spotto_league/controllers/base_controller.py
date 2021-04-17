@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+import json
 import asyncio
 from werkzeug.wrappers import BaseRequest, BaseResponse
 from flask.wrappers import Request as FlaskRequest
@@ -21,6 +22,10 @@ class BaseController(metaclass=ABCMeta):
     def validate(self, request: BaseRequest, **kwargs) -> None:
         pass
 
+    @asyncio.coroutine
+    def get_layout_as_exception(self, request: BaseRequest, error: Exception, **kwargs) -> None:
+        return self.render_template("error.html", error_message=str(error))
+
     @abstractmethod
     @asyncio.coroutine
     def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
@@ -32,7 +37,10 @@ class BaseController(metaclass=ABCMeta):
 
     def render(self, request: BaseRequest, **kwargs) -> BaseResponse:
         loop = asyncio.get_event_loop()
-        loop.run_until_complete(self.validate(request, **kwargs))
+        try:
+            loop.run_until_complete(self.validate(request, **kwargs))
+        except Exception as e:
+            return loop.run_until_complete(self.get_layout_as_exception(request, e, **kwargs))
         return loop.run_until_complete(self.get_layout(request, **kwargs))
 
     def render_as_json(self, request: BaseRequest, **kwargs) -> Dict[str, Any]:

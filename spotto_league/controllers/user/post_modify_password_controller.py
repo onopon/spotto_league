@@ -15,7 +15,7 @@ class PostModifyPasswordController(BaseController):
         password = request.form.get("password")
         confirm_password = request.form.get("confirm_password")
         if (password != confirm_password):
-            raise Exception()
+            raise Exception("パスワードが一致しません。")
 
     # override
     @asyncio.coroutine

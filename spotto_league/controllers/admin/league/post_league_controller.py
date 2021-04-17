@@ -20,11 +20,11 @@ class PostLeagueController(BaseController):
     def validate(self, request: BaseRequest, **kwargs) -> None:
         self._league = League.find_by_id(kwargs["league_id"])
         if not self._league:
-            raise Exception
+            raise Exception("League: {} does not exist". kwargs["league_id"])
         league_member_ids = request.form.getlist('enabled_league_member_ids')
         # TODO: リーグ戦最低人数を決める
         if len(league_member_ids) < 2:
-            raise Exception
+            raise Exception("League member less than 2")
 
     # override
     @asyncio.coroutine

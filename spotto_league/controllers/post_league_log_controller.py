@@ -26,12 +26,12 @@ class PostLeagueLogController(BaseController):
         score_1_list = [int(s) for s in request.form.getlist("score_1_list[]")]
         score_2_list = [int(s) for s in request.form.getlist("score_2_list[]")]
         if not all([league_id, user_id_1, user_id_2]):
-            raise Exception
+            raise Exception("All data does not exist.")
 
         if not score_1_list or\
             not score_2_list or\
             len(score_1_list) != len(score_2_list):
-            raise Exception
+            raise Exception("Score List is invalid.")
 
     # override
     @asyncio.coroutine
