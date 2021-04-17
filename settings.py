@@ -1,4 +1,4 @@
-DEFUALT_ENV = "development"
+DEFAULT_ENV = "development"
 DEFAULT_SECRET_KEY = "abcde"
 DEFAULT_BASIC_USER = 'spotto'
 DEFAULT_BASIC_PASS = 'magu'
