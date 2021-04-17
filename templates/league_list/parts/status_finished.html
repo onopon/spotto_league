@@ -1,4 +1,5 @@
 <div class="container">
+  {% if (league_list_hash['status_finished'] | count) > 0 %}
   <ul class="list-group list-group-flush">
     <li class="list-group-item pale-gray small">
       <div class="row">
@@ -22,4 +23,11 @@
     </li>
     {% endfor %}
   </ul>
+  {% else %}
+  <div class="row mt-3">
+    <div class="col-12 small pale-gray">
+      開催終了したイベントはありません。
+    </div>
+  </div>
+  {% endif %}
 </div>
