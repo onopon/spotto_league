@@ -21,5 +21,9 @@ class LeaguePoint(db.Model, Base):
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
 
     @classmethod
+    def all(cls) -> List['LeaguePoint']:
+        return db.session.query(LeaguePoint).all()
+
+    @classmethod
     def find_all_by_group_id(cls, group_id: int) -> List['LeaguePoint']:
         return db.session.query(cls).filter(cls.group_id == group_id).all()

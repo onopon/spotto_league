@@ -5,29 +5,65 @@
 4.3.1
 
 ###  dbを用意
+```
 brew install mysql
 mysql.server start
+```
+
 などで、
+
+```
 ホスト:localhost
 ユーザ名：root
 パスワード：なし
+```
+
 でmysqlにアクセスできる状態を作っておく。
+
 mysqlにログインし、
+
+```
 create database spotto_dev
+```
+
 をし、spotto_dev DBを作成する。
 
 
 ### tableのmigrate
 詳しくはこの辺参照。
-https://qiita.com/shirakiya/items/0114d51e9c189658002e
-poetry run python manage.py db migrate    # spotto_leagus/models 内のファイルの追加や変更を行うたびに叩いて、migration/versions 内のファイルを生成する
-poetry run python manage.py db upgrade    # mysqlへの反映が行われていない時に叩く
-poetry run python manage.py db downgrade  # mysqlの反映を巻き戻す時に叩く
 
+https://qiita.com/shirakiya/items/0114d51e9c189658002e
+
+```
+$poetry run python manage.py db migrate    # spotto_leagus/models 内のファイルの追加や変更を行うたびに叩いて、migration/versions 内のファイルを生成する
+$poetry run python manage.py db upgrade    # mysqlへの反映が行われていない時に叩く
+$poetry run python manage.py db downgrade  # mysqlの反映を巻き戻す時に叩く
+```
+
+### master dataの準備
+
+LeaguePointを準備する。
+```
+$poetry run python -m spotto_league.scripts.add_league_point
+```
+
+### Adminユーザの準備
+
+Adminユーザに昇格する場合は、下記のコマンドを実行する。
+
+ex) onoponをAdminにする場合
+
+```
+$poetry run python -m spotto_league.scripts.add_role --login_name=onopon --role_type=1
+```
 
 ### 開発環境の起こし方
+
 下記で起動
+
+```
 $ export FLASK_APP=application.py
 $ poetry run python -m flask run
+```
 
 Basic認証周りはinstance/config以下に書きます。

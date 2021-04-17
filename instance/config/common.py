@@ -1,2 +1,2 @@
 BASIC_USER = 'spotto'
-BASIC_PASS = 'magu'
+BASIC_PASS = 'magudora'

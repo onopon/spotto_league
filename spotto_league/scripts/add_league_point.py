@@ -8,6 +8,8 @@ class AddLeaguePoint(Base):
     # override
     def execute_task(self) -> None:
         try:
+            if (len(LeaguePoint.all())):
+                raise Exception("既存データが存在するため、実行できません。")
             league_point_list = [[1, 1, 3000],
                                  [1, 2, 2000],
                                  [1, 3, 1500],
