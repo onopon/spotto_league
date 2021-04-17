@@ -35,20 +35,23 @@ login_manager = flask_login.LoginManager()
 
 
 def create_app():
+#    locale.setlocale(locale.LC_TIME, 'Japanese_Japan.UTF-8')
     locale.setlocale(locale.LC_TIME, 'ja_JP.UTF-8')
     app = Flask(__name__, instance_relative_config=True)
     # 標準設定ファイル読み込み
     app.config.from_object("settings")
+    environment = os.environ.get('ENV', app.config["DEFAULT_ENV"])
+    secret_key = os.environ.get('SECRET_KEY', app.config["DEFAULT_SECRET_KEY"]).encode('utf-8')
 
     # 非公開設定ファイル読み込み
     app.config.from_pyfile(os.path.join("config", "common.py"), silent=True)
-    if app.config["ENV"] == "development":
+    if environment == "development":
         app.config.from_pyfile(os.path.join("config", "development.py"), silent=True)
     else:
         app.config.from_pyfile(os.path.join("config", "production.py"), silent=True)
 
     init_db(app)
-    app.secret_key = app.config["SECRET_KEY"]
+    app.secret_key = secret_key
     login_manager.init_app(app)
     login_manager.login_view = 'user_login'
     return app
@@ -57,8 +60,10 @@ app = create_app()
 
 @auth.verify_password
 def verify_password(username, password):
-    if username == app.config["BASIC_USER"] and\
-        check_password_hash(generate_password_hash(app.config["BASIC_PASS"]), password):
+    basic_user = os.environ.get('BASIC_USER', app.config["DEFAULT_BASIC_USER"])
+    basic_pass = os.environ.get('BASIC_PASS', app.config["DEFAULT_SECRET_KEY"])
+    if username == basic_user and\
+        check_password_hash(generate_password_hash(basic_pass), password):
         return username
 
 @app.route("/", methods=("GET", "POST"))
