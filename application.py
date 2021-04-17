@@ -39,8 +39,6 @@ def create_app():
     app = Flask(__name__, instance_relative_config=True)
     # 標準設定ファイル読み込み
     app.config.from_object("settings")
-    for item in os.environ.items():
-        print(item)
     environment = os.environ.get('ENV', app.config["DEFAULT_ENV"])
     secret_key = os.environ.get('SECRET_KEY', app.config["DEFAULT_SECRET_KEY"]).encode('utf-8')
 
