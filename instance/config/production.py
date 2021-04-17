@@ -2,9 +2,9 @@ import os
 
 # flask
 DEBUG = False
-USER = os.environ.get('DB_NAME')
+USER = os.environ.get('DB_USERNAME')
 PASSWORD = os.environ.get('DB_PASSWORD')
-HOST = os.environ.get('DATABASE_URL')
+HOST = os.environ.get('DB_HOSTNAME')
 DB = os.environ.get('DB_NAME')
 
 # SQLAlchemy
