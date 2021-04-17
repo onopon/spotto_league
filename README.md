@@ -4,6 +4,27 @@
 ### Pythonのversion
 4.3.1
 
+```
+$ pyenv install 4.3.1
+```
+
+などによって、4.3.1をインストールする。
+
+もし、これで
+
+```
+Ignoring ensurepip failure: pip 1.5.6 requires SSL/TLS
+```
+
+のようなエラーが出流場合は、
+
+```
+$ sudo apt install libssl1.0-dev
+$ pyenv install 3.4.1
+```
+
+と行う。（mac, linuxでこの辺りのエラーは検出済み）
+
 ###  dbを用意
 ```
 brew install mysql
@@ -28,6 +49,12 @@ create database spotto_dev
 
 をし、spotto_dev DBを作成する。
 
+
+### poetryのinstallを行う
+
+```
+poetry install
+```
 
 ### tableのmigrate
 詳しくはこの辺参照。
@@ -56,6 +83,24 @@ ex) onoponをAdminにする場合
 ```
 $poetry run python -m spotto_league.scripts.add_role --login_name=onopon --role_type=1
 ```
+
+### fmtファイルからファイルを生成
+
+#### settings.py の生成
+
+```
+$ cp settings.py.fmt settings.py
+```
+
+本番環境の場合、 `ENV = "production"` とする。
+
+#### instance/config/production.py の生成（production環境のみ）
+
+```
+$ instance/config/production.py.fmt instance/config/production.py
+```
+
+ROOT, PASSWORD, HOST, DBの値を書き換える。
 
 ### 開発環境の起こし方
 
