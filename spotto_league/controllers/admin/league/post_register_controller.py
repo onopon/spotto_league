@@ -22,7 +22,7 @@ class PostRegisterController(BaseController):
         game_count = request.form.get("game_count")
         join_end_at_str = request.form.get("join_end_at")
         targets = [date_str, start_at_str, end_at_str, name, game_count, join_end_at_str]
-        if any([len(target) == 0 for target in targets]):
+        if any([len(str(target)) == 0 for target in targets]):
             raise Exception("必要なデータが入力されていません。")
 
         place_mode = int(request.form.get("placetab"))
@@ -35,7 +35,7 @@ class PostRegisterController(BaseController):
             place_name = request.form.get("place-name")
             url = request.form.get("url")
             capacity = request.form.get("capacity")
-            if any([len(target) == 0 for target in [place_name, url, capacity]]):
+            if any([len(str(target)) == 0 for target in [place_name, url, capacity]]):
                 raise Exception("会場に関する必要なデータが入力されていません。")
             self._place = Place()
             self._place.name = place_name
