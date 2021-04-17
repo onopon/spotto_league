@@ -191,6 +191,7 @@ class Rank():
             # 直接対決がない or 3つ巴以上が起きている場合
             sort_priorities = ['game_of_difference', 'point_of_difference', 'league_member_id']
             sort_priority = sort_priorities[count]
-            ranks.sort(key=lambda r: getattr(r, sort_priority), reverse=True)
+            is_reverse = True if sort_priority != 'league_member_id' else False
+            ranks.sort(key=lambda r: getattr(r, sort_priority), reverse=is_reverse)
             sorted_rank_list.extend(cls.sort_rank_list(ranks, sort_priority, count+1))
         return sorted_rank_list
