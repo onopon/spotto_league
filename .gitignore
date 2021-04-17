@@ -5,8 +5,6 @@ settings.py
 *.pyc
 __pycache__/
 
-instance/config/production.py
-
 .pytest_cache/
 .coverage
 htmlcov/
