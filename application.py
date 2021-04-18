@@ -29,6 +29,8 @@ from spotto_league.controllers.admin.league.post_register_controller import Post
 from spotto_league.controllers.admin.league.league_controller import LeagueController as AdminLeagueController
 from spotto_league.controllers.admin.league.post_league_controller import PostLeagueController as PostAdminLeagueController
 from spotto_league.controllers.admin.league.post_league_finish_controller import PostLeagueFinishController as PostAdminLeagueFinishController
+from spotto_league.controllers.admin.user.register_point_controller import RegisterPointController as AdminUserRegisterPointController
+from spotto_league.controllers.admin.user.post_register_point_controller import PostRegisterPointController as PostAdminUserRegisterPointController
 from spotto_league.controllers.user.post_league_join_controller import PostLeagueJoinController as PostUserLeagueJoinController
 from spotto_league.controllers.user.post_league_cancel_controller import PostLeagueCancelController as PostUserLeagueCancelController
 from spotto_league.modules.password_util import PasswordUtil
@@ -186,6 +188,14 @@ def admin_league(league_id: int):
 def admin_league_finish(league_id: int):
     if request.method == "POST":
         return PostAdminLeagueFinishController().render(request, league_id=league_id)
+
+@app.route("/admin/user/register/point", methods=("GET", "POST"))
+@auth.login_required
+@flask_login.login_required
+def admin_user_register_point():
+    if request.method == "POST":
+        return PostAdminUserRegisterPointController().render(request)
+    return AdminUserRegisterPointController().render(request)
 
 '''
 for flask-login

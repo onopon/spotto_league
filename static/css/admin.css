@@ -7,10 +7,21 @@
   display: none;
 }
 
-#admin-league-register select.place-select {
+#admin-league-register select {
 	font-size: 100%;
 	line-height: 1.1em;
 	border-radius: 5px;
   padding: 3%;
+  border: 2px solid #91C9F4;
+}
+
+#admin-user-register-point select {
+	font-size: 100%;
+	line-height: 1.1em;
+	border-radius: 5px;
+  padding-top: 1%;
+  padding-bottom: 1%;
+  padding-left: 3%;
+  padding-right: 3%;
   border: 2px solid #91C9F4;
 }

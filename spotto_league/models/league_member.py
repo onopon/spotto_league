@@ -1,7 +1,7 @@
 from typing import List
 from datetime import datetime
 from spotto_league.database import db
-from spotto_league.models.user import User
+from .user import User
 from .base import Base
 
 

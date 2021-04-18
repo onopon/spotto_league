@@ -37,6 +37,11 @@ class UserPoint(db.Model, Base):
         self.reason_class = 'BonusPoint'
         self.reason_id = bonus_point.id
 
+    def set_point(self, point, reason_class, memo: str = '') -> None:
+        self.point = point
+        self.reason_class = reason_class
+        self.memo = memo
+
     @classmethod
     def find_all_in_season(self, year: Optional[int] = None) -> List["UserPoint"]:
         if not year:

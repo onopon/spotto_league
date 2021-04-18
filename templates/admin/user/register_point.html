@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for("static", filename="css/admin.css") }}?{{ timestamp }}">
+{% endblock %}
+
+{% block title %}ポイント付与画面{% endblock %}
+
+{% block content %}
+<div id="admin-user-register-point" class="container">
+  <form class="row g-3" method="post">
+    <input type="hidden" name="is_update_for_admin" value=1>
+    <ul class="list-group list-group-flush mb-3">
+      <li class="list-group-item">
+        <div class="col h3">ポイント付与画面</div>
+      </li>
+      <li class="list-group-item">
+        <div class="row align-items-center">
+          <div class="col-2 pale-gray small">対象ユーザ</div>
+          <div class="col-10">
+            <select name="user-select" class="user-select">
+              {% for user in users %}
+              <option value="{{ user.login_name }}">{{ user.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="row align-items-center">
+          <div class="col-2 pale-gray small">ベースポイント</div>
+          <div class="col-10">
+            <div class="row align-items-center">
+              <div class="col-sm-4"><input class="form-control" type="number" name="base"></div>
+              <div class="col">pt</div>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li class="list-group-item">
+        <div class="row align-items-center">
+          <div class="col-2 pale-gray small">リーグポイント</div>
+          <div class="col-10">
+            <div class="row">
+              {% for i in range(4) %}
+              <div class="col-sm-3"><input class="form-control" type="number" name="league_{{ i }}"></div>
+              {% endfor %}
+            </div>
+            <div class="row mt-2">
+              {% for i in range(4, 8) %}
+              <div class="col-sm-3"><input class="form-control" type="number" name="league_{{ i }}"></div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="list-group-item">
+        <div class="row align-items-center">
+          <div class="col-2 pale-gray small">ボーナスポイント</div>
+          <div class="col-10">
+            {% for bp in bonus_points %}
+            <div class="row align-items-center">
+              <div class="col-3 small">
+                {{ bp.user.name }}さんに勝利した回数
+              </div>
+              <div class="col-2"><input class="form-control" type="number" name="bonus_{{ bp.id }}"></div>
+              <div class="col">回 × {{ bp.point }} pt</div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </li>
+    </ul>
+    <hr></hr>
+    <div class="row justify-content-end mt-4">
+      <div class="offset-3 col-9 offset-md-6 col-md-6 col-xl-4 offset-xl-8 align-items-center">
+        <div class="row align-items-end">
+          <div class="offset-3 col-3">
+            <a class='btn back' href='javascript:history.back()'>戻る</a>
+          </div>
+          <div class="offset-1 col-5">
+            <button class="btn register btn-default align-items-end">登録</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}
