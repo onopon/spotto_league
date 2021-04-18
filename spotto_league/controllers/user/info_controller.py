@@ -23,6 +23,7 @@ class InfoController(BaseController):
     def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
         date = dt.now().date()
         render_hash = {}
+        render_hash['is_update_for_admin'] = int(request.form.get("is_update_for_admin") or 0)
         render_hash['year'] = date.year
         render_hash['user'] = self._user
         point_rank_list = PointRank.make_point_rank_list_in_season(date.year)

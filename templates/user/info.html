@@ -70,6 +70,16 @@
       チーム内成績
     </div>
   </div>
+  {% if is_update_for_admin %}
+  <div class="row">
+    <div class="col-12">
+      <div class="alert alert-success alert-dismissible fade show mt-4" role="alert">
+        更新しました。
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+  {% endif %}
   <ul class="list-group list-group-flush mb-3">
     <li class="list-group-item">
       <div class="row">
