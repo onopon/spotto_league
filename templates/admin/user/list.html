@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for("static", filename="css/admin.css") }}?{{ timestamp }}">
+{% endblock %}
+
+{% block title %}ユーザ一覧{% endblock %}
+
+{% block content %}
+<div id="admin-user-register-point" class="container">
+  <div class="row mt-3">
+    <div class="col h3">ユーザ一覧</div>
+  </div>
+  {% if error_message %}
+  <div class="row">
+    <div class="col-12">
+      <div class="alert alert-warning alert-dismissible fade show mt-4" role="alert">
+        {{ error_message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  {% if is_success %}
+  <div class="row">
+    <div class="col-12">
+      <div class="alert alert-success alert-dismissible fade show mt-4" role="alert">
+        更新しました。
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  <div class="row">
+    <div class="col orange small">※ 苗字と名前が設定されているユーザのみ役柄を設定できます。</div>
+  </div>
+  <form class="row g-3" method="post">
+    <ul class="list-group list-group-flush mb-3">
+      <li class="list-group-item">
+        <div class="row align-items-center pale-gray small">
+          <div class="col-2 pale-gray small">login_name</div>
+          <div class="col-2 pale-gray small">ニックネーム</div>
+          <div class="col-1 pale-gray small">苗字</div>
+          <div class="col-1 pale-gray small">名前</div>
+          <div class="col-1 pale-gray small">性別</div>
+          <div class="col-2 pale-gray small">誕生日</div>
+          <div class="col-1 pale-gray small">現在の年齢</div>
+          <div class="col-2 pale-gray small">役柄</div>
+        </div>
+      </li>
+      {% for user in users %}
+      <li class="list-group-item">
+        <div class="row align-items-center">
+          <div class="col-2">{{ user.login_name }}</div>
+          <div class="col-2">{{ user.name }}</div>
+          <div class="col-1">{{ user.last_name or '' }}</div>
+          <div class="col-1">{{ user.first_name or '' }}</div>
+          <div class="col-1">{{ user.gender_for_display }}</div>
+          <div class="col-2">{{ user.birthday }}</div>
+          <div class="col-1">{{ user.age }}</div>
+          <div class="col-2">
+            {% set user_role_id = user.role.role_type or -1  %}
+            {% for role_type_hash in role_type_hash_list %}
+            {% set role_id = "radio_{}_{}".format(user.login_name, role_type_hash['id']) %}
+            <div class="form-check">
+              <input class="form-check-input"
+                     type="radio"
+                     name="radio_{{ user.login_name }}"
+                     id="{{ role_id }}"
+                     value="{{ role_type_hash['id'] }}"
+                     {% if (not user.first_name) or (not user.last_name) %} disabled {% endif %}
+                     {% if user_role_id == role_type_hash['id'] %} checked {% endif %}
+              >
+              <label class="form-check-label" for="{{ role_id }}">{{ role_type_hash['name'] }}</label>
+            </div>
+            {% endfor %}
+            {% set role_id = "radio_{}_guest".format(user.login_name) %}
+            <div class="form-check">
+              <input class="form-check-input"
+                     type="radio"
+                     name="radio_{{ user.login_name }}"
+                     id="{{ role_id }}"
+                     value="-1"
+                     {% if user_role_id == -1 %}checked{% endif %}
+              >
+              <label class="form-check-label" for="{{ role_id }}">ゲスト</label>
+            </div>
+          </div>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    <hr></hr>
+    <div class="row justify-content-end mt-4">
+      <div class="offset-3 col-9 offset-md-6 col-md-6 col-xl-4 offset-xl-8 align-items-center">
+        <div class="row align-items-end">
+          <div class="offset-3 col-3">
+            <a class='btn back' href='javascript:history.back()'>戻る</a>
+          </div>
+          <div class="offset-1 col-5">
+            <button class="btn register btn-default align-items-end">更新</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}
