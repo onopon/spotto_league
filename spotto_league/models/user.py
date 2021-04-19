@@ -6,7 +6,7 @@ import flask_login
 from typing import Dict, Any, List
 from spotto_league.database import db
 from .base import Base
-from .role import Role
+from .role import Role, RoleType
 import datetime
 from enum import Enum
 
@@ -58,7 +58,15 @@ class User(flask_login.UserMixin, db.Model, Base):
 
     @property
     def birthday_for_display(self) -> str:
-        return self.birthday.strftime('%Y年%m月%d日')
+        return self.birthday.strftime('%m月%d日')
+
+    @property
+    def age(self) -> str:
+        today = dt.now()
+        age = today.year - self.birthday.year
+        if (today.month, today.day) < (self.birthday.month, self.birthday.day):
+            age -= 1
+        return age
 
     @property
     def gender_for_display(self) -> str:

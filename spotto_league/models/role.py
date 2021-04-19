@@ -12,7 +12,11 @@ from enum import Enum
 class RoleType(Enum):
     ADMIN = 1
     MEMBER = 2
-    PENDING_MEMBER_APPROVAL = 3
+
+    @classmethod
+    def all(cls):
+        return [{'id': RoleType.ADMIN.value, 'name': '管理者'},
+                {'id': RoleType.MEMBER.value, 'name': 'メンバー'}]
 
 class Role(db.Model, Base):
 
