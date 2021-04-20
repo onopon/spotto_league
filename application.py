@@ -244,14 +244,14 @@ def request_loader(request):
 for SqlAlchemy on production
 https://qiita.com/yukiB/items/67336716b242df3be350
 '''
-@app.teardown_appcontext
-def session_clear(exception):
-    session = db.session
-    if exception and session.is_active:
-        session.rollback()
-    else:
-        session.commit()
-    session.close()
+# @app.teardown_appcontext
+# def session_clear(exception):
+#     session = db.session
+#     if exception and session.is_active:
+#         session.rollback()
+#     else:
+#         session.commit()
+#     session.close()
 
 @event.listens_for(Pool, "checkout")
 def ping_connection(dbapi_connection, connection_record, connection_proxy):
