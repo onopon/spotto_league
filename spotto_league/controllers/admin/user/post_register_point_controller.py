@@ -37,7 +37,7 @@ class PostRegisterPointController(BaseController):
             count = int(request.form.get("bonus_{}".format(bp.id)) or 0)
             if count < 0:
                 raise exception
-            if bp.user_id == user.id:
+            if bp.user_id == user.id and count > 0:
                 raise Exception("ボーナスポイントは自分自身に付与できません。")
 
     # override
