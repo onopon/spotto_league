@@ -25,7 +25,7 @@ class PostListController(BaseController):
         self._users = User.all()
         for user in self._users:
             role_type_key = "radio_{}".format(user.login_name)
-            role_type_value = int(request.form.get(role_type_key))
+            role_type_value = int(request.form.get(role_type_key, -1))
             if (self.login_user.id == user.id and role_type_value != RoleType.ADMIN.value):
                 raise Exception("自分自身を管理者以外に設定することはできません。")
             if ((not user.first_name or not user.last_name) and role_type_value > 0):
