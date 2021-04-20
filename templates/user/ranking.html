@@ -39,6 +39,14 @@
             <div class='user_id' hidden>{{ point_rank.user.id }}</div>
             {{ point_rank.current_point }} <i class="light-blue bi bi-info-circle-fill"></i>
           </div>
+          <div class="col-1 text-end">
+            {% if point_rank.user.is_admin() %}
+            <i class="bi bi-person-check-fill h4 orange"></i>
+            {% elif point_rank.user.is_member() %}
+            <i class="bi bi-person-check-fill h4 deep-blue"></i>
+            {% else %}
+            {% endif %}
+          </div>
           <div class="col-4">
             {% if login_user.id == point_rank.user.id %}
             <b><a class="deep-blue" href='/user/info/{{ point_rank.user.login_name }}/'>{{ point_rank.user.name }}</a></b>

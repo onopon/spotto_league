@@ -9,6 +9,11 @@
       <img class='logo' src='/static/images/logo.png' />
     </div>
     <div class='col-9 col-md-10 h1'>
+      {% if user.is_admin() %}
+      <i class="bi bi-person-check-fill orange"></i>
+      {% elif user.is_member() %}
+      <i class="bi bi-person-check-fill deep-blue"></i>
+      {% endif %}
       {{ user.name }} / {{ user.login_name }}
     </div>
   </div>

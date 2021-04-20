@@ -12,7 +12,13 @@ class PostModifyController(BaseController):
     # override
     @asyncio.coroutine
     def validate(self, request: BaseRequest, **kwargs) -> None:
-        pass
+        if self.login_user.role and not request.form.get("first-name"):
+            raise Exception("管理者、チームメンバーのユーザは本名の設定は必須です。")
+
+    @asyncio.coroutine
+    def get_layout_as_exception(self, request: BaseRequest, error: Exception, **kwargs) -> None:
+        return self.render_template("user/modify.html",
+                                    error_message=str(error))
 
     # override
     @asyncio.coroutine

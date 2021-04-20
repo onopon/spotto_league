@@ -40,3 +40,6 @@ class Role(db.Model, Base):
 
     def is_admin(self) -> bool:
         return RoleType(self.role_type) == RoleType.ADMIN
+
+    def is_member(self) -> bool:
+        return RoleType(self.role_type) == RoleType.MEMBER

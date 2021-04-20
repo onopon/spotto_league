@@ -56,6 +56,12 @@ class User(flask_login.UserMixin, db.Model, Base):
             return False
         return role.is_admin()
 
+    def is_member(self) -> bool:
+        role = self.role
+        if not role:
+            return False
+        return role.is_member()
+
     @property
     def birthday_for_display(self) -> str:
         return self.birthday.strftime('%m月%d日')
