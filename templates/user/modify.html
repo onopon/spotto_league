@@ -12,6 +12,16 @@
       <span class="h4">ユーザ情報の修正</span>
     </div>
   </div>
+  {% if error_message %}
+  <div class="row">
+    <div class="col-12">
+      <div class="alert alert-warning alert-dismissible fade show mt-4" role="alert">
+        {{ error_message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+  {% endif %}
 
   <div class='row caption'>
     <span class="h6">ログイン情報</span>
