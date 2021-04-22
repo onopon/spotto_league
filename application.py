@@ -25,6 +25,7 @@ from spotto_league.controllers.user.post_modify_password_controller import PostM
 from spotto_league.controllers.user.ranking_controller import RankingController as UserRankingController
 from spotto_league.controllers.post_league_log_controller import PostLeagueLogController as PostLeagueLogController
 from spotto_league.controllers.admin.league.register_controller import RegisterController as AdminLeagueRegisterController
+from spotto_league.controllers.admin.league.modify_controller import ModifyController as AdminLeagueModifyController
 from spotto_league.controllers.admin.league.post_register_controller import PostRegisterController as PostAdminLeagueRegisterController
 from spotto_league.controllers.admin.league.league_controller import LeagueController as AdminLeagueController
 from spotto_league.controllers.admin.league.post_league_controller import PostLeagueController as PostAdminLeagueController
@@ -175,6 +176,14 @@ def admin_league_register():
     if request.method == "POST":
         return PostAdminLeagueRegisterController().render(request)
     return AdminLeagueRegisterController().render(request)
+
+@app.route("/admin/league/modify/", methods=("GET", "POST"))
+@auth.login_required
+@flask_login.login_required
+def admin_league_modify():
+    if request.method == "POST":
+        return PostAdminLeagueRegisterController().render(request)
+    return AdminLeagueModifyController().render(request)
 
 @app.route("/admin/league/<int:league_id>/", methods=("GET", "POST"))
 @auth.login_required

@@ -47,6 +47,7 @@ class PostRegisterController(BaseController):
     # override
     @asyncio.coroutine
     def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
+        league_id = request.form.get("league_id")
         date_str = request.form.get("date")
         start_at = request.form.get("start_at")
         end_at = request.form.get("end_at")
@@ -54,7 +55,7 @@ class PostRegisterController(BaseController):
         game_count = request.form.get("game_count")
         join_end_at = request.form.get("join_end_at")
 
-        league = League()
+        league = League.find_by_id(league_id) or League()
         league.date = date_str
         league.start_at = start_at
         league.end_at = end_at
@@ -65,4 +66,4 @@ class PostRegisterController(BaseController):
         self._place.save()
         league.place_id = self._place.id
         league.save()
-        return redirect(url_for('league_list'))
+        return redirect(url_for('user_info', login_name = self.login_user.login_name))
