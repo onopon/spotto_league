@@ -12,7 +12,12 @@
     <input id="place-tab-value" type="hidden" name="placetab" value="0">
     <ul class="list-group list-group-flush mb-3">
       <li class="list-group-item">
+        {% if league %}
+        <div class="col h3">リーグ戦情報編集画面</div>
+        <input type="hidden" name="league_id" value="{{ league.id }}">
+        {% else %}
         <div class="col h3">リーグ戦情報登録画面</div>
+        {% endif %}
       </li>
       <li class="list-group-item">
         <div class="row align-items-center">
@@ -21,13 +26,13 @@
             <label class="invalid"></label>
             <div class="row">
               <div class="col-12 col-md-6">
-                <input class="form-control" type="date" name="date">
+                <input class="form-control" type="date" name="date" value="{{ league.date if league}}">
               </div>
               <div class="col-12 offset-md-0 col-md-6 mt-2 mt-md-0">
                 <div class="row align-items-center">
-                  <div class="col-5"><input class="form-control" type="time" name="start_at"></div>
+                  <div class="col-5"><input class="form-control" type="time" name="start_at" value="{{ league.start_at if league }}"></div>
                   <div class="col-2 text-center">〜</div>
-                  <div class="col-5"><input class="form-control" type="time" name="end_at"></div>
+                  <div class="col-5"><input class="form-control" type="time" name="end_at" value="{{ league.end_at  if league }}"></div>
                 </div>
               </div>
             </div>
@@ -39,7 +44,7 @@
           <div class="col-2 pale-gray small">リーグ戦名<i class="bi bi-check2-circle float-end is-valid"></i></div>
           <div class="col-10">
             <label class="invalid"></label>
-            <input class="form-control" type="text" name="name">
+            <input class="form-control" type="text" name="name" value="{{ league.name if league }}">
           </div>
         </div>
       </li>
@@ -49,7 +54,7 @@
           <div class="col-10">
             <div class="row align-items-center">
               <label class="invalid"></label>
-              <div class="col-2 col-lg-1"><input class="form-control" type="number" name="game_count"></div>
+              <div class="col-2 col-lg-1"><input class="form-control" type="number" name="game_count" value="{{ league.game_count if league }}"></div>
               <div class="col-10 col-lg-11">セットマッチ</div>
             </div>
           </div>
@@ -60,7 +65,8 @@
           <div class="col-2 pale-gray small">募集締切日<i class="bi bi-check2-circle float-end is-valid"></i></div>
           <div class="col-10">
             <label class="invalid"></label>
-            <input class="form-control" type="datetime-local" name="join_end_at">
+            {% set join_end_at = league.join_end_at.strftime('%Y-%m-%dT%H:%M:%S') if league %}
+            <input class="form-control" type="datetime-local" name="join_end_at" value="{{ join_end_at }}">
           </div>
         </div>
       </li>
@@ -84,7 +90,9 @@
                 <div class="col-4">
                   <select name="place-select" class="place-select">
                     {% for place in places %}
-                    <option value="{{ place.id }}">{{ place.name }}(収容人数： {{ place.capacity }})</option>
+                    <option value="{{ place.id }}" {% if league and league.place_id == place.id %}selected{% endif %}>
+                    {{ place.name }}(収容人数： {{ place.capacity }})
+                    </option>
                     {% endfor %}
                   </select>
                 </div>
@@ -133,7 +141,7 @@
             <a class='btn back' href='javascript:history.back()'>戻る</a>
           </div>
           <div class="offset-1 col-5">
-            <button class="btn register btn-default align-items-end">登録</button>
+            <button class="btn register btn-default align-items-end">{% if league %}更新{% else %}登録{% endif %}</button>
           </div>
         </div>
       </div>

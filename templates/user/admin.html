@@ -21,6 +21,7 @@
     </li>
   </ul>
   <ul class="list-group list-group-flush">
+  {% if (yet_finished_league_list | count) > 0 %}
     <li class="list-group-item pale-gray small">
       <div class="row">
         <div class="col-4">
@@ -33,6 +34,13 @@
         </div>
       </div>
     </li>
+    {% else %}
+    <div class="row mt-3">
+      <div class="col-12 small pale-gray">
+        現在募集中のイベントはありません。
+      </div>
+    </div>
+    {% endif %}
     {% for league in yet_recruiting_league_list %}
     <li class="list-group-item">
       <div class="row align-items-center">
@@ -56,6 +64,44 @@
           </div>
           {% endif %}
           {{ league.join_end_at_for_display }}
+        </div>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+
+  <ul class="nav nav-tabs mt-4">
+    <li class="nav-item">
+      <a class="nav-link active">近々開催予定のリーグ戦</a>
+    </li>
+  </ul>
+  <ul class="list-group list-group-flush">
+    {% if (ready_league_list | count) > 0 %}
+    <li class="list-group-item pale-gray small">
+      <div class="row">
+        <div class="col-12">
+        </div>
+      </div>
+    </li>
+    {% else %}
+    <div class="row mt-3">
+      <div class="col-12 small pale-gray">
+        近々開催されるイベントはありません。
+      </div>
+    </div>
+    {% endif %}
+    {% for league in ready_league_list %}
+    <li class="list-group-item">
+      <div class="row align-items-center">
+        <div class="col-12">
+          <div class="row small gray">
+            <div class="col">{{ league.date_for_display }}</div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <a href='/admin/league/{{ league.id }}/'>{{ league.name }}</a>
+            </div>
+          </div>
         </div>
       </div>
     </li>

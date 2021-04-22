@@ -31,6 +31,15 @@ class InfoController(BaseController):
         if self._user.id == self.login_user.id:
             if self.login_user.is_admin():
                 leagues = League.all()
-                render_hash['yet_recruiting_league_list'] = [l for l in leagues if l.is_status_recruiting()]
-                render_hash['yet_finished_league_list'] = [l for l in leagues if l.is_status_ready() and l.date <= date]
+                render_hash['yet_recruiting_league_list'] = []
+                render_hash['ready_league_list'] = []
+                render_hash['yet_finished_league_list'] = []
+                for league in leagues:
+                    if league.is_status_recruiting():
+                        render_hash['yet_recruiting_league_list'].append(league)
+                    elif league.is_status_ready():
+                        if league.date <= date:
+                            render_hash['yet_finished_league_list'].append(league)
+                        else:
+                            render_hash['ready_league_list'].append(league)
         return self.render_template("user/info.html", **render_hash)
