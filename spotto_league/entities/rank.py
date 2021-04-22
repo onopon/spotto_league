@@ -155,8 +155,8 @@ class Rank():
                         settlement['logs'],
                         settlement['details'])
             rank_list.append(rank)
-        rank_list.sort(key=lambda r: r.win_point, reverse=True)
-        sorted_rank_list = cls.sort_rank_list(rank_list, 'win_point')
+        rank_list.sort(key=lambda r: r.win, reverse=True)
+        sorted_rank_list = cls.sort_rank_list(rank_list, 'win')
         for i, rank in enumerate(sorted_rank_list):
             rank.set_rank(i+1)
         return sorted_rank_list
