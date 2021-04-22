@@ -2,7 +2,7 @@ import os
 import locale
 import flask_login
 from flask import Flask, request, render_template, redirect, url_for
-from flask_httpauth import HTTPBasicAuth
+from flask_httpauth import HTTPDigestAuth
 from sqlalchemy import exc
 from sqlalchemy import event
 from sqlalchemy.pool import Pool
@@ -39,7 +39,7 @@ from spotto_league.controllers.user.post_league_cancel_controller import PostLea
 from spotto_league.modules.password_util import PasswordUtil
 from spotto_league.models.user import User
 
-auth = HTTPBasicAuth()
+auth = HTTPDigestAuth()
 login_manager = flask_login.LoginManager()
 
 
@@ -66,13 +66,12 @@ def create_app():
 
 app = create_app()
 
-@auth.verify_password
-def verify_password(username, password):
+@auth.get_password
+def get_password(login_name):
     basic_user = os.environ.get('BASIC_USER', app.config["DEFAULT_BASIC_USER"])
     basic_pass = os.environ.get('BASIC_PASS', app.config["DEFAULT_BASIC_PASS"])
-    if username == basic_user and\
-        check_password_hash(generate_password_hash(basic_pass), password):
-        return username
+    if login_name == basic_user:
+        return basic_pass
 
 @app.route("/", methods=("GET", "POST"))
 @auth.login_required
