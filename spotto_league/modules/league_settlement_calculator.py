@@ -13,8 +13,8 @@ class LeagueSettlementCalculator():
         # ここで選手ごとにlogを分ける
         for member in members:
             member_logs = [l for l in logs if l.is_in_user_id(member.user_id)]
-            if count_of_games > len(member_logs):
-                count_of_games = len(member_logs)
+#            if count_of_games > len(member_logs):
+#                count_of_games = len(member_logs)
             settlement_hash[member.user_id]['logs'] = member_logs
 
         for member in members:
