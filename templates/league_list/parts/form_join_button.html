@@ -6,7 +6,7 @@
   <input type="hidden" name="join_end_at" value="{{ league.join_end_at }}">
   {% if league.id in user_join_league_ids %}
   <button class="btn btn-default join collapse {{ btn_disabled }}"><i class="bi bi-check-square"></i></button>
-  <button class="btn btn-default cancel {{ btn_disabled }}"><i class="bi bi-check-square-fill"></i></button>
+  <button class="btn btn-default cancel"><i class="bi bi-check-square-fill"></i></button>
   {% else %}
   <button class="btn btn-default join {{ btn_disabled }}"><i class="bi bi-check-square"></i></button>
   <button class="btn btn-default cancel collapse {{ btn_disabled }}"><i class="bi bi-check-square-fill"></i></button>
