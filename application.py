@@ -84,6 +84,11 @@ def league_list():
 @auth.login_required
 @flask_login.login_required
 def league(league_id: int):
+    if request.method == "POST":
+        if int(request.form.get("status_join", 0)):
+            PostUserLeagueJoinController().render(request)
+        else:
+            PostUserLeagueCancelController().render(request)
     return LeagueController().render(request, league_id=league_id)
 
 @app.route("/league/<int:league_id>/json", methods=("GET", "POST"))

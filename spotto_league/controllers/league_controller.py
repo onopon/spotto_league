@@ -19,8 +19,8 @@ class LeagueController(BaseController):
     # override
     @asyncio.coroutine
     def validate(self, request: BaseRequest, **kwargs) -> None:
-        # あとでleague_id がNotFoundだった時のエラーを書く
-        pass
+        if not League.find_by_id(kwargs["league_id"]):
+            raise Exception("league_id: {} のリーグ戦情報は存在しません。".format(kwargs["league_id"]))
 
     # override
     @asyncio.coroutine

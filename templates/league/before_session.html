@@ -28,6 +28,7 @@
       </div>
       <div class="col-5">
       {% if login_user.name == member.user.name %}
+        {% set is_wanted_join = 1 %}
         <b><a class="deep-blue" href='/user/info/{{ member.user.login_name }}/'>{{ member.user.name }}</a></b>
       {% else %}
         <a href='/user/info/{{ member.user.login_name }}/'>{{ member.user.name }}</a>
@@ -38,11 +39,36 @@
       </div>
     </div>
   </li>
+  <div class="row align-items-center mt-4">
+    <div class="offset-4 col-4 offset-lg-5 col-lg-2">
+      <form method="post">
+        <input type="hidden" name="league_id" value="{{ league.id }}">
+        {% if is_wanted_join %}
+        <input type="hidden" name="status_join" value=0>
+        <button class="btn cancel">キャンセルする</button>
+        {% else %}
+        <input type="hidden" name="status_join" value=1>
+        <button class="btn join">参加表明する</button>
+        {% endif %}
+      </form>
+    </div>
+  </div>
   {% endfor %}
   {% else %}
   <li class="list-group-item">
     <div class="row">
       <div class="col-12 small pale-gray">参加希望者はまだいません。</div>
+    </div>
+  </li>
+  <li class="list-group-item">
+    <div class="row align-items-center mt-4">
+      <div class="offset-4 col-4 offset-lg-5 col-lg-2">
+        <form method="post">
+          <input type="hidden" name="league_id" value="{{ league.id }}">
+          <input type="hidden" name="status_join" value=1>
+          <button class="btn join">参加表明する</button>
+        </form>
+      </div>
     </div>
   </li>
   {% endif %}

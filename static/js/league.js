@@ -154,4 +154,8 @@ $(function() {
     $('#pointDetailModal .bonus-point').text(`${bonusPoint}`);
     $('#pointDetailModal').modal('show'); 
   });
+
+  $('#league button.cancel').click(function() {
+    return confirm('募集締切日をすぎている場合、再度参加希望を出すことはできません。キャンセルしてもよろしいですか？');
+  });
 });
