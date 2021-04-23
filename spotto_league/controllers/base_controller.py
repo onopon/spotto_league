@@ -5,7 +5,7 @@ from werkzeug.wrappers import BaseRequest, BaseResponse
 from flask.wrappers import Request as FlaskRequest
 from typing import Dict, Any
 import time
-from flask import render_template
+from flask import render_template, redirect, url_for
 from flask_login import current_user
 from spotto_league.models.user import User
 
@@ -16,6 +16,10 @@ class BaseController(metaclass=ABCMeta):
     def __init__(self):
         if current_user.is_authenticated:
             self.login_user = User.find_by_login_name(current_user.login_name)
+
+    # アクセスする際、ユーザログインを保っているべきであるかどうか
+    def should_login(self) -> bool:
+        return True
 
     @abstractmethod
     @asyncio.coroutine
@@ -55,4 +59,8 @@ class BaseController(metaclass=ABCMeta):
         context['timestamp'] = time.time()
         if current_user.is_authenticated:
             context['login_user'] = self.login_user
+        else:
+            if self.should_login():
+                return redirect(url_for('user_login'))
+                
         return render_template(template_name_or_list, **context)

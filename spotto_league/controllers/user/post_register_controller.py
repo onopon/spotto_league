@@ -9,6 +9,10 @@ import flask_login
 
 class PostRegisterController(BaseController):
     # override
+    def should_login(self) -> bool:
+        return False
+
+    # override
     @asyncio.coroutine
     def validate(self, request: BaseRequest, **kwargs) -> None:
         login_name = request.form.get("login_name")
