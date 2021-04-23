@@ -10,6 +10,10 @@ $(function() {
   });
 
   $('.recruiting button.cancel').click(function() {
+    $conf = confirm('募集締切日をすぎている場合、再度参加希望を出すことはできません。キャンセルしてもよろしいですか？');
+    if (!$conf) {
+      return false;
+    }
     let btn = $(this);
     let recruitingForm = btn.closest('.recruiting');
     let league_id = recruitingForm.find('input[name=league_id]').val().trim();
