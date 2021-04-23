@@ -10,6 +10,10 @@ from datetime import datetime as dt
 
 class ExistsController(BaseController):
     # override
+    def should_login(self) -> bool:
+        return False
+
+    # override
     @asyncio.coroutine
     def validate(self, request: BaseRequest, **kwargs) -> None:
         if not kwargs["login_name"]:

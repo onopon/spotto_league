@@ -8,6 +8,10 @@ from spotto_league.models.user import User
 
 class RegisterController(BaseController):
     # override
+    def should_login(self) -> bool:
+        return False
+
+    # override
     @asyncio.coroutine
     def validate(self, request: BaseRequest, **kwargs) -> None:
         pass
