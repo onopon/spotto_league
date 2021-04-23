@@ -351,6 +351,26 @@ label.invalid {
   background: transparent;
 }
 
+#league .cancel.btn,
+#league .cancel.btn:hover,
+#league .cancel.btn:active,
+#league .cancel.btn:focus {
+  border: 1px solid #D7D7D7;
+  background-color: #D7D7D7;
+  border-radius: 40px;
+  width: 100%;
+}
+
+#league .join.btn,
+#league .join.btn:hover,
+#league .join.btn:active,
+#league .join.btn:focus {
+  border: 1px solid #648DF8;
+  background-color: #648DF8;
+  border-radius: 40px;
+  width: 100%;
+}
+
 .btn.back {
   width: 100%;
 }
