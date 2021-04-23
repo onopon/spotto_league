@@ -35,7 +35,7 @@
       </div>
     </li>
   </ul>
-  {% if not league.is_status_finished() %}
+  {% if league.is_before_session() %}
   <div class="row mt-4 mb-5">
     <div class="col-3">
       <a class='btn' href='/admin/league/modify?id={{ league.id }}'>修正する</a>
