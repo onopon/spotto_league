@@ -28,7 +28,6 @@
       </div>
       <div class="col-5">
       {% if login_user.name == member.user.name %}
-        {% set is_wanted_join = 1 %}
         <b><a class="deep-blue" href='/user/info/{{ member.user.login_name }}/'>{{ member.user.name }}</a></b>
       {% else %}
         <a href='/user/info/{{ member.user.login_name }}/'>{{ member.user.name }}</a>

@@ -34,7 +34,8 @@ class LeagueController(BaseController):
 
         params = {}
         params['league'] = league
-        params['is_join'] = current_user.login_name in [u.login_name for u in user_hash.values()]
+        params['is_join'] = self.login_user.login_name in [u.login_name for u in user_hash.values()]
+        params['is_wanted_join'] = self.login_user.id in [lm.user_id for lm in league.members]
         params['users'] = list(user_hash.values())
         params['league_log_hash'] = league_log_hash
         params['rank_user_ids'] = rank_user_ids
