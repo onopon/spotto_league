@@ -39,7 +39,6 @@ from spotto_league.controllers.user.post_league_cancel_controller import PostLea
 from spotto_league.modules.password_util import PasswordUtil
 from spotto_league.models.user import User
 
-auth = HTTPBasicAuth()
 login_manager = flask_login.LoginManager()
 
 
@@ -66,22 +65,12 @@ def create_app():
 
 app = create_app()
 
-@auth.verify_password
-def verify_password(username, password):
-    basic_user = os.environ.get('BASIC_USER', app.config["DEFAULT_BASIC_USER"])
-    basic_pass = os.environ.get('BASIC_PASS', app.config["DEFAULT_BASIC_PASS"])
-    if username == basic_user and\
-        check_password_hash(generate_password_hash(basic_pass), password):
-        return username
-
 @app.route("/", methods=("GET", "POST"))
-@auth.login_required
 @flask_login.login_required
 def league_list():
     return LeagueListController().render(request)
 
 @app.route("/league/<int:league_id>/", methods=("GET", "POST"))
-@auth.login_required
 @flask_login.login_required
 def league(league_id: int):
     if request.method == "POST":
@@ -92,32 +81,27 @@ def league(league_id: int):
     return LeagueController().render(request, league_id=league_id)
 
 @app.route("/league/<int:league_id>/json", methods=("GET", "POST"))
-@auth.login_required
 @flask_login.login_required
 def league_json_data(league_id: int):
     return LeagueController().render_as_json(request, league_id=league_id)
 
 @app.route("/league/log", methods=("GET", "POST"))
-@auth.login_required
 @flask_login.login_required
 def league_log():
     if request.method == "POST":
         return PostLeagueLogController().render(request)
 
 @app.route("/user/register", methods=("GET", "POST"))
-@auth.login_required
 def user_register():
     if request.method == "POST":
         return PostUserRegisterController().render(request)
     return UserRegisterController().render(request)
 
 @app.route("/user/<string:login_name>/exists", methods=("GET", "POST"))
-@auth.login_required
 def user_exists(login_name: str):
     return UserExistsController().render(request, login_name=login_name)
 
 @app.route("/user/login", methods=("GET", "POST"))
-@auth.login_required
 @login_manager.unauthorized_handler
 def user_login():
     if request.method == "POST":
@@ -125,20 +109,17 @@ def user_login():
     return UserLoginController().render(request)
 
 @app.route("/user/logout", methods=("GET", "POST"))
-@auth.login_required
 @login_manager.unauthorized_handler
 def user_logout():
     flask_login.logout_user()
     return redirect(url_for('user_login'))
 
 @app.route("/user/info/<string:login_name>/", methods=("GET", "POST"))
-@auth.login_required
 @flask_login.login_required
 def user_info(login_name: str):
     return UserInfoController().render(request, login_name=login_name)
 
 @app.route("/user/modify/", methods=("GET", "POST"))
-@auth.login_required
 @flask_login.login_required
 def user_modify():
     if request.method == "POST":
@@ -146,7 +127,6 @@ def user_modify():
     return UserModifyController().render(request)
 
 @app.route("/user/modify/password/", methods=("GET", "POST"))
-@auth.login_required
 @flask_login.login_required
 def user_modify_password():
     if request.method == "POST":
@@ -164,18 +144,15 @@ def user_league_cancel():
         return PostUserLeagueCancelController().render(request)
 
 @app.route("/user/ranking/<int:year>/", methods=("GET", "POST"))
-@auth.login_required
 def user_ranking(year: int):
     return UserRankingController().render(request, year=year)
 
 @app.route("/user/ranking/<int:year>/json", methods=("GET", "POST"))
-@auth.login_required
 @flask_login.login_required
 def user_ranking_json_data(year: int):
     return UserRankingController().render_as_json(request, year=year)
 
 @app.route("/admin/league/register/", methods=("GET", "POST"))
-@auth.login_required
 @flask_login.login_required
 def admin_league_register():
     if request.method == "POST":
@@ -183,7 +160,6 @@ def admin_league_register():
     return AdminLeagueRegisterController().render(request)
 
 @app.route("/admin/league/modify/", methods=("GET", "POST"))
-@auth.login_required
 @flask_login.login_required
 def admin_league_modify():
     if request.method == "POST":
@@ -191,7 +167,6 @@ def admin_league_modify():
     return AdminLeagueModifyController().render(request)
 
 @app.route("/admin/league/<int:league_id>/", methods=("GET", "POST"))
-@auth.login_required
 @flask_login.login_required
 def admin_league(league_id: int):
     if request.method == "POST":
@@ -199,14 +174,12 @@ def admin_league(league_id: int):
     return AdminLeagueController().render(request, league_id=league_id)
 
 @app.route("/admin/league/<int:league_id>/finish", methods=("GET", "POST"))
-@auth.login_required
 @flask_login.login_required
 def admin_league_finish(league_id: int):
     if request.method == "POST":
         return PostAdminLeagueFinishController().render(request, league_id=league_id)
 
 @app.route("/admin/user/register/point", methods=("GET", "POST"))
-@auth.login_required
 @flask_login.login_required
 def admin_user_register_point():
     if request.method == "POST":
@@ -214,7 +187,6 @@ def admin_user_register_point():
     return AdminUserRegisterPointController().render(request)
 
 @app.route("/admin/user/list", methods=("GET", "POST"))
-@auth.login_required
 @flask_login.login_required
 def admin_user_list():
     if request.method == "POST":
