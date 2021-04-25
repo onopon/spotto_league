@@ -1,2 +1,7 @@
 ENV = "development"
-SECRET_KEY = b"569c38bf0246fdeb7bac07ac326e041d27bargj12hefgrbc225f5cbad88d1ed2"
+SECRET_KEY = ""
+DB_DEBUG = True
+DB_USER = 'root'
+DB_PASSWORD = ''
+DB_HOST = 'localhost'
+DB_NAME = 'spotto_dev'
