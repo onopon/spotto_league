@@ -4,6 +4,7 @@ from werkzeug.wrappers import BaseRequest, BaseResponse
 from flask import Flask, request, render_template, redirect, url_for
 from spotto_league.models.user import User
 from datetime import date
+from spotto_league.modules.password_util import PasswordUtil
 import flask_login
 
 
@@ -15,6 +16,10 @@ class PostRegisterController(BaseController):
     # override
     @asyncio.coroutine
     def validate(self, request: BaseRequest, **kwargs) -> None:
+        common_password = request.form.get("common_password")
+        if not PasswordUtil.is_correct_common_password(common_password):
+            raise Exception("秘密の合言葉が違います。")
+
         login_name = request.form.get("login_name")
         name = request.form.get("name")
         gender = int(request.form.get("gender"))
