@@ -164,6 +164,16 @@ $(function() {
     }
   });
 
+  $("#common-password").blur(function() {
+    var commonPassword = $(this);
+    try {
+      checkLength(commonPassword.val(), 1);
+      valid(commonPassword);
+    } catch (e) {
+      invalid(commonPassword, e.message);
+    }
+  });
+
   $("#name").blur(function() {
     var name = $(this);
     try {
@@ -261,7 +271,7 @@ $(function() {
   }
 
   function tryEnableUpdateButton() {
-    if ($('#register .is-valid').length == 6) {
+    if ($('#register .is-valid').length == 7) {
       $(".register button").removeClass('disabled');
     }
     if ($('#user-modify-password .is-valid').length == 2) {

@@ -1,4 +1,6 @@
 import hashlib
+from settings import COMMON_PASSWORD
+
 
 class PasswordUtil():
     @classmethod
@@ -8,4 +10,8 @@ class PasswordUtil():
 
     @classmethod
     def is_same(cls, password, password_hex) -> bool:
-        return cls.make_hex(password) == password_hex 
+        return cls.make_hex(password) == password_hex
+
+    @classmethod
+    def is_correct_common_password(cls, common_password) -> bool:
+        return common_password == COMMON_PASSWORD

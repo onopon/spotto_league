@@ -16,6 +16,10 @@ class PostLoginController(BaseController):
     # override
     @asyncio.coroutine
     def validate(self, request: BaseRequest, **kwargs) -> None:
+        common_password = request.form.get("common_password")
+        if not PasswordUtil.is_correct_common_password(common_password):
+            raise Exception("ログイン失敗")
+
         login_name = request.form.get("login_name")
         password = request.form.get("password")
         user = User.find_by_login_name(login_name)

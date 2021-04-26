@@ -54,6 +54,22 @@
 
     {% include 'user/parts/user_info_form.html' %}
 
+    <div class='row caption'>
+      <span class="h6">その他</span>
+    </div>
+    <div class='container block mb-4'>
+      <div class='row justify-content-center mt-2'>
+        <div class="col-12 has-validation">
+          <div class='row small mb-1'>
+            <div class="col form-title">
+              秘密の合言葉<label class="invalid" for="common-password"></label>
+            </div>
+          </div>
+          <input type="password" class="form-control" id="common-password" name="common_password" placeholder="関係者にご確認ください。">
+        </div>
+      </div>
+    </div>
+
     <div class='register'>
       <div class="row justify-content-end mt-4">
         <div class="offset-3 col-9 offset-md-6 col-md-6 col-xl-4 offset-xl-8 align-items-center">
