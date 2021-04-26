@@ -2,10 +2,10 @@
 
 ## 開発環境準備
 ### Pythonのversion
-4.3.1
+3.7.3
 
 ```
-$ pyenv install 4.3.1
+$ pyenv install 3.7.3
 ```
 
 などによって、4.3.1をインストールする。
@@ -16,14 +16,24 @@ $ pyenv install 4.3.1
 Ignoring ensurepip failure: pip 1.5.6 requires SSL/TLS
 ```
 
-のようなエラーが出流場合は、
+のようなエラーが出る場合は、
 
 ```
 $ sudo apt install libssl1.0-dev
-$ pyenv install 3.4.1
+$ pyenv install 3.7.3
 ```
 
 と行う。（mac, linuxでこの辺りのエラーは検出済み）
+
+mac bigsurで
+```
+ implicit declaration of function 'sendfile' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
+```
+が出た人は、
+```
+CFLAGS="-I$(brew --prefix openssl)/include -I$(brew --prefix bzip2)/include -I$(brew --prefix readline)/include -I$(xcrun --show-sdk-path)/usr/include" LDFLAGS="-L$(brew --prefix openssl)/lib -L$(brew --prefix readline)/lib -L$(brew --prefix zlib)/lib -L$(brew --prefix bzip2)/lib" pyenv install --patch 3.7.3 < <(curl -sSL https://github.com/python/cpython/commit/8ea6353.patch\?full_index\=1)
+```
+を実行したら治るかもしれない。。
 
 ###  dbを用意
 ```
@@ -44,7 +54,7 @@ mysql.server start
 mysqlにログインし、
 
 ```
-create database spotto_dev
+create database spotto_dev;
 ```
 
 をし、spotto_dev DBを作成する。
