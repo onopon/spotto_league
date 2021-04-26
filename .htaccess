@@ -1,6 +1,35 @@
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^(.*)$ /index.cgi/$1 [L]
+
+RewriteCond %{THE_REQUEST} ^.*/index.cgi/
+RewriteRule index.cgi/(.*)$ /$1 [R=301,L]
+
+
 <Files ~ "\.py$">
   deny from all
 </Files>
+
+# RewriteEngine On
+# # これがdefault
+# RewriteCond %{REQUEST_FILENAME} !-f
+# RewriteRule ^(.*)$ /index.cgi/$1 [L]
+# 
+# 
+# # RewriteCond %{HTTPS} off
+# # RewriteRule ^(.*)$ https://ponno.onopon.blog/$1 [R=301,L]
+# # 
+# # 
+# RewriteCond %{HTTP_HOST} ^www.ponno.onopon.blog$
+# RewriteRule ^(.*)$ https://ponno.onopon.blog/$1 [R=301,L]
+# # 
+# # RewriteCond %{HTTP_HOST} ^ponno.onopon.blog$
+# # RewriteRule ^(.*)$ https://ponno.onopon.blog/$1 [R=301,L]
+# # 
+# # #Redirect to non-WWW
+# # RewriteCond %{HTTP_HOST} ^pentoile.cocotte.jp$
+# # RewriteRule ^(.*) https://ponno.onopon.blog/$1 [QSA,L,R=301]
+# 
+# <Files ~ "\.py$">
+#   deny from all
+# </Files>
