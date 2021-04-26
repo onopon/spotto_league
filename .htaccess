@@ -1,0 +1,10 @@
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ /index.cgi/$1 [L]
+
+RewriteCond %{THE_REQUEST} ^.*/index.cgi/
+RewriteRule index.cgi/(.*)$ /$1 [R=301,L]
+
+<Files ~ "\.py$">
+  deny from all
+</Files>
