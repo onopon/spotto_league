@@ -36,7 +36,7 @@
             {{ member.created_at }}
           </div>
           <div class="col-3">
-            <input class="form-check-input" type="checkbox" name="enabled_league_member_ids" value="{{ member.id }}" {% if member.enabled %}checked{% endif %}>
+            <input class="form-check-input" type="checkbox" name="enabled_league_member_ids" value="{{ member.id }}" {% if member.enabled or league.is_status_recruiting() %}checked{% endif %}>
           </div>
         </div>
       </li>

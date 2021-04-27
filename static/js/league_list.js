@@ -10,7 +10,7 @@ $(function() {
   });
 
   $('.recruiting button.cancel').click(function() {
-    $conf = confirm('募集締切日をすぎている場合、再度参加希望を出すことはできません。キャンセルしてもよろしいですか？');
+    $conf = confirm('募集締切日を過ぎている場合、再度参加希望を出すことはできません。キャンセルしてもよろしいですか？');
     if (!$conf) {
       return false;
     }
