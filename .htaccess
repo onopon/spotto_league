@@ -1,3 +1,6 @@
+Header add Pragma "no-cache"
+Header set Cache-Control no-cache
+
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^(.*)$ /index.cgi/$1 [L]
