@@ -14,6 +14,7 @@ class BonusPoint(db.Model, Base):
     available_count = db.Column(db.Integer, nullable=False, default=4)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
+    _user = None
 
     @classmethod
     def all(cls) -> List['BonusPoint']:
@@ -32,7 +33,9 @@ class BonusPoint(db.Model, Base):
     @classmethod
     def find_all_by_user_ids(cls, user_ids: List[int]) -> List['BonusPoint']:
         return db.session.query(cls).filter(cls.user_id.in_(user_ids)).all()
+
     @property
     def user(self) -> User:
-        return db.session.query(User).\
-            filter_by(id = self.user_id).one()
+        if not self._user:
+            self._user = User.find(self.user_id)
+        return self._user

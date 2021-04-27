@@ -15,11 +15,13 @@ class LeagueMember(db.Model, Base):
     enabled = db.Column(db.Boolean, nullable=False, default=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
+    _user = None
 
     @property
     def user(self) -> User:
-        return db.session.query(User).\
-            filter_by(id = self.user_id).one()
+        if not self._user:
+            self._user = User.find(self.user_id)
+        return self._user
 
     @classmethod
     def find_all_by_league_id(cls, league_id) -> List['LeagueMember']:
