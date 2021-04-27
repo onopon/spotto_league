@@ -17,8 +17,8 @@
     </li>
     <li class="list-group-item">
       <div class="row">
-        <div class="col-2 pale-gray small">日時</div>
-        <div class="col-10">{{ league.date_for_display }}</div>
+        <div class="col-3 pale-gray small"><span class="small">日時</span></div>
+        <div class="col-9">{{ league.date_for_display }}</div>
       </div>
     </li>
     <li class="list-group-item">
@@ -26,14 +26,14 @@
     </li>
     <li class="list-group-item">
       <div class="row">
-        <div class="col-2 pale-gray small">場所</div>
-        <div class="col-10"><a href="{{ place.url }}" target="_blank" rel="noopener noreferrer">{{ place.name }}</a></div>
+        <div class="col-3 pale-gray small"><span class="small">場所</span></div>
+        <div class="col-9"><a href="{{ place.url }}" target="_blank" rel="noopener noreferrer">{{ place.name }}</a></div>
       </div>
     </li>
     <li class="list-group-item">
       <div class="row align-items-center">
-        <div class="col-2 pale-gray small">ゲームカウント</div>
-        <div class="col-10">{{ league.game_count }} ゲームマッチ</div>
+        <div class="col-3 pale-gray small"><span class="small">ゲームカウント</span></div>
+        <div class="col-9">{{ league.game_count }} ゲームマッチ</div>
       </div>
     </li>
   </ul>
@@ -43,10 +43,8 @@
   {% elif league.is_status_ready() %}
     {% if league.is_before_session() %}
       {% include 'league/before_session.html' %}
-    {% elif league.is_in_session() %}
-      {% include 'league/in_session.html' %}  
     {% else %}
-      {% include 'league/after_session.html' %}  
+      {% include 'league/in_session.html' %}  
     {% endif %}
   {% elif league.is_status_finished() %}
     {% include 'league/after_session.html' %}  

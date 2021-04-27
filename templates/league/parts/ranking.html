@@ -8,7 +8,7 @@
         <div class="col-2 text-center">
           順位
         </div>
-        <div class="col-4 text-start">
+        <div class="col-4 text-start small align-items-center">
           順位づけの理由
         </div>
       </div>
@@ -23,7 +23,7 @@
           <a href='/user/info/{{ rank_hash[r_user_id]["login_name"] }}/'>{{ rank_hash[r_user_id]['user_name'] }}</a>
           {% endif %}
         </div>
-        <div class="col-2 text-center">
+        <div class="col-2 text-center small align-items-center">
           {{ rank_hash[r_user_id]['win'] }} - {{ rank_hash[r_user_id]['lose'] }}
         </div>
         <div class="col-2 text-center">
