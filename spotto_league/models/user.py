@@ -54,14 +54,14 @@ class User(flask_login.UserMixin, db.Model, Base):
         return self._role
 
     def is_admin(self) -> bool:
-        if not self._role:
+        if not self.role:
             return False
-        return self._role.is_admin()
+        return self.role.is_admin()
 
     def is_member(self) -> bool:
-        if not self._role:
+        if not self.role:
             return False
-        return self._role.is_member()
+        return self.role.is_member()
 
     @property
     def birthday_for_display(self) -> str:
