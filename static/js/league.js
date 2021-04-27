@@ -156,6 +156,6 @@ $(function() {
   });
 
   $('#league button.cancel').click(function() {
-    return confirm('募集締切日をすぎている場合、再度参加希望を出すことはできません。キャンセルしてもよろしいですか？');
+    return confirm('募集締切日を過ぎている場合、再度参加希望を出すことはできません。キャンセルしてもよろしいですか？');
   });
 });

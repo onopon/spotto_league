@@ -3,6 +3,9 @@
 {% else %}
 {% set members = league.enable_members %}
 {% endif %}
+{% if not league.is_in_join_session() %}
+  {% set btn_disabled = 'disabled' %}
+{% endif %}
 <ul class="list-group list-group-flush mt-4">
   <li class="list-group-item disabled">
     <div class="row small">
@@ -48,7 +51,7 @@
         <button class="btn cancel">キャンセルする</button>
         {% else %}
         <input type="hidden" name="status_join" value=1>
-        <button class="btn join">参加表明する</button>
+        <button class="btn join {{ btn_disabled }}">参加表明する</button>
         {% endif %}
       </form>
     </div>
@@ -65,7 +68,7 @@
         <form method="post">
           <input type="hidden" name="league_id" value="{{ league.id }}">
           <input type="hidden" name="status_join" value=1>
-          <button class="btn join">参加表明する</button>
+          <button class="btn join {{ btn_disabled }}">参加表明する</button>
         </form>
       </div>
     </div>
