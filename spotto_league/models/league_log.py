@@ -17,6 +17,7 @@ class LeagueLog(db.Model, Base):
     user_id_2 = db.Column(db.Integer, nullable=False, index=True)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
+    _details = None
 
     @classmethod
     def find_or_initialize(cls, league_id, user_id_1, user_id_2) -> Optional['LeagueLog']:
@@ -34,7 +35,13 @@ class LeagueLog(db.Model, Base):
 
     @property
     def details(self) -> List[LeagueLogDetail]:
-        return db.session.query(LeagueLogDetail).filter_by(league_log_id = self.id).all()
+        if not self._details:
+            self._details = LeagueLogDetail.find_all_by_league_log_ids([self.id])
+        return self._details
+
+    @classmethod
+    def find_all_by_league_id(cls, league_id) -> List['LeagueLog']:
+        return db.session.query(cls).filter(cls.league_id == league_id).all()
 
     def is_valid(self, league_id, user_id_1, user_id_2) -> bool:
         id_1 = user_id_1 if user_id_1 < user_id_2 else user_id_2

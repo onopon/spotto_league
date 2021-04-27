@@ -38,14 +38,22 @@ class League(db.Model, Base):
     league_point_group_id = db.Column(db.Integer)
     created_at = db.Column(db.DateTime, nullable=False, default=dt.now)
     updated_at = db.Column(db.DateTime, nullable=False, default=dt.now, onupdate=dt.now)
+    _place = None
+    _members = None
+    _logs = None
+    _league_points = None
 
     @property
     def place(self) -> Place:
-        return Place.find(self.place_id)
+        if not self._place:
+            self._place = Place.find(self.place_id)
+        return self._place
 
     @property
     def members(self) -> List[LeagueMember]:
-        return LeagueMember.find_all_by_league_id(self.id)
+        if not self._members:
+            self._members = LeagueMember.find_all_by_league_id(self.id)
+        return self._members
 
     @property
     def enable_members(self) -> List[LeagueMember]:
@@ -53,8 +61,9 @@ class League(db.Model, Base):
 
     @property
     def logs(self) -> List[LeagueLog]:
-        return self.session.query(LeagueLog).\
-                filter_by(league_id=self.id).all()
+        if not self._logs:
+            self._logs = LeagueLog.find_all_by_league_id(self.id)
+        return self._logs
 
     @property
     def recommend_league_point_group_id(self) -> int:
@@ -67,7 +76,9 @@ class League(db.Model, Base):
     def league_points(self) -> List[LeaguePoint]:
         if not self.league_point_group_id:
             return []
-        return LeaguePoint.find_all_by_group_id(self.league_point_group_id)
+        if not self._league_points:
+            self._league_points = LeaguePoint.find_all_by_group_id(self.league_point_group_id)
+        return self._league_points
 
     @property
     def date_for_display(self) -> str:
