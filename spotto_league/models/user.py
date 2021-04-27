@@ -31,10 +31,6 @@ class User(flask_login.UserMixin, db.Model, Base):
     updated_at = db.Column(db.DateTime, nullable=False, default=dt.now, onupdate=dt.now)
     _role = None
 
-    def __init__(self):
-        super().__init__()
-        self._role = None
-
     def set_password(self, password: str) -> None:
         self.password = PasswordUtil.make_hex(password)
 
@@ -58,16 +54,14 @@ class User(flask_login.UserMixin, db.Model, Base):
         return self._role
 
     def is_admin(self) -> bool:
-        role = self.role
-        if not role:
+        if not self._role:
             return False
-        return role.is_admin()
+        return self._role.is_admin()
 
     def is_member(self) -> bool:
-        role = self.role
-        if not role:
+        if not self._role:
             return False
-        return role.is_member()
+        return self._role.is_member()
 
     @property
     def birthday_for_display(self) -> str:
