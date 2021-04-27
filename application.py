@@ -60,7 +60,7 @@ def create_app():
 
 app = create_app()
 
-@app.route("/", methods=("GET", "POST"))
+@app.route("/top", methods=("GET", "POST"))
 @flask_login.login_required
 def league_list():
     return LeagueListController().render(request)
@@ -96,7 +96,7 @@ def user_register():
 def user_exists(login_name: str):
     return UserExistsController().render(request, login_name=login_name)
 
-@app.route("/user/login", methods=("GET", "POST"))
+@app.route("/", methods=("GET", "POST"))
 @login_manager.unauthorized_handler
 def user_login():
     if request.method == "POST":
