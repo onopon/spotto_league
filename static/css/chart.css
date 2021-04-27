@@ -27,10 +27,11 @@ td:empty {
                         transparent 50.5%, transparent);
 }
 
-
-
 /* xs */
 @media (max-width: 575.98px) {
+  .bi-dash-square, .bi-plus-square {
+    font-size: 0.7rem;
+  }
 }
 
 /* sm */

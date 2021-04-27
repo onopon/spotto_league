@@ -2,14 +2,14 @@
 {% set members = league.members %}
 <div class="row align-items-center">
 {% if league.is_status_recruiting() %}
-  <div class="col-2 pale-gray small">応募人数</div>
+  <div class="col-3 pale-gray small"><span class="small">応募人数</span></div>
   {% if place.capacity > (members | count) %}
-    <div class="col-10">{{ members | count }} / {{ place.capacity }} 人</div>
+    <div class="col-9">{{ members | count }} / {{ place.capacity }} 人</div>
   {% else %}
-    <div class="col-10">{{ members | count }} / {{ place.capacity }} 人</div>
+    <div class="col-9">{{ members | count }} / {{ place.capacity }} 人</div>
   {% endif %}
 {% else %}
-  <div class="col-2 pale-gray small">参加人数</div>
-  <div class="col-10">{{ members | count }} 人</div>
+  <div class="col-3 pale-gray small"><span class="small">参加人数</span></div>
+  <div class="col-9">{{ members | count }} 人</div>
 {% endif %}
 </div>

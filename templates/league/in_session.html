@@ -27,8 +27,7 @@
         <div class="container" id="modal-body">
         {% for count in range(league.game_count) %}
           <div class="row align-items-center">
-            <div class="col-1"></div>
-            <div class="col-4">
+            <div class="col-6 col-sm-5">
         			<div class="input-group number-spinner">
         				<span class="input-group-btn">
         					<button class="btn btn-default" data-dir="dwn"><i class="bi bi-dash-square"></i></button>
@@ -39,10 +38,8 @@
         				</span>
         			</div>
         		</div>
-            <div class="col-2 text-center">
-              -
-            </div>
-            <div class="col-4">
+            <div class="d-none d-sm-block col-sm-2 text-center">-</div>
+            <div class="col-6 col-sm-5">
         			<div class="input-group number-spinner">
         				<span class="input-group-btn">
         					<button class="btn btn-default" data-dir="dwn"><i class="bi bi-dash-square"></i></button>
