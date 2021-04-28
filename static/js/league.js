@@ -25,19 +25,18 @@ $(function() {
   $('#target-table td').click(function() {
     targetId = $(this).attr('class');
     let hash = league_log_hash[targetId];
+    if (hash == undefined) { return false; }
     for (let i = 0; i < game_count; i++) {
       let detail = hash.details_hash_list[i];
       if (detail == undefined) {
-        detail = {"score_1": 0, "score_2": 0};
+        detail = {"score_1": '', "score_2": ''};
       }
       let count_1 = detail.score_1;
       let count_2 = detail.score_2;
       $(`#modal-body .score_1_${i}`).val(count_1);
       $(`#modal-body .score_2_${i}`).val(count_2);
-      if (!(count_1 == 0 && count_2 == 0)) {
-        $(`#modal-body p.score_1_${i}`).text(count_1);
-        $(`#modal-body p.score_2_${i}`).text(count_2);
-      }
+      $(`#modal-body .result p.score_1_${i}`).text(count_1);
+      $(`#modal-body .result p.score_2_${i}`).text(count_2);
     }
     $('#modal-title').text(`${hash.user_name_1} vs ${hash.user_name_2}`);
     $('#detailModal').modal('show');
@@ -45,7 +44,11 @@ $(function() {
 
   $('#modal-save-btn').click(function() {
     var leftScores = $("#detailModal .score-left").map(function (index, el) {
-      return $(this).val();
+      let score = $(this).val();
+      if ($(this).val() == "") {
+        score = '0';
+      }
+      return score;
     }).toArray();
     var rightScores = $("#detailModal .score-right").map(function (index, el) {
       return $(this).val();
@@ -112,7 +115,7 @@ $(function() {
       for (let i = 0; i < game_count; i++) {
         let detail = log.details_hash_list[i];
         if (detail == undefined) {
-          detail = {"score_1": 0, "score_2": 0};
+          detail = {"score_1": "", "score_2": ""};
         }
         let count_1 = detail.score_1;
         let count_2 = detail.score_2;

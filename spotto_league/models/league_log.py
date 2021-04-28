@@ -17,7 +17,6 @@ class LeagueLog(db.Model, Base):
     user_id_2 = db.Column(db.Integer, nullable=False, index=True)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
-    _details = None
 
     @classmethod
     def find_or_initialize(cls, league_id, user_id_1, user_id_2) -> Optional['LeagueLog']:
@@ -35,9 +34,7 @@ class LeagueLog(db.Model, Base):
 
     @property
     def details(self) -> List[LeagueLogDetail]:
-        if not self._details:
-            self._details = LeagueLogDetail.find_all_by_league_log_ids([self.id])
-        return self._details
+        return LeagueLogDetail.find_all_by_league_log_ids([self.id])
 
     @classmethod
     def find_all_by_league_id(cls, league_id) -> List['LeagueLog']:
