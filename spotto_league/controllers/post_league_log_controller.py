@@ -23,8 +23,8 @@ class PostLeagueLogController(BaseController):
         league_id = int(request.form.get("league_id"))
         user_id_1 = int(request.form.get("user_id_1"))
         user_id_2 = int(request.form.get("user_id_2"))
-        score_1_list = [int(s) for s in request.form.getlist("score_1_list[]")]
-        score_2_list = [int(s) for s in request.form.getlist("score_2_list[]")]
+        score_1_list = [int(s or 0) for s in request.form.getlist("score_1_list[]")]
+        score_2_list = [int(s or 0) for s in request.form.getlist("score_2_list[]")]
         if not all([league_id, user_id_1, user_id_2]):
             raise Exception("All data does not exist.")
 
@@ -46,8 +46,8 @@ class PostLeagueLogController(BaseController):
             self._league_log.save()
         is_reverse = user_id_1 != self._league_log.user_id_1
 
-        score_1_list = [int(s) for s in request.form.getlist("score_1_list[]")]
-        score_2_list = [int(s) for s in request.form.getlist("score_2_list[]")]
+        score_1_list = [int(s or 0) for s in request.form.getlist("score_1_list[]")]
+        score_2_list = [int(s or 0) for s in request.form.getlist("score_2_list[]")]
         league_log_details = self._league_log.details
         for i, (score_1, score_2) in enumerate(zip(score_1_list, score_2_list)):
             try:
