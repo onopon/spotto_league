@@ -1,4 +1,5 @@
 import os
+import traceback
 import locale
 import flask_login
 from flask import Flask, request, render_template, redirect, url_for
@@ -187,6 +188,10 @@ def admin_user_list():
     if request.method == "POST":
         return PostAdminUserListController().render(request)
     return AdminUserListController().render(request)
+
+@app.errorhandler(500)
+def not_found(error):
+    return render_template("error.html", error_message=str(traceback.format_exc()))
 
 '''
 for flask-login

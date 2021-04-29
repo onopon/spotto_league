@@ -57,4 +57,4 @@ class PostLeagueFinishController(BaseController):
             self._league.league_point_group_id = group_id
             self._league.finish()
             self._league.save()
-        return redirect(url_for('league_list', login_name=current_user.login_name))
+        return redirect(url_for('league_list'))

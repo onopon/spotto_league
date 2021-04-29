@@ -48,7 +48,7 @@
     </li>
     {% endfor %}
   </ul>
-  <form action="{{ url_for('admin_league_finish', league_id=league.id) }}" method="post">
+  <form action="/admin/league/{{ league.id }}/finish" method="post">
     <div class="form-group">
       <div class="row align-items-center">
         <div class="col-4 col-sm-3 col-lg-2">
