@@ -17,8 +17,14 @@
     </li>
     <li class="list-group-item">
       <div class="row">
-        <div class="col-3 pale-gray small"><span class="small">日時</span></div>
+        <div class="col-3 pale-gray small"><span class="small">開催日時</span></div>
         <div class="col-9">{{ league.date_for_display }}</div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-3 pale-gray small"><span class="small">締め切り日時</span></div>
+        <div class="col-9 pale-gray">{{ league.join_end_at_for_display }}</div>
       </div>
     </li>
     <li class="list-group-item">

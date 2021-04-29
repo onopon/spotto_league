@@ -377,7 +377,7 @@ label.invalid {
 
 .btn.update, .btn.register {
   width: 100%;
-  border: 1px solid #6086E5;
+  border: 3px solid #6086E5;
   background: #6086E5;
 }
 
