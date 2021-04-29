@@ -31,6 +31,7 @@ class InfoController(BaseController):
         if self._user.id == self.login_user.id:
             if self.login_user.is_admin():
                 leagues = League.all()
+                leagues.sort(key=lambda r: r.date, reverse=False)
                 render_hash['yet_recruiting_league_list'] = []
                 render_hash['ready_league_list'] = []
                 render_hash['yet_finished_league_list'] = []
