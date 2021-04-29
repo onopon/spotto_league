@@ -40,6 +40,8 @@ class PostLeagueFinishController(BaseController):
         league_points = LeaguePoint.find_all_by_group_id(group_id)
         bonus_points = BonusPoint.find_all_by_user_ids([r.user_id for r in ranks])
         for rank in ranks:
+            if rank.user.is_guest():
+                continue
             league_point = next(filter(lambda l: l.rank == rank.rank, league_points), league_points[-1])
             user_point = UserPoint()
             user_point.league_id = self._league.id
