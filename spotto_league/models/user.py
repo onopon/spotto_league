@@ -41,7 +41,7 @@ class User(flask_login.UserMixin, db.Model, Base):
     def all_without_visitor(cls) -> List['User']:
         users = cls.all()
         roles = Role.all()
-        visitor_user_ids = [r.user_id for r in roles if r.is_visitor]
+        visitor_user_ids = [r.user_id for r in roles if r.is_visitor()]
         return [u for u in users if u.id not in visitor_user_ids]
 
     @classmethod
