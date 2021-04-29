@@ -19,6 +19,8 @@ class LeagueListController(BaseController):
     def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
         is_from_register = bool(request.form.get("is_from_register", 0))
         league_list = League.all()
+        league_list.sort(key=lambda r: r.date, reverse=False)
+
         league_list_hash = defaultdict(list)
         league_members = LeagueMember.find_all_by_user_id(self.login_user.id)
         user_join_league_ids = []
@@ -42,6 +44,7 @@ class LeagueListController(BaseController):
                     league_list_hash['status_ready'].append(league)
             elif league.is_status_finished():
                 league_list_hash['status_finished'].append(league)
+        league_list_hash['status_finished'].sort(key=lambda r: r.date, reverse=True)
         return self.render_template("league_list.html",
                                     is_from_register=is_from_register,
                                     user_join_league_ids=user_join_league_ids,
