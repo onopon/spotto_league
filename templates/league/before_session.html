@@ -46,12 +46,14 @@
     <div class="offset-2 col-8 offset-lg-5 col-lg-2">
       <form method="post">
         <input type="hidden" name="league_id" value="{{ league.id }}">
+        {% if league.is_status_recruiting() %}
         {% if is_wanted_join %}
         <input type="hidden" name="status_join" value=0>
         <button class="btn cancel">キャンセルする</button>
         {% else %}
         <input type="hidden" name="status_join" value=1>
         <button class="btn join {{ btn_disabled }}">参加表明する</button>
+        {% endif %}
         {% endif %}
       </form>
     </div>
