@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Spottoユーザ情報{% endblock %}
+{% block title %}{{ user.name }} さんのユーザ情報{% endblock %}
 
 {% block content %}
 <div id="user-info" class="container">
@@ -107,15 +107,15 @@
         <div class="col-9">{{ point_rank.current_point }} pt</div>
       </div>
       <div class="row mt-2 small">
-        <div class="offset-3 col-3 pale-gray small">ベースポイント</div>
+        <div class="offset-2 col-4 offset-md-3 col-md-2 pale-gray small"><span class="small">ベースポイント</span></div>
         <div class="col-6">{{ point_rank.current_base_point or 0 }} pt</div>
       </div>
       <div class="row small">
-        <div class="offset-3 col-3 pale-gray small">リーグポイント</div>
+        <div class="offset-2 col-4 offset-md-3 col-md-2 pale-gray small"><span class="small">リーグポイント</span></div>
         <div class="col-6">{{ point_rank.current_league_points }} pt ({{ point_rank.current_league_points | length }} / 8)</div>
       </div>
       <div class="row small">
-        <div class="offset-3 col-3 pale-gray small">ボーナスポイント</div>
+        <div class="offset-2 col-4 offset-md-3 col-md-2 pale-gray small"><span class="small">ボーナスポイント</span></div>
         <div class="col-6">{{ point_rank.current_bonus_point }} pt</div>
       </div>
     </li>
@@ -129,7 +129,7 @@
 <div class="container">
   <hr></hr>
   <div class="row mt-4">
-    <div class="col-3 col-sm-2">
+    <div class="col-4">
       <a class='btn' href='/'>TOPへ</a>
     </div>
   </div>
