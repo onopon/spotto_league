@@ -21,6 +21,17 @@ class BaseController(metaclass=ABCMeta):
     def should_login(self) -> bool:
         return True
 
+    # アクセスする際、ビジターの人もアクセス可能かどうか
+    def enable_for_visitor(self) -> bool:
+        return False
+
+    @asyncio.coroutine
+    def validate_for_visitor(self) -> None:
+        if self.enable_for_visitor():
+            return
+        if current_user.is_authenticated and self.login_user.is_visitor():
+            raise Exception("ゲストの方はこのページを閲覧することはできません。")
+
     @abstractmethod
     @asyncio.coroutine
     def validate(self, request: BaseRequest, **kwargs) -> None:
@@ -42,6 +53,7 @@ class BaseController(metaclass=ABCMeta):
     def render(self, request: BaseRequest, **kwargs) -> BaseResponse:
         loop = asyncio.get_event_loop()
         try:
+            loop.run_until_complete(self.validate_for_visitor())
             loop.run_until_complete(self.validate(request, **kwargs))
         except Exception as e:
             return loop.run_until_complete(self.get_layout_as_exception(request, e, **kwargs))
@@ -50,6 +62,7 @@ class BaseController(metaclass=ABCMeta):
     def render_as_json(self, request: BaseRequest, **kwargs) -> Dict[str, Any]:
         @asyncio.coroutine
         def _render():
+            self.validate_for_visitor()
             self.validate(request, **kwargs)
             layout = self.get_json(request, **kwargs)
             return layout

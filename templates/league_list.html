@@ -41,6 +41,10 @@
             それでは試合頑張ってくださいねっ！
           </col>
         </div>
+      {% elif login_user.is_visitor() %}
+        <div class='row'>
+          <col-12>SPOTTOへようこそ！あなたのゲストアカウント名は<span class="deep-blue">{{ login_user.name }}</span>です。</col>
+        </div>
       {% else %}
         <div class='row'>
           <col-12>こんにちは、<a class="deep-blue" href='/user/info/{{ login_user.login_name }}/'>{{ login_user.name }}</a>さん！</col>
@@ -52,6 +56,7 @@
  
   {% include 'league_list/parts/today.html' %}
 
+  {% if not login_user.is_visitor() %}
   <ul class="nav nav-tabs mt-4" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
       <a class="nav-link active" id="recruiting-tab" data-bs-toggle="tab" href="#recruiting" role="tab" aria-controls="recruiting" aria-selected="true">募集中</a>
@@ -74,6 +79,7 @@
       {% include 'league_list/parts/status_finished.html' %}
     </div>
   </div>
+  {% endif %}
 
   <div class='row justify-content-center p-4'>
     <form action="/user/logout" method="get">
