@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block head %}
+<link rel="stylesheet" href="{{ url_for("static", filename="css/admin.css") }}?{{ timestamp }}">
 <script src="{{ url_for("static", filename="js/admin/league.js") }}?{{ timestamp }}"></script>
 {% endblock %}
 

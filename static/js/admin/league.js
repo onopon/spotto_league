@@ -26,4 +26,26 @@ $(function() {
       return confirm('参加者数が許容人数を超えてしまっていますが、よろしいですか？');
     }
   });
+
+  $('#admin-league .btn.force-join').click(function() {
+    var userSelect = $('[name=user-select] option:selected');
+    if (confirm(`${userSelect.text()}さんを飛び入り参加させてもよろしいですか？`)) {
+      var leagueId = parseInt($("#league_id").text());
+      var loginName = userSelect.val();
+      postForceJoin(leagueId, loginName);
+    }
+    return false;
+  });
+
+  function postForceJoin(leagueId, loginName) {
+      $.ajax({
+          url: `/user/league/join`,
+          type: "POST",
+          data: {'league_id': leagueId, 'login_name': loginName, 'force_join': true}
+        }).done(function(_){
+          window.location.href = `/admin/league/${leagueId}`;
+        }).fail(function(){
+          console.log('fail');
+        });
+  }
 });

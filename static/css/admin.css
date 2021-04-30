@@ -25,3 +25,21 @@
   padding-right: 3%;
   border: 2px solid #91C9F4;
 }
+
+select.user-select {
+	font-size: 100%;
+	line-height: 1.1em;
+	border-radius: 5px;
+  padding-top: 1%;
+  padding-bottom: 1%;
+  padding-left: 3%;
+  padding-right: 3%;
+  background: #FCFCFC;
+  border: 2px solid #91C9F4;
+}
+
+.btn.force-join {
+  width: 100%;
+  border: 3px solid #FF9A68;
+  background: #FF9A68;
+}
