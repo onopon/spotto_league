@@ -52,7 +52,7 @@ class Role(db.Model, Base):
     def is_member(self) -> bool:
         return RoleType(self.role_type) == RoleType.MEMBER
 
-    def is_visitor(self) -> bool:
+    def is_guest(self) -> bool:
         return RoleType(self.role_type) == RoleType.GUEST
 
     def is_visitor(self) -> bool:

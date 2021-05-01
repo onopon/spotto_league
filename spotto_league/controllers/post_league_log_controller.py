@@ -15,6 +15,7 @@ from spotto_league.models.league_log_detail import LeagueLogDetail
 class PostLeagueLogController(BaseController):
     __slots__ = ["_league_log"]
     def __init__(self) -> None:
+        super().__init__()
         self._league_log = None
 
     # override
