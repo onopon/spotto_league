@@ -18,6 +18,9 @@ class InfoController(BaseController):
         if not self._user:
             raise Exception("{}というユーザは存在しません。".format(kwargs["login_name"]))
 
+        if self._user.is_visitor():
+            raise Exception("ビジターアカウントはの情報は見ることができません。{}の誕生日は{}だよ。".format(self._user.name, self._user.birthday_for_display))
+
     # override
     @asyncio.coroutine
     def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
