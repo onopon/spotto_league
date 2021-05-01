@@ -7,9 +7,15 @@ from sqlalchemy import exc
 from sqlalchemy import event
 from sqlalchemy.pool import Pool
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import date
+from linebot import (
+    LineBotApi, WebhookHandler
+)
+from linebot.exceptions import (
+    InvalidSignatureError
+)
 from spotto_league.database import init_db
 from spotto_league.database import db
-from datetime import date
 from spotto_league.controllers.league_list_controller import LeagueListController
 from spotto_league.controllers.league_controller import LeagueController
 from spotto_league.controllers.user.exists_controller import ExistsController as UserExistsController
@@ -225,6 +231,28 @@ def request_loader(request):
     user.id = login_name
     flask_login.login_user(user)
     return user
+
+
+'''
+for line api
+'''
+@app.route("/callback", methods=['POST'])
+def callback():
+    # get X-Line-Signature header value
+    signature = request.headers['X-Line-Signature']
+
+    # get request body as text
+    body = request.get_data(as_text=True)
+    app.logger.info("Request body: " + body)
+
+    # handle webhook body
+    try:
+        handler.handle(body, signature)
+    except InvalidSignatureError:
+        print("Invalid signature. Please check your channel access token/channel secret.")
+        abort(400)
+
+    return 'OK'
 
 '''
 for SqlAlchemy on production
