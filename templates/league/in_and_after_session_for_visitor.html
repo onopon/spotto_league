@@ -1,0 +1,53 @@
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <a class="nav-link active" id="chart-tab" data-bs-toggle="tab" href="#chart" role="tab" aria-controls="chart" aria-selected="true">リーグ戦表</a>
+  </li>
+  <li class="nav-item" role="presentation">
+    <a class="nav-link" id="personal-tab" data-bs-toggle="tab" href="#personal" role="tab" aria-controls="personal" aria-selected="false">個人戦表</a>
+  </li>
+  {% if league.is_status_finished() %}
+  <li class="nav-item" role="presentation">
+    <a class="nav-link" id="ranking-tab" data-bs-toggle="tab" href="#ranking" role="tab" aria-controls="ranking" aria-selected="false">順位</a>
+  </li>
+  {% endif %}
+</ul>
+<div class="tab-content mt-3" id="myTabContent">
+  <div class="tab-pane fade show active" id="chart" role="tabpanel" aria-labelledby="chart-tab">
+    {% include 'league/parts/league_chart.html' %}
+  </div>
+  <div class="tab-pane fade" id="personal" role="tabpanel" aria-labelledby="personal-tab">
+    {% include 'league/parts/after_session/personal_record.html' %}
+  </div>
+  <div class="tab-pane fade" id="ranking" role="tabpanel" aria-labelledby="ranking-tab">
+    {% include 'league/parts/ranking.html' %}
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal-title"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container" id="modal-body">
+        {% for count in range(league.game_count) %}
+          <div class="row result">
+            <div class="col-5 text-end">
+              <p class="score_1_{{ count }}"></p>
+        		</div>
+            <div class="col-2 text-center">
+              <p>-</p>
+            </div>
+            <div class="col-5 text-begin">
+              <p class="score_2_{{ count }}"></p>
+        		</div>
+        	</div>
+        {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

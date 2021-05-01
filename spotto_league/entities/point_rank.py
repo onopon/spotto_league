@@ -97,7 +97,7 @@ class PointRank():
     @classmethod
     def make_point_rank_list_in_season(cls, year: int) -> List['PointRank']:
         user_points = UserPoint.find_all_in_season(year)
-        users = User.all()
+        users = User.all_without_visitor()
         bonus_points = BonusPoint.find_all_by_user_ids([u.id for u in users])
 
         rank_list = []
@@ -123,7 +123,7 @@ class PointRank():
     def make_point_rank_list(cls, league: League) -> List['PointRank']:
         user_points = UserPoint.find_all_in_season(league.updated_at.year)
         members = league.enable_members
-        users = User.all()
+        users = User.all_without_visitor()
 
         bonus_points = BonusPoint.find_all_by_user_ids([u.id for u in users])
         rank_list = []

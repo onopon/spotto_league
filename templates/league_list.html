@@ -41,6 +41,30 @@
             それでは試合頑張ってくださいねっ！
           </col>
         </div>
+      {% elif login_user.is_visitor() %}
+        <div class='row'>
+          <col-12>SPOTTOへようこそ！あなたのゲストアカウント名は<b class="deep-blue">{{ login_user.name }}</b>です。</col>
+        </div>
+        <div class='row mt-4'>
+          <col-12>
+            <span class="deep-blue">参加日当日のみ本日開催の欄が出現</span>し、リーグ戦詳細ページへのリンクが表示されます。
+          </col>
+        </div>
+        <div class='row'>
+          <col-12>
+            試合の状況や、順位はリンク先のページにて随時ご確認いただけます。
+          </col>
+        </div>
+        <div class='row mt-2'>
+          <col-12>
+            それでは試合頑張ってくださいねっ！
+          </col>
+        </div>
+        <div class='row mt-4'>
+          <col-12 class="small pale-glay">
+            ※ もしリンクの右隣に<i class="bi bi-patch-check-fill m-1"></i>マークが表示されていない場合、お手数ですが試合開始前までにSPOTTO関係者にお伝えください。
+          </col>
+        </div>
       {% else %}
         <div class='row'>
           <col-12>こんにちは、<a class="deep-blue" href='/user/info/{{ login_user.login_name }}/'>{{ login_user.name }}</a>さん！</col>
@@ -52,6 +76,7 @@
  
   {% include 'league_list/parts/today.html' %}
 
+  {% if not login_user.is_visitor() %}
   <ul class="nav nav-tabs mt-4" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
       <a class="nav-link active" id="recruiting-tab" data-bs-toggle="tab" href="#recruiting" role="tab" aria-controls="recruiting" aria-selected="true">募集中</a>
@@ -74,6 +99,7 @@
       {% include 'league_list/parts/status_finished.html' %}
     </div>
   </div>
+  {% endif %}
 
   <div class='row justify-content-center p-4'>
     <form action="/user/logout" method="get">

@@ -17,10 +17,17 @@ from spotto_league.database import db
 
 class LeagueController(BaseController):
     # override
+    def enable_for_visitor(self) -> bool:
+        return True
+
+    # override
     @asyncio.coroutine
     def validate(self, request: BaseRequest, **kwargs) -> None:
-        if not League.find_by_id(kwargs["league_id"]):
+        league = League.find_by_id(kwargs["league_id"])
+        if not league:
             raise Exception("league_id: {} のリーグ戦情報は存在しません。".format(kwargs["league_id"]))
+        if self.login_user.is_visitor() and not league.is_on_today():
+            raise Exception("ゲストの方はこのページを閲覧することはできません。")
 
     # override
     @asyncio.coroutine

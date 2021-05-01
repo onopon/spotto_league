@@ -24,7 +24,11 @@
     <div class="col-lg-6">
       <ul class="list-group list-group-flush mb-3">
         <li class="list-group-item h6">
+          {% if login_user.is_visitor() %}
+          vs <span class="light-blue">{{ user.name }}</span>
+          {% else %}
           vs <a href='/user/info/{{ user.login_name }}/'>{{ user.name }}</a>
+          {% endif %}
         </li>
         <li class="list-group-item">
           <div class="row align-items-center {{ login_user.id }}-{{ user.id }}">

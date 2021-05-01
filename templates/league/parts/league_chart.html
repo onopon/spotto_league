@@ -4,11 +4,7 @@
       <tr>
         <th scope=""></th>
         {% for user in users %}
-        {% if login_user.id == user.id %}
-        <th class="user-name" scope="col"><a class="deep-blue" href='/user/info/{{ user.login_name }}/'>{{ user.name }}</a></th>
-        {% else %}
-        <th class="user-name" scope="col"><a href='/user/info/{{ user.login_name }}/'>{{ user.name }}</a></th>
-        {% endif %}
+        {% include 'league/parts/th_user_name.html' %}
         {% endfor %}
         <th scope="col">戦績</th>
         <th scope="col">順位</th>
@@ -17,11 +13,7 @@
     <tbody>
       {% for user in users %}
       <tr>
-        {% if login_user.id == user.id %}
-        <th class="user-name" scope="row"><a class="deep-blue" href='/user/info/{{ user.login_name }}/'>{{ user.name }}</a></th>
-        {% else %}
-        <th class="user-name" scope="row"><a href='/user/info/{{ user.login_name }}/'>{{ user.name }}</a></th>
-        {% endif %}
+        {% include 'league/parts/th_user_name.html' %}
         {% for user_2 in users %}
         {% if user.id == user_2.id %}
         <td></td>

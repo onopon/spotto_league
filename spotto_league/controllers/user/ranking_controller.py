@@ -24,7 +24,7 @@ class RankingController(BaseController):
     @asyncio.coroutine
     def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
         year = int(kwargs["year"])
-        users = User.all()
+        users = User.all_without_visitor()
         point_ranks = PointRank.make_point_rank_list_in_season(year)
         return self.render_template("user/ranking.html", year=year, point_ranks=point_ranks)
 

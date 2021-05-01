@@ -44,16 +44,24 @@
     </li>
   </ul>
 
-  {% if league.is_status_recruiting() %}
-    {% include 'league/before_session.html' %}
-  {% elif league.is_status_ready() %}
+  {% if login_user.is_visitor() %}
     {% if league.is_before_session() %}
-      {% include 'league/before_session.html' %}
+      {% include 'league/before_session_for_visitor.html' %}
     {% else %}
-      {% include 'league/in_session.html' %}  
+      {% include 'league/in_and_after_session_for_visitor.html' %}  
     {% endif %}
-  {% elif league.is_status_finished() %}
-    {% include 'league/after_session.html' %}  
+  {% else %}
+    {% if league.is_status_recruiting() %}
+      {% include 'league/before_session.html' %}
+    {% elif league.is_status_ready() %}
+      {% if league.is_before_session() %}
+        {% include 'league/before_session.html' %}
+      {% else %}
+        {% include 'league/in_session.html' %}  
+      {% endif %}
+    {% elif league.is_status_finished() %}
+      {% include 'league/after_session.html' %}  
+    {% endif %}
   {% endif %}
 </div>
 

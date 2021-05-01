@@ -14,6 +14,10 @@ class ExistsController(BaseController):
         return False
 
     # override
+    def enable_for_visitor(self) -> bool:
+        return True
+
+    # override
     @asyncio.coroutine
     def validate(self, request: BaseRequest, **kwargs) -> None:
         if not kwargs["login_name"]:

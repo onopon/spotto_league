@@ -1,0 +1,13 @@
+{% if login_user.is_visitor() %}
+  {% if login_user.id == user.id %}
+  <th class="user-name deep-blue" scope="col">{{ user.name }}</th>
+  {% else %}
+  <th class="user-name light-blue" scope="col">{{ user.name }}</th>
+  {% endif %}
+{% else %}
+  {% if login_user.id == user.id %}
+  <th class="user-name" scope="col"><a class="deep-blue" href='/user/info/{{ user.login_name }}/'>{{ user.name }}</a></th>
+  {% else %}
+  <th class="user-name" scope="col"><a href='/user/info/{{ user.login_name }}/'>{{ user.name }}</a></th>
+  {% endif %}
+{% endif %}

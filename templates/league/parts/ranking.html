@@ -17,10 +17,18 @@
     <li class="list-group-item">
       <div class="row">
         <div class="col-4 col-md-3 text-start">
-          {% if login_user.id == r_user_id %}
-          <b><a class="deep-blue" href='/user/info/{{ rank_hash[r_user_id]["login_name"] }}/'>{{ rank_hash[r_user_id]['user_name'] }}</a></b>
+          {% if login_user.is_visitor() %}
+            {% if login_user.id == r_user_id %}
+            <b class="deep-blue">{{ rank_hash[r_user_id]['user_name'] }}</b>
+            {% else %}
+            <span class="light-blue">{{ rank_hash[r_user_id]['user_name'] }}</span>
+            {% endif %}
           {% else %}
-          <a href='/user/info/{{ rank_hash[r_user_id]["login_name"] }}/'>{{ rank_hash[r_user_id]['user_name'] }}</a>
+            {% if login_user.id == r_user_id %}
+            <b><a class="deep-blue" href='/user/info/{{ rank_hash[r_user_id]["login_name"] }}/'>{{ rank_hash[r_user_id]['user_name'] }}</a></b>
+            {% else %}
+            <a href='/user/info/{{ rank_hash[r_user_id]["login_name"] }}/'>{{ rank_hash[r_user_id]['user_name'] }}</a>
+            {% endif %}
           {% endif %}
         </div>
         <div class="col-2 text-center small align-items-center">

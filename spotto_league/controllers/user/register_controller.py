@@ -12,6 +12,10 @@ class RegisterController(BaseController):
         return False
 
     # override
+    def enable_for_visitor(self) -> bool:
+        return True
+
+    # override
     @asyncio.coroutine
     def validate(self, request: BaseRequest, **kwargs) -> None:
         pass

@@ -1,9 +1,8 @@
-from typing import Optional
+from typing import Dict, Any, List, Optional
 from datetime import datetime as dt
 from spotto_league.modules.password_util import PasswordUtil
 import hashlib
 import flask_login
-from typing import Dict, Any, List
 from spotto_league.database import db
 from .base import Base
 from .role import Role, RoleType
@@ -39,6 +38,13 @@ class User(flask_login.UserMixin, db.Model, Base):
         return db.session.query(User).all()
 
     @classmethod
+    def all_without_visitor(cls) -> List['User']:
+        users = cls.all()
+        roles = Role.all()
+        visitor_user_ids = [r.user_id for r in roles if r.is_visitor()]
+        return [u for u in users if u.id not in visitor_user_ids]
+
+    @classmethod
     def find_by_login_name(cls, login_name) -> Optional['User']:
         return db.session.query(cls).filter(cls.login_name==login_name).one_or_none()
 
@@ -50,21 +56,20 @@ class User(flask_login.UserMixin, db.Model, Base):
     @property
     def role(self) -> Optional[Role]:
         if not self._role:
-            self._role = Role.find_by_user_id(self.id)
+            self._role = Role.find_or_initialize_by_user_id(self.id)
         return self._role
 
     def is_admin(self) -> bool:
-        if not self.role:
-            return False
         return self.role.is_admin()
 
     def is_member(self) -> bool:
-        if not self.role:
-            return False
         return self.role.is_member()
 
     def is_guest(self) -> bool:
-        return not self.role
+        return self.role.is_guest()
+
+    def is_visitor(self) -> bool:
+        return self.role.is_visitor()
 
     @property
     def birthday_for_display(self) -> str:
