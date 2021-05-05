@@ -67,11 +67,8 @@ class LeagueController(BaseController):
         rank_hash = dict(zip(rank_user_ids, [r.to_hash() for r in ranks]))
         params = {'game_count': league.game_count,
                   'league_log_hash': league_log_hash,
-                  'rank_hash': rank_hash}
-        if league.is_status_finished():
-            point_ranks = PointRank.make_point_rank_list(league)
-            point_rank_hash = dict(zip([p.user.id for p in point_ranks], [p.to_hash() for p in point_ranks]))
-            params['point_rank_hash'] = point_rank_hash
+                  'rank_hash': rank_hash,
+                  'point_rank_hash': dict(zip([p.user.id for p in point_ranks], [p.to_hash() for p in point_ranks]))}
         return json.dumps(params)
 
     def _get_user_hash_and_league_log_hash(self, league: League, point_ranks: List[PointRank]):
