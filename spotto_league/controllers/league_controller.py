@@ -12,7 +12,6 @@ from spotto_league.models.league_log import LeagueLog
 from spotto_league.models.league_log_detail import LeagueLogDetail
 from spotto_league.entities.rank import Rank
 from spotto_league.entities.point_rank import PointRank
-from spotto_league.database import db
 
 
 class LeagueController(BaseController):
@@ -100,7 +99,7 @@ class LeagueController(BaseController):
                          'count_2': 0,
                          'details_hash_list': []
                          }
-        league_logs = db.session.query(LeagueLog).filter_by(league_id=league.id).all()
+        league_logs = LeagueLog.find_all_by_league_id(league.id)
         for log in league_logs:
             details = log.details
             count_1 = [d.score_1 > d.score_2 for d in details].count(True)
