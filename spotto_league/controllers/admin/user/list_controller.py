@@ -21,7 +21,7 @@ class ListController(BaseController):
     # override
     @asyncio.coroutine
     def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
-        users = User.all()
+        users = User.all_without_visitor()
         role_type_hash_list = RoleType.all()
         return self.render_template("admin/user/list.html",
                                     users=users,

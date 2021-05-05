@@ -12,7 +12,6 @@ from spotto_league.models.league_log import LeagueLog
 from spotto_league.models.league_log_detail import LeagueLogDetail
 from spotto_league.entities.rank import Rank
 from spotto_league.entities.point_rank import PointRank
-from spotto_league.database import db
 
 
 class LeagueController(BaseController):
@@ -32,14 +31,17 @@ class LeagueController(BaseController):
     # override
     @asyncio.coroutine
     def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
+        params = {}
+
         league_id = kwargs["league_id"]
-        league = db.session.query(League).get(league_id)
-        user_hash, league_log_hash = self._get_user_hash_and_league_log_hash(league_id)
+        league = League.find(league_id)
+        point_ranks = PointRank.make_point_rank_list(league)
+        user_hash, league_log_hash = self._get_user_hash_and_league_log_hash(league, point_ranks)
+
         ranks = Rank.make_rank_list(league)
         rank_user_ids = [r.user_id for r in ranks]
         rank_hash = dict(zip(rank_user_ids, [r.to_hash() for r in ranks]))
 
-        params = {}
         params['league'] = league
         params['is_join'] = self.login_user.login_name in [u.login_name for u in user_hash.values()]
         params['is_wanted_join'] = self.login_user.id in [lm.user_id for lm in league.members]
@@ -47,9 +49,7 @@ class LeagueController(BaseController):
         params['league_log_hash'] = league_log_hash
         params['rank_user_ids'] = rank_user_ids
         params['rank_hash'] = rank_hash
-
-        if league.is_status_finished():
-            params['point_ranks'] = PointRank.make_point_rank_list(league)
+        params['point_ranks'] = point_ranks
 
         return self.render_template("league.html",
                 **params)
@@ -59,25 +59,30 @@ class LeagueController(BaseController):
     def get_json(self, request: BaseRequest, **kwargs) -> Dict[str, Any]:
         league_id = kwargs["league_id"]
         league = League.find_by_id(league_id)
-        _, league_log_hash = self._get_user_hash_and_league_log_hash(league_id)
+        point_ranks = PointRank.make_point_rank_list(league)
+        _, league_log_hash = self._get_user_hash_and_league_log_hash(league, point_ranks)
         ranks = Rank.make_rank_list(league)
         rank_user_ids = [r.user_id for r in ranks]
         rank_hash = dict(zip(rank_user_ids, [r.to_hash() for r in ranks]))
         params = {'game_count': league.game_count,
                   'league_log_hash': league_log_hash,
-                  'rank_hash': rank_hash}
-        if league.is_status_finished():
-            point_ranks = PointRank.make_point_rank_list(league)
-            point_rank_hash = dict(zip([p.user.id for p in point_ranks], [p.to_hash() for p in point_ranks]))
-            params['point_rank_hash'] = point_rank_hash
+                  'rank_hash': rank_hash,
+                  'point_rank_hash': dict(zip([p.user.id for p in point_ranks], [p.to_hash() for p in point_ranks]))}
         return json.dumps(params)
 
-    def _get_user_hash_and_league_log_hash(self, league_id):
-        league_members = db.session.query(LeagueMember).\
-            filter_by(league_id=league_id, enabled=True).all()
+    def _get_user_hash_and_league_log_hash(self, league: League, point_ranks: List[PointRank]):
+        league_members = league.enable_members
         users_hash = {}
+        point_rank_user_ids = [pr.user.id for pr in point_ranks]
+        users = []
+        users_out_of_point_rank = []
         for league_member in league_members:
-            user = league_member.user
+            if league_member.user_id in point_rank_user_ids:
+                users.append(league_member.user)
+            else:
+                users_out_of_point_rank.append(league_member.user)
+
+        for user in users + users_out_of_point_rank:
             users_hash[user.id] = user
 
         league_log_hash = {}
@@ -94,7 +99,7 @@ class LeagueController(BaseController):
                          'count_2': 0,
                          'details_hash_list': []
                          }
-        league_logs = db.session.query(LeagueLog).filter_by(league_id=league_id).all()
+        league_logs = LeagueLog.find_all_by_league_id(league.id)
         for log in league_logs:
             details = log.details
             count_1 = [d.score_1 > d.score_2 for d in details].count(True)
