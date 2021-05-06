@@ -72,17 +72,24 @@ class LeagueController(BaseController):
 
     def _get_user_hash_and_league_log_hash(self, league: League, point_ranks: List[PointRank]):
         league_members = league.enable_members
-        users_hash = {}
         point_rank_user_ids = [pr.user.id for pr in point_ranks]
+        user_with_rank_hash = {}
         users = []
         users_out_of_point_rank = []
-        for league_member in league_members:
-            if league_member.user_id in point_rank_user_ids:
-                users.append(league_member.user)
-            else:
-                users_out_of_point_rank.append(league_member.user)
 
-        for user in users + users_out_of_point_rank:
+        for league_member in league_members:
+            for point_rank in point_ranks:
+                if league_member.user.id == point_rank.user.id:
+                    user_with_rank_hash[point_rank.current_rank] = league_member.user
+                    continue
+            users_out_of_point_rank.append(league_member.user)
+
+        users_hash = {}
+        for rank in sorted(list(user_with_rank_hash.keys())):
+            user = user_with_rank_hash[rank]
+            users_hash[user.id] = user
+
+        for user in users_out_of_point_rank:
             users_hash[user.id] = user
 
         league_log_hash = {}
