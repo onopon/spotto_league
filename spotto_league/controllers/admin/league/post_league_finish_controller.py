@@ -15,6 +15,7 @@ from spotto_league.models.league_log import LeagueLog
 from spotto_league.models.league_log_detail import LeagueLogDetail
 from spotto_league.models.user_point import UserPoint
 from spotto_league.database import db
+from ponno_linebot.ponno_bot import PonnoBot
 
 
 class PostLeagueFinishController(BaseController):
@@ -59,4 +60,5 @@ class PostLeagueFinishController(BaseController):
             self._league.league_point_group_id = group_id
             self._league.finish()
             self._league.save()
+        PonnoBot.push_about_finished_league(self._league.id)
         return redirect(url_for('league_list'))

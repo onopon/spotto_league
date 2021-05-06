@@ -11,6 +11,7 @@ from datetime import date
 from linebot import (
     LineBotApi, WebhookHandler
 )
+from linebot.models import MessageEvent, TextMessage
 from linebot.exceptions import (
     InvalidSignatureError
 )
@@ -66,6 +67,7 @@ def create_app():
     return app
 
 app = create_app()
+handler = WebhookHandler(app.config['LINE_BOT_CHANNEL_SECRET'])
 
 @app.route("/", methods=("GET", "POST"))
 @flask_login.login_required
@@ -253,6 +255,14 @@ def callback():
         abort(400)
 
     return 'OK'
+
+@handler.add(MessageEvent, message=TextMessage)
+def handle_message(event):
+    if (event.source.user_id not in settings.LINE_BOT_ADMIN_USER_IDS):
+        return
+    if (event.message.text == 'ここはどこ？'):
+        line_bot_api.reply_message(event.reply_token,
+                                   TextSendMessage(text="{}だよ".format(event.source.group_id)))
 
 '''
 for SqlAlchemy on production
