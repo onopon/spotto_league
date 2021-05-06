@@ -22,7 +22,7 @@ class PostListController(BaseController):
         if not self.login_user.is_admin():
             raise Exception("User: {} is not admin.".format(current_user.login_name))
 
-        self._users = User.all()
+        self._users = User.all_without_visitor()
         for user in self._users:
             role_type_key = "radio_{}".format(user.login_name)
             role_type_value = int(request.form.get(role_type_key, -1))
