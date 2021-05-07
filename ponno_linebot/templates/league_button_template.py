@@ -1,3 +1,5 @@
+from typing import Optional
+from enum import Enum
 from flask import url_for
 from linebot.models.template import Template, ButtonsTemplate
 
@@ -8,17 +10,20 @@ from spotto_league.entities.rank import Rank
 
 class LeagueButtonTemplate(Base):
     # override
-    def create(self, **kwargs) -> Template:
+    def create(self, **kwargs) -> Optional[Template]:
         league = kwargs["league"]
-        uri = "https://ponno.onopon.blog/{}".format(url_for('league', league_id = league.id))
+        uri = "https://ponno.onopon.blog/league/{}/".format(league.id)
+        title = "{} の結果".format(league.name)
+        text = self._create_result_text(league)
+
         return ButtonsTemplate(
-                text = self._create_text(league),
-                title = "{} の結果".format(league.name),
+                text = text,
+                title = title,
                 actions = [DetailURIAction().create(uri = uri)]
                 )
 
     # 3行までしか表示できない
-    def _create_text(self, league: ModelLeague) -> str:
+    def _create_result_text(self, league: ModelLeague) -> str:
         ranks = Rank.make_rank_list(league)  # ranksが空にならないことを信用する
         texts = []
         texts.append("今回の優勝は")

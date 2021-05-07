@@ -1,0 +1,31 @@
+from typing import Optional
+from enum import Enum
+from flask import url_for
+from linebot.models import CarouselColumn
+
+from ponno_linebot.carousel_columns.base import Base
+from ponno_linebot.actions.detail_uri_action import DetailURIAction
+from spotto_league.models.league import League as ModelLeague
+
+
+class LeagueButtonCarouselColumn(Base):
+    # override
+    def create(self, **kwargs) -> Optional[CarouselColumn]:
+        league = kwargs["league"]
+        uri = "https://ponno.onopon.blog/league/{}/".format(league.id)
+        title = "{}".format(league.name)
+        text = self._create_near_join_end_at_text(league)
+
+        return CarouselColumn(
+                text = text,
+                title = title,
+                actions = [DetailURIAction().create(uri = uri)]
+                )
+
+    # 3行までしか表示できない
+    # 60文字までしか表示できない
+    def _create_near_join_end_at_text(self, league: ModelLeague) -> str:
+        texts = []
+        texts.append("締め切りは、 {} です。".format(league.join_end_at_for_display))
+        texts.append("参加表明がまだの方はお早めに！！")
+        return '\n'.join(texts)

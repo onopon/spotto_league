@@ -1,4 +1,3 @@
-import os
 import argparse
 from spotto_league.models.user import User
 from spotto_league.models.role import Role, RoleType

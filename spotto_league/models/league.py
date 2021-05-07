@@ -16,6 +16,8 @@ from time import strftime
 from enum import Enum
 
 
+NEAR_JOIN_END_AT_SECONDS = 3*60*60 # 参加締め切り時刻に近いとする時間（秒）
+
 class LeagueStatus(Enum):
     RECRUITING = 0
     READY = 1
@@ -140,3 +142,14 @@ class League(db.Model, Base):
 
     def is_after_session(self) -> bool:
         return dt.combine(self.date, self.end_at) < dt.now()
+
+    def is_near_join_end_at(self) -> bool:
+        if not self.is_status_recruiting():
+            return False
+
+        now = dt.now()
+        if self.join_end_at < now:
+            return False
+
+        delta = self.join_end_at - now
+        return delta.seconds <= NEAR_JOIN_END_AT_SECONDS
