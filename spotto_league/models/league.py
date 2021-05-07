@@ -22,6 +22,7 @@ class LeagueStatus(Enum):
     RECRUITING = 0
     READY = 1
     FINISHED = 2
+    RECRUITING_NEAR_JOIN_END_AT = 3
 
 
 class League(db.Model, Base):
@@ -100,10 +101,13 @@ class League(db.Model, Base):
 
     @property
     def join_end_at_for_display(self) -> str:
-        return self.join_end_at.strftime('%m月%d日（%a） %H:%M')
+        return self.join_end_at.strftime('%m月%d日（%a）%H:%M')
 
     def league_point_group_id_is(self, group_id: int) -> bool:
         return group_id == self.recommend_league_point_group_id
+
+    def recruiting_near_join_end_at(self) -> None:
+        self.status = LeagueStatus.RECRUITING_NEAR_JOIN_END_AT.value
 
     def ready(self) -> None:
         self.status = LeagueStatus.READY.value
@@ -115,7 +119,11 @@ class League(db.Model, Base):
         return self.date == dt.now().date()
 
     def is_status_recruiting(self) -> bool:
-        return LeagueStatus(self.status) == LeagueStatus.RECRUITING
+        return LeagueStatus(self.status) == LeagueStatus.RECRUITING or\
+                self.is_status_recruiting_near_join_end_at()
+
+    def is_status_recruiting_near_join_end_at(self) -> bool:
+        return LeagueStatus(self.status) == LeagueStatus.RECRUITING_NEAR_JOIN_END_AT
 
     def is_status_ready(self) -> bool:
         return LeagueStatus(self.status) == LeagueStatus.READY

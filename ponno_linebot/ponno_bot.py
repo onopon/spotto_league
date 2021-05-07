@@ -1,10 +1,11 @@
 import argparse
+import json
 from enum import Enum
 from typing import Optional, List
 from linebot import (
     LineBotApi, WebhookHandler
 )
-from linebot.models import MessageEvent
+from linebot.models import MessageEvent, TextSendMessage
 from ponno_linebot.messages.base import Base as MessageBase
 from ponno_linebot.messages.league_template_send_message import LeagueTemplateSendMessage
 import settings
@@ -49,11 +50,15 @@ class PonnoBot:
         message = LeagueTemplateSendMessage.get_for_push_about_join_end_at_deadline()
         if not message:
             return
+        texts = ["締め切りの近い練習会があるみたいだよ！",
+                 "参加表明がまだの方はお早めにね！"]
+        LineBotApi(settings.LINE_BOT_CHANNEL_ACCESS_TOKEN).push_message(channel, TextSendMessage(text='\n'.join(texts)))
         LineBotApi(settings.LINE_BOT_CHANNEL_ACCESS_TOKEN).push_message(channel, message)
 
 if __name__ == '__main__':
     '''
     ex)
+    poetry run python -m ponno_linebot.ponno_bot --method_name push_about_finished_league --kwargs '{"league_id": 3}'
     poetry run python -m ponno_linebot.ponno_bot --method_name push_about_join_end_at_deadline
     '''
     # ponno_linebotはspotto_leagueと切り分けたからか、appの設定を書かないと機能しない
@@ -61,6 +66,7 @@ if __name__ == '__main__':
     app.app_context().push()
     parser = argparse.ArgumentParser()
     parser.add_argument('--method_name', required=True, type=str)
-    parser.add_argument('--kwargs', type=hash, default={})
+    parser.add_argument('--kwargs', type=str, default='{}')
     args = parser.parse_args()
-    getattr(PonnoBot, args.method_name)(**args.kwargs)
+    kwargs = json.loads(args.kwargs)
+    getattr(PonnoBot, args.method_name)(**kwargs)

@@ -26,6 +26,7 @@ class LeagueButtonCarouselColumn(Base):
     # 60文字までしか表示できない
     def _create_near_join_end_at_text(self, league: ModelLeague) -> str:
         texts = []
-        texts.append("締め切りは、 {} です。".format(league.join_end_at_for_display))
-        texts.append("参加表明がまだの方はお早めに！！")
+        texts.append("開催日時: {}".format(league.date_for_display))
+        texts.append("締め切り: {}".format(league.join_end_at_for_display))
+        texts.append("場所: {}".format(league.place.name))
         return '\n'.join(texts)

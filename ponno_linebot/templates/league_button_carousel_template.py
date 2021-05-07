@@ -16,12 +16,14 @@ class LeagueButtonCarouselTemplate(Base):
         leagues = ModelLeague.all()
         columns = []
         for l in leagues:
-            if not l.is_near_join_end_at():
+            if (not l.is_near_join_end_at()) or l.is_status_recruiting_near_join_end_at():
                 continue
             _kwargs = kwargs
             _kwargs["league"] = l
             column = LeagueButtonCarouselColumn().create(**_kwargs)
             columns.append(column)
+            l.recruiting_near_join_end_at()
+            l.save()
             if len(columns) > COLUMN_MAX_COUNT:
                 break
         if not columns:

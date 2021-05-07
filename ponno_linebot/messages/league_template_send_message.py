@@ -31,5 +31,5 @@ class LeagueTemplateSendMessage(Base):
         template = LeagueButtonCarouselTemplate().create(**kwargs)
         if not template:
             return None
-        return TemplateSendMessage(alt_text="参加締め切りの近いリーグ戦をお知らせします。",
+        return TemplateSendMessage(alt_text="参加締め切りの近い練習会をお知らせします。",
                                    template=template)
