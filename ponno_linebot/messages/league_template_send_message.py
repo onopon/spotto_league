@@ -33,3 +33,12 @@ class LeagueTemplateSendMessage(Base):
             return None
         return TemplateSendMessage(alt_text="参加締め切りの近い練習会をお知らせします。",
                                    template=template)
+
+    @classmethod
+    def get_for_push_about_all_recruiting_leagues(cls, **kwargs) -> Optional[Message]:
+        kwargs["is_recruiting"] = True
+        template = LeagueButtonCarouselTemplate().create(**kwargs)
+        if not template:
+            return None
+        return TemplateSendMessage(alt_text="募集中の練習会をお知らせします。",
+                                   template=template)

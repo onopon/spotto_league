@@ -13,7 +13,7 @@ class LeagueButtonCarouselColumn(Base):
     def create(self, **kwargs) -> Optional[CarouselColumn]:
         league = kwargs["league"]
         uri = "https://ponno.onopon.blog/league/{}/".format(league.id)
-        title = "{}".format(league.name)
+        title = "{}@{}".format(league.name, league.place.name)
         text = self._create_near_join_end_at_text(league)
 
         return CarouselColumn(
@@ -26,7 +26,6 @@ class LeagueButtonCarouselColumn(Base):
     # 60文字までしか表示できない
     def _create_near_join_end_at_text(self, league: ModelLeague) -> str:
         texts = []
-        texts.append("開催日時: {}".format(league.date_for_display))
-        texts.append("締め切り: {}".format(league.join_end_at_for_display))
-        texts.append("場所: {}".format(league.place.name))
+        texts.append("日時:{}".format(league.date_for_display))
+        texts.append("締切:{}".format(league.join_end_at_for_display))
         return '\n'.join(texts)
