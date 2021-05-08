@@ -77,7 +77,7 @@ class League(db.Model, Base):
 
     @property
     def league_points(self) -> List[LeaguePoint]:
-        if not self.league_point_group_id:
+        if self.league_point_group_id is None:
             return []
         if not self._league_points:
             self._league_points = LeaguePoint.find_all_by_group_id(self.league_point_group_id)
