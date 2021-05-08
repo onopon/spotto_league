@@ -1,4 +1,11 @@
 {% extends 'base.html' %}
+{% block head %}
+{% if user.id == login_user.id %}
+  {% if login_user.is_admin() %}
+    <script src="{{ url_for("static", filename="js/admin/user.js") }}?{{ timestamp }}"></script>
+  {% endif %}
+{% endif %}
+{% endblock %}
 
 {% block title %}{{ user.name }} さんのユーザ情報{% endblock %}
 

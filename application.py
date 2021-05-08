@@ -11,6 +11,7 @@ from datetime import date
 from linebot import (
     LineBotApi, WebhookHandler
 )
+from linebot.models import MessageEvent, TextMessage, TextSendMessage
 from linebot.exceptions import (
     InvalidSignatureError
 )
@@ -36,6 +37,7 @@ from spotto_league.controllers.admin.league.post_register_controller import Post
 from spotto_league.controllers.admin.league.league_controller import LeagueController as AdminLeagueController
 from spotto_league.controllers.admin.league.post_league_controller import PostLeagueController as PostAdminLeagueController
 from spotto_league.controllers.admin.league.post_league_finish_controller import PostLeagueFinishController as PostAdminLeagueFinishController
+from spotto_league.controllers.admin.league.post_notify_recruiting_controller import PostNotifyRecruitingController as PostAdminLeagueNotifyRecruitingController
 from spotto_league.controllers.admin.user.register_point_controller import RegisterPointController as AdminUserRegisterPointController
 from spotto_league.controllers.admin.user.post_register_point_controller import PostRegisterPointController as PostAdminUserRegisterPointController
 from spotto_league.controllers.admin.user.list_controller import ListController as AdminUserListController
@@ -66,6 +68,7 @@ def create_app():
     return app
 
 app = create_app()
+handler = WebhookHandler(app.config['LINE_BOT_CHANNEL_SECRET'])
 
 @app.route("/", methods=("GET", "POST"))
 @flask_login.login_required
@@ -181,6 +184,12 @@ def admin_league_finish(league_id: int):
     if request.method == "POST":
         return PostAdminLeagueFinishController().render(request, league_id=league_id)
 
+@app.route("/admin/league/notify_recruiting", methods=("GET", "POST"))
+@flask_login.login_required
+def notify_recruiting():
+    if request.method == "POST":
+        return PostAdminLeagueNotifyRecruitingController().render(request)
+
 @app.route("/admin/user/register/point", methods=("GET", "POST"))
 @flask_login.login_required
 def admin_user_register_point():
@@ -253,6 +262,14 @@ def callback():
         abort(400)
 
     return 'OK'
+
+@handler.add(MessageEvent, message=TextMessage)
+def handle_message(event):
+    if (event.source.user_id not in settings.LINE_BOT_ADMIN_USER_IDS):
+        return
+    if (event.message.text == 'ここはどこ？'):
+        line_bot_api.reply_message(event.reply_token,
+                                   TextSendMessage(text="{}だよ".format(event.source.group_id)))
 
 '''
 for SqlAlchemy on production

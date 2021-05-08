@@ -32,6 +32,9 @@
         <div class="col-4 small">
           募集締切日
         </div>
+        <div class="col-2 small">
+          通知チェック
+        </div>
       </div>
     </li>
     {% else %}
@@ -65,9 +68,21 @@
           {% endif %}
           {{ league.join_end_at_for_display }}
         </div>
+        <div class="col-2">
+          {% if league.is_in_join_session() %}
+            <input class="form-check-input" type="checkbox" name="league_ids" value="{{ league.id }}" checked>
+          {% else %}
+            <input class="form-check-input" type="checkbox" name="league_ids" value="{{ league.id }}" disabled>
+          {% endif %}
+        </div>
       </div>
     </li>
     {% endfor %}
+    <li class="list-group-item">
+        <div class="offset-3 col-6  offset-md-10 col-md-2">
+            <button class="btn notify_via_linebot">LINEで通知する</button>
+        </div>
+    </li>
   </ul>
 
   <ul class="nav nav-tabs mt-4">
