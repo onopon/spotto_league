@@ -45,7 +45,8 @@ class AddLeaguePoint(Base):
                                  [3, 9, 600 * 2],
                                  [3, 10, 500 * 2],
                                  [3, 11, 400 * 2],
-                                 [3, 12, 300 * 2]]
+                                 [3, 12, 300 * 2],
+                                 [0, 1, 0]]
             for data in league_point_list:
                 league_point = LeaguePoint()
                 league_point.group_id = data[0]

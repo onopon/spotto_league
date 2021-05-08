@@ -70,12 +70,21 @@ class PonnoBot:
         LineBotApi(settings.LINE_BOT_CHANNEL_ACCESS_TOKEN).push_message(channel, TextSendMessage(text='\n'.join(texts)))
         LineBotApi(settings.LINE_BOT_CHANNEL_ACCESS_TOKEN).push_message(channel, message)
 
+    @classmethod
+    def push_text(cls, text: str, channel: str = None) -> None:
+        if not settings.LINE_BOT_ENABLE:
+            return
+
+        channel = channel or settings.LINE_BOT_GROUP_ID_HASH[settings.LINE_BOT_ENV]
+        LineBotApi(settings.LINE_BOT_CHANNEL_ACCESS_TOKEN).push_message(channel, TextSendMessage(text=text))
+
 if __name__ == '__main__':
     '''
     ex)
     poetry run python -m ponno_linebot.ponno_bot --method_name push_about_finished_league --kwargs '{"league_id": 3}'
     poetry run python -m ponno_linebot.ponno_bot --method_name push_about_join_end_at_deadline
     poetry run python -m ponno_linebot.ponno_bot --method_name push_about_recruiting_league_information --kwargs '{"league_ids": [14, 15]}'
+    poetry run python -m ponno_linebot.ponno_bot --method_name push_text --kwargs '{"text": "hoge"}'
     '''
     # ponno_linebotはspotto_leagueと切り分けたからか、appの設定を書かないと機能しない
     app = create_app()

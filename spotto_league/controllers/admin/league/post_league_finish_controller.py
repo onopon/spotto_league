@@ -17,6 +17,8 @@ from spotto_league.models.user_point import UserPoint
 from spotto_league.database import db
 from ponno_linebot.ponno_bot import PonnoBot
 
+INVALID_MATCH_GROUP_ID = 0
+
 
 class PostLeagueFinishController(BaseController):
     __slots__ = ['_league']
@@ -29,7 +31,7 @@ class PostLeagueFinishController(BaseController):
         if not self._league.is_status_ready():
             raise Exception("League status is not ready")
 
-        if not request.form.get('league_point_group_id'):
+        if request.form.get('league_point_group_id') is None:
             raise Exception("league_point_group_id does not exist")
 
     # override
@@ -38,6 +40,7 @@ class PostLeagueFinishController(BaseController):
         session = db.session
         ranks = Rank.make_rank_list(self._league)
         group_id = request.form.get('league_point_group_id')
+
         league_points = LeaguePoint.find_all_by_group_id(group_id)
         bonus_points = BonusPoint.find_all_by_user_ids([r.user_id for r in ranks])
         for rank in ranks:
@@ -49,6 +52,10 @@ class PostLeagueFinishController(BaseController):
             user_point.user_id = rank.user_id
             user_point.set_league_point(self._league, league_point)
             user_point.save()
+
+            # group_id が 0（無効試合）だった場合、bonus_pointの付与も行わない
+            if group_id == INVALID_MATCH_GROUP_ID:
+                continue
 
             win_bonus_points = list(filter(lambda b: rank.did_win(b.user_id), bonus_points))
             for bonus_point in win_bonus_points:
