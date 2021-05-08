@@ -14,7 +14,7 @@ class LeagueButtonCarouselTemplate(Base):
     # override
     def create(self, **kwargs) -> Optional[Template]:
         columns = []
-        if kwargs["is_recruiting"]:
+        if kwargs.get("is_recruiting", False):
             columns = self._make_recruiting_league_columns(**kwargs)
         else:
             columns = self._make_near_join_end_at_league_columns(**kwargs)
