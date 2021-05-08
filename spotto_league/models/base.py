@@ -1,4 +1,4 @@
-from typing import Optional, Any
+from typing import Optional, Any, List
 from spotto_league.database import db
 
 
@@ -19,6 +19,10 @@ class Base():
     @classmethod
     def find_by_id(cls, target_id: int) -> Optional[Any]:
         return db.session.query(cls).filter(cls.id==target_id).one_or_none()
+
+    @classmethod
+    def find_all_by_ids(cls, target_ids: List[int]) -> List[Any]:
+        return db.session.query(cls).filter(cls.id.in_(target_ids)).all()
 
     def save(self) -> None:
         session = db.session.object_session(self) or db.session

@@ -15,9 +15,9 @@ class LeagueButtonCarouselTemplate(Base):
     def create(self, **kwargs) -> Optional[Template]:
         columns = []
         if kwargs["is_recruiting"]:
-            columns = self._make_recruiting_league_columns()
+            columns = self._make_recruiting_league_columns(**kwargs)
         else:
-            columns = self._make_near_join_end_at_league_columns()
+            columns = self._make_near_join_end_at_league_columns(**kwargs)
         if not columns:
             return None
         return CarouselTemplate(columns = columns)
@@ -40,7 +40,7 @@ class LeagueButtonCarouselTemplate(Base):
         return columns
 
     def _make_recruiting_league_columns(self, **kwargs) -> List[CarouselColumn]:
-        leagues = ModelLeague.all()
+        leagues = ModelLeague.find_all_by_ids(kwargs.get("league_ids", []))
         leagues.sort(key=lambda l:l.date)
         columns = []
         for l in leagues:

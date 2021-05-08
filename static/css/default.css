@@ -382,6 +382,12 @@ label.invalid {
   background: #6086E5;
 }
 
+.btn.notify_via_linebot {
+  width: 100%;
+  border: 3px solid #FF9A68;
+  background: #FF9A68;
+}
+
 #user-info .h1 {
   margin-bottom: 0;
 }

@@ -35,7 +35,8 @@ class LeagueTemplateSendMessage(Base):
                                    template=template)
 
     @classmethod
-    def get_for_push_about_all_recruiting_leagues(cls, **kwargs) -> Optional[Message]:
+    def get_for_push_about_recruiting_leagues(cls, **kwargs) -> Optional[Message]:
+        _ = kwargs["league_ids"]
         kwargs["is_recruiting"] = True
         template = LeagueButtonCarouselTemplate().create(**kwargs)
         if not template:

@@ -55,13 +55,14 @@ class PonnoBot:
         LineBotApi(settings.LINE_BOT_CHANNEL_ACCESS_TOKEN).push_message(channel, TextSendMessage(text='\n'.join(texts)))
         LineBotApi(settings.LINE_BOT_CHANNEL_ACCESS_TOKEN).push_message(channel, message)
 
+    # league_ids の中で、まだ申し込み中のLeagueを投稿する。
     @classmethod
-    def push_about_recruiting_league_information(cls, channel: str = None) -> None:
+    def push_about_recruiting_league_information(cls, league_ids: List[int], channel: str = None) -> None:
         if not settings.LINE_BOT_ENABLE:
             return
 
         channel = channel or settings.LINE_BOT_GROUP_ID_HASH[settings.LINE_BOT_ENV]
-        message = LeagueTemplateSendMessage.get_for_push_about_all_recruiting_leagues()
+        message = LeagueTemplateSendMessage.get_for_push_about_recruiting_leagues(league_ids = league_ids)
         if not message:
             return
         texts = ["募集中の練習会が追加されたみたいだよ！",
@@ -74,7 +75,7 @@ if __name__ == '__main__':
     ex)
     poetry run python -m ponno_linebot.ponno_bot --method_name push_about_finished_league --kwargs '{"league_id": 3}'
     poetry run python -m ponno_linebot.ponno_bot --method_name push_about_join_end_at_deadline
-    poetry run python -m ponno_linebot.ponno_bot --method_name push_about_recruiting_league_information
+    poetry run python -m ponno_linebot.ponno_bot --method_name push_about_recruiting_league_information --kwargs '{"league_ids": [14, 15]}'
     '''
     # ponno_linebotはspotto_leagueと切り分けたからか、appの設定を書かないと機能しない
     app = create_app()
