@@ -8,6 +8,7 @@ from sqlalchemy import event
 from sqlalchemy.pool import Pool
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import date
+from datetime import datetime as dt
 from linebot import (
     LineBotApi, WebhookHandler
 )
@@ -46,6 +47,7 @@ from spotto_league.controllers.user.post_league_join_controller import PostLeagu
 from spotto_league.controllers.user.post_league_cancel_controller import PostLeagueCancelController as PostUserLeagueCancelController
 from spotto_league.modules.password_util import PasswordUtil
 from spotto_league.models.user import User
+from ponno_linebot.ponno_bot import PonnoBot
 
 login_manager = flask_login.LoginManager()
 
@@ -204,9 +206,20 @@ def admin_user_list():
         return PostAdminUserListController().render(request)
     return AdminUserListController().render(request)
 
-@app.errorhandler(500)
-def not_found(error):
-    return render_template("error.html", error_message=str(traceback.format_exc()))
+@app.errorhandler(Exception)
+def handle_exception(e):
+    path = "{}/log/error.{}.log".format(os.getcwd(), app.config['ENV'])
+    logs = [str(dt.now())]
+    if flask_login.current_user.is_authenticated:
+        logs.append(flask_login.current_user.id)
+    logs.append(traceback.format_exc())
+    error_msg = " ".join(logs)
+    with open(path, mode='a') as f:
+        f.write(error_msg)
+    if app.config['ENV'] is "production":
+        # ぽのちゃん実験場にエラーログを送る
+        PonnoBot.push_text(error_msg, app.config['LINE_BOT_GROUP_ID_HASH']['development'])
+    return render_template("error.html", error_message=str(error_msg))
 
 '''
 for flask-login
