@@ -56,5 +56,6 @@ class PostLoginController(BaseController):
         user = User()
         user.id = self._user.login_name
         user.login_name = self._user.login_name
-        flask_login.login_user(user)
+        remember = True if not self._user.is_visitor() else False
+        flask_login.login_user(user, remember=remember)
         return redirect(url_for('league_list'))
