@@ -32,10 +32,10 @@ class LeagueTemplateSendMessage(Base):
         league_id = kwargs["league_id"]
         league = ModelLeague.find(league_id)
         kwargs["league"] = league
-        texts = ["{}開催予定の「{}」は中止となりました。".format(league.date_for_display, league.name)]
+        texts = ["{}開催予定の「{}」は中止となりました。\n".format(league.date_for_display, league.name)]
         user_names = ["{}さん".format(m.user.name) for m in league.members]
         if user_names:
-            texts.append("参加表明を出していた、")
+            texts.append("参加表明を出していた")
             texts.extend(user_names)
         texts.append("申し訳ございません。")
         return TextSendMessage(text='\n'.join(texts))

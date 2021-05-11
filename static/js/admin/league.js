@@ -27,6 +27,10 @@ $(function() {
     }
   });
 
+  $('.btn.cancel-league').click(function() {
+    return confirm('練習会を中止します。よろしいですか？\n※中止してしまうと、この練習会を再度募集することはできません。');
+  });
+
   $('#admin-league .btn.force-join').click(function() {
     var userSelect = $('[name=user-select] option:selected');
     if (confirm(`${userSelect.text()}さんを飛び入り参加させてもよろしいですか？`)) {
