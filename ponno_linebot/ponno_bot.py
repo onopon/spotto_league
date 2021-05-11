@@ -42,6 +42,15 @@ class PonnoBot:
         LineBotApi(settings.LINE_BOT_CHANNEL_ACCESS_TOKEN).push_message(channel, message)
 
     @classmethod
+    def push_about_cancel_league(cls, league_id: int, channel: str = None) -> None:
+        if not settings.LINE_BOT_ENABLE:
+            return
+
+        channel = channel or settings.LINE_BOT_GROUP_ID_HASH[settings.LINE_BOT_ENV]
+        message = LeagueTemplateSendMessage.get_for_push_about_cacnel_league(league_id = league_id)
+        LineBotApi(settings.LINE_BOT_CHANNEL_ACCESS_TOKEN).push_message(channel, message)
+
+    @classmethod
     def push_about_join_end_at_deadline(cls, channel: str = None) -> None:
         if not settings.LINE_BOT_ENABLE:
             return

@@ -382,7 +382,7 @@ label.invalid {
   background: #6086E5;
 }
 
-.btn.notify_via_linebot {
+.btn.notify_via_linebot, .btn.cancel-league {
   width: 100%;
   border: 3px solid #FF9A68;
   background: #FF9A68;

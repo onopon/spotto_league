@@ -2,6 +2,10 @@
 <div class="row small orange">
   <div class="col small">※ 順位未確定</div>
 </div>
+{% elif league.is_status_cancel() %}
+<div class="row small orange">
+  <div class="col small">※ 中止となりました</div>
+</div>
 {% endif %}
 <div class="row small gray">
   <div class="col">{{ league.date_for_display }}</div>
