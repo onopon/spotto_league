@@ -23,6 +23,7 @@ class LeagueStatus(Enum):
     READY = 1
     FINISHED = 2
     RECRUITING_NEAR_JOIN_END_AT = 3
+    CANCEL = 4
 
 
 class League(db.Model, Base):
@@ -115,6 +116,9 @@ class League(db.Model, Base):
     def finish(self) -> None:
         self.status = LeagueStatus.FINISHED.value
 
+    def cancel(self) -> None:
+        self.status = LeagueStatus.CANCEL.value
+
     def is_on_today(self) -> bool:
         return self.date == dt.now().date()
 
@@ -129,7 +133,11 @@ class League(db.Model, Base):
         return LeagueStatus(self.status) == LeagueStatus.READY
 
     def is_status_finished(self) -> bool:
-        return LeagueStatus(self.status) == LeagueStatus.FINISHED
+        return LeagueStatus(self.status) == LeagueStatus.FINISHED or\
+                self.is_status_cancel()
+
+    def is_status_cancel(self) -> bool:
+        return LeagueStatus(self.status) == LeagueStatus.CANCEL
 
     @classmethod
     def all(cls) -> List['League']:

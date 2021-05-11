@@ -59,6 +59,8 @@
       {% else %}
         {% include 'league/in_session.html' %}  
       {% endif %}
+    {% elif league.is_status_cancel() %}
+      {% include 'league/cancel.html' %}  
     {% elif league.is_status_finished() %}
       {% include 'league/after_session.html' %}  
     {% endif %}

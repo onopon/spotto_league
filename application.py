@@ -38,6 +38,7 @@ from spotto_league.controllers.admin.league.post_register_controller import Post
 from spotto_league.controllers.admin.league.league_controller import LeagueController as AdminLeagueController
 from spotto_league.controllers.admin.league.post_league_controller import PostLeagueController as PostAdminLeagueController
 from spotto_league.controllers.admin.league.post_league_finish_controller import PostLeagueFinishController as PostAdminLeagueFinishController
+from spotto_league.controllers.admin.league.league_cancel_controller import LeagueCancelController as AdminLeagueCancelController
 from spotto_league.controllers.admin.league.post_notify_recruiting_controller import PostNotifyRecruitingController as PostAdminLeagueNotifyRecruitingController
 from spotto_league.controllers.admin.user.register_point_controller import RegisterPointController as AdminUserRegisterPointController
 from spotto_league.controllers.admin.user.post_register_point_controller import PostRegisterPointController as PostAdminUserRegisterPointController
@@ -186,6 +187,11 @@ def admin_league_finish(league_id: int):
     if request.method == "POST":
         return PostAdminLeagueFinishController().render(request, league_id=league_id)
 
+@app.route("/admin/league/<int:league_id>/cancel", methods=("GET", "POST"))
+@flask_login.login_required
+def admin_league_cancel(league_id: int):
+    return AdminLeagueCancelController().render(request, league_id=league_id)
+    
 @app.route("/admin/league/notify_recruiting", methods=("GET", "POST"))
 @flask_login.login_required
 def notify_recruiting():

@@ -43,8 +43,11 @@
     </li>
   </ul>
   <div class="row mt-4 mb-5">
-    <div class="col-4">
+    <div class="col-2">
       <a class='btn' href='/admin/league/modify?id={{ league.id }}'>修正する</a>
+    </div>
+    <div class="col-2">
+      <a class='btn cancel-league' href='/admin/league/{{ league.id }}/cancel'>中止する</a>
     </div>
   </div>
 </div>
