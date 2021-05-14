@@ -168,4 +168,6 @@ class League(db.Model, Base):
             return False
 
         delta = self.join_end_at - now
+        if delta.days > 0:
+            return False
         return delta.seconds <= NEAR_JOIN_END_AT_SECONDS
