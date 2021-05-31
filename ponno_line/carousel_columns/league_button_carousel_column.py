@@ -3,8 +3,8 @@ from enum import Enum
 from flask import url_for
 from linebot.models import CarouselColumn
 
-from ponno_linebot.carousel_columns.base import Base
-from ponno_linebot.actions.detail_uri_action import DetailURIAction
+from ponno_line.carousel_columns.base import Base
+from ponno_line.actions.detail_uri_action import DetailURIAction
 from spotto_league.models.league import League as ModelLeague
 
 

@@ -3,8 +3,8 @@ from enum import Enum
 from flask import url_for
 from linebot.models.template import Template, ButtonsTemplate
 
-from ponno_linebot.templates.base import Base
-from ponno_linebot.actions.detail_uri_action import DetailURIAction
+from ponno_line.templates.base import Base
+from ponno_line.actions.detail_uri_action import DetailURIAction
 from spotto_league.models.league import League as ModelLeague
 from spotto_league.entities.rank import Rank
 

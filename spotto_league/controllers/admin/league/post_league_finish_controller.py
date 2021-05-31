@@ -15,7 +15,7 @@ from spotto_league.models.league_log import LeagueLog
 from spotto_league.models.league_log_detail import LeagueLogDetail
 from spotto_league.models.user_point import UserPoint
 from spotto_league.database import db
-from ponno_linebot.ponno_bot import PonnoBot
+from ponno_line.ponno_bot import PonnoBot
 
 INVALID_MATCH_GROUP_ID = 0
 

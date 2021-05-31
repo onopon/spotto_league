@@ -1,5 +1,5 @@
 from linebot.models import Action, URIAction
-from ponno_linebot.actions.base import Base
+from ponno_line.actions.base import Base
 
 
 DEFAULT_LABEL = "詳細を見る"

@@ -2,8 +2,8 @@ from typing import Optional, List
 from flask import url_for
 from linebot.models.template import Template, CarouselTemplate, CarouselColumn
 
-from ponno_linebot.templates.base import Base
-from ponno_linebot.carousel_columns.league_button_carousel_column import LeagueButtonCarouselColumn
+from ponno_line.templates.base import Base
+from ponno_line.carousel_columns.league_button_carousel_column import LeagueButtonCarouselColumn
 from spotto_league.models.league import League as ModelLeague
 from spotto_league.entities.rank import Rank
 

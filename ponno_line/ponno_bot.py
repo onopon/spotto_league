@@ -6,8 +6,8 @@ from linebot import (
     LineBotApi, WebhookHandler
 )
 from linebot.models import MessageEvent, TextSendMessage
-from ponno_linebot.messages.base import Base as MessageBase
-from ponno_linebot.messages.league_template_send_message import LeagueTemplateSendMessage
+from ponno_line.messages.base import Base as MessageBase
+from ponno_line.messages.league_template_send_message import LeagueTemplateSendMessage
 import settings
 from spotto_league.app import create_app
 
@@ -87,15 +87,16 @@ class PonnoBot:
         channel = channel or settings.LINE_BOT_GROUP_ID_HASH[settings.LINE_BOT_ENV]
         LineBotApi(settings.LINE_BOT_CHANNEL_ACCESS_TOKEN).push_message(channel, TextSendMessage(text=text))
 
+
 if __name__ == '__main__':
     '''
     ex)
-    poetry run python -m ponno_linebot.ponno_bot --method_name push_about_finished_league --kwargs '{"league_id": 3}'
-    poetry run python -m ponno_linebot.ponno_bot --method_name push_about_join_end_at_deadline
-    poetry run python -m ponno_linebot.ponno_bot --method_name push_about_recruiting_league_information --kwargs '{"league_ids": [14, 15]}'
-    poetry run python -m ponno_linebot.ponno_bot --method_name push_text --kwargs '{"text": "hoge"}'
+    poetry run python -m ponno_line.ponno_bot --method_name push_about_finished_league --kwargs '{"league_id": 3}'
+    poetry run python -m ponno_line.ponno_bot --method_name push_about_join_end_at_deadline
+    poetry run python -m ponno_line.ponno_bot --method_name push_about_recruiting_league_information --kwargs '{"league_ids": [14, 15]}'
+    poetry run python -m ponno_line.ponno_bot --method_name push_text --kwargs '{"text": "hoge"}'
     '''
-    # ponno_linebotはspotto_leagueと切り分けたからか、appの設定を書かないと機能しない
+    # ponno_lineはspotto_leagueと切り分けたからか、appの設定を書かないと機能しない
     app = create_app()
     app.app_context().push()
     parser = argparse.ArgumentParser()
