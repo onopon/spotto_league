@@ -1,4 +1,4 @@
 #!/bin/bash
 export PATH="$HOME/.poetry/bin:$PATH"
 cd $(dirname $0)
-poetry run python -m ponno_linebot.ponno_bot --method_name push_about_join_end_at_deadline
+poetry run python -m ponno_line.ponno_bot --method_name push_about_join_end_at_deadline

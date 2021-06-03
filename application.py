@@ -2,9 +2,8 @@ import os
 import traceback
 import locale
 import flask_login
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for, abort
 from sqlalchemy import exc
-from sqlalchemy import event
 from sqlalchemy.pool import Pool
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import date
@@ -48,7 +47,8 @@ from spotto_league.controllers.user.post_league_join_controller import PostLeagu
 from spotto_league.controllers.user.post_league_cancel_controller import PostLeagueCancelController as PostUserLeagueCancelController
 from spotto_league.modules.password_util import PasswordUtil
 from spotto_league.models.user import User
-from ponno_linebot.ponno_bot import PonnoBot
+from ponno_line.ponno_bot import PonnoBot
+
 
 login_manager = flask_login.LoginManager()
 
@@ -223,8 +223,9 @@ def handle_exception(e):
     with open(path, mode='a') as f:
         f.write(error_msg)
     if app.config['ENV'] is "production":
-        # ぽのちゃん実験場にエラーログを送る
-        PonnoBot.push_text(error_msg, app.config['LINE_BOT_GROUP_ID_HASH']['development'])
+        # ぽのちゃん実験場にエラーログを送る(上限1000文字）
+        length = 995 if len(error_msg) > 995 else len(error_msg)
+        PonnoBot.push_text("...\n" + error_msg[- length:], app.config['LINE_BOT_GROUP_ID_HASH']['development'])
     return render_template("error.html", error_message=str(error_msg))
 
 '''
@@ -282,9 +283,10 @@ def callback():
 
     return 'OK'
 
+
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    if (event.source.user_id not in settings.LINE_BOT_ADMIN_USER_IDS):
+    if (event.source.user_id not in app.config['LINE_BOT_ADMIN_USER_IDS']):
         return
     if (event.message.text == 'ここはどこ？'):
         line_bot_api.reply_message(event.reply_token,

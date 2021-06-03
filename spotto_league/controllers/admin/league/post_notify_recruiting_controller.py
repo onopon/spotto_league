@@ -5,7 +5,7 @@ from werkzeug.wrappers import BaseRequest, BaseResponse
 from flask import Flask, request, render_template, redirect, url_for
 from spotto_league.models.place import Place
 from spotto_league.models.league import League
-from ponno_linebot.ponno_bot import PonnoBot
+from ponno_line.ponno_bot import PonnoBot
 
 class PostNotifyRecruitingController(BaseController):
     # override

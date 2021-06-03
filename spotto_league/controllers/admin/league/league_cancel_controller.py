@@ -3,7 +3,7 @@ from spotto_league.controllers.base_controller import BaseController
 from werkzeug.wrappers import BaseRequest, BaseResponse
 from flask import request, redirect, url_for
 from spotto_league.models.league import League
-from ponno_linebot.ponno_bot import PonnoBot
+from ponno_line.ponno_bot import PonnoBot
 
 
 class LeagueCancelController(BaseController):
