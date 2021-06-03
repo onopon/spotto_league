@@ -1,13 +1,12 @@
 from typing import Dict, Any, List, Optional
 from datetime import datetime as dt
 from spotto_league.modules.password_util import PasswordUtil
-import hashlib
 import flask_login
 from spotto_league.database import db
 from .base import Base
-from .role import Role, RoleType
-import datetime
+from .role import Role
 from enum import Enum
+
 
 class Gender(Enum):
     MALE = 1
@@ -46,9 +45,9 @@ class User(flask_login.UserMixin, db.Model, Base):
 
     @classmethod
     def find_by_login_name(cls, login_name) -> Optional['User']:
-        return db.session.query(cls).filter(cls.login_name==login_name).one_or_none()
+        return db.session.query(cls).filter(cls.login_name == login_name).one_or_none()
 
-    def to_hash(self) -> Dict[str ,Any]:
+    def to_hash(self) -> Dict[str, Any]:
         return {'id': self.id,
                 'login_name': self.login_name,
                 'name': self.name}

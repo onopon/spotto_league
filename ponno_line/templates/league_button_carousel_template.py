@@ -33,8 +33,6 @@ class LeagueButtonCarouselTemplate(Base):
             _kwargs["league"] = l
             column = LeagueButtonCarouselColumn().create(**_kwargs)
             columns.append(column)
-            l.recruiting_near_join_end_at()
-            l.save()
             if len(columns) > COLUMN_MAX_COUNT:
                 break
         return columns

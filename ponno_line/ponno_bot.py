@@ -1,15 +1,17 @@
 import argparse
 import json
-from enum import Enum
-from typing import Optional, List
+from typing import List
 from linebot import (
-    LineBotApi, WebhookHandler
+    LineBotApi
 )
 from linebot.models import MessageEvent, TextSendMessage
+from linebot.exceptions import LineBotApiError
 from ponno_line.messages.base import Base as MessageBase
 from ponno_line.messages.league_template_send_message import LeagueTemplateSendMessage
+from ponno_line.ponno_notify import PonnoNotify
 import settings
 from spotto_league.app import create_app
+from spotto_league.models.league import League as ModelLeague
 
 
 class MessageList:
@@ -17,19 +19,21 @@ class MessageList:
     def get_by_priority(cls) -> List[MessageBase]:
         return []
 
+
 class PonnoBot:
     __slots__ = ['_api']
+
     def __init__(self) -> None:
         self._api = LineBotApi(settings.LINE_BOT_CHANNEL_ACCESS_TOKEN)
 
-    def reply(event: MessageEvent) -> None:
+    def reply(self, event: MessageEvent) -> None:
         if not settings.LINE_BOT_ENABLE:
             return
 
         for message_cls in MessageList.get_by_priority():
             msg = message_cls.get(event)
             if msg:
-                self._api.reply_message(event.reply_token, message)
+                self._api.reply_message(event.reply_token, msg)
                 return
 
     @classmethod
@@ -37,18 +41,24 @@ class PonnoBot:
         if not settings.LINE_BOT_ENABLE:
             return
 
-        channel = channel or settings.LINE_BOT_GROUP_ID_HASH[settings.LINE_BOT_ENV]
-        message = LeagueTemplateSendMessage.get_for_push_about_finished_league(league_id = league_id)
-        LineBotApi(settings.LINE_BOT_CHANNEL_ACCESS_TOKEN).push_message(channel, message)
+        try:
+            channel = channel or settings.LINE_BOT_GROUP_ID_HASH[settings.LINE_BOT_ENV]
+            message = LeagueTemplateSendMessage.get_for_push_about_finished_league(league_id=league_id)
+            LineBotApi(settings.LINE_BOT_CHANNEL_ACCESS_TOKEN).push_message(channel, message)
+        except LineBotApiError:
+            PonnoNotify().notify_about_finished_league(league_id)
 
     @classmethod
     def push_about_cancel_league(cls, league_id: int, channel: str = None) -> None:
         if not settings.LINE_BOT_ENABLE:
             return
 
-        channel = channel or settings.LINE_BOT_GROUP_ID_HASH[settings.LINE_BOT_ENV]
-        message = LeagueTemplateSendMessage.get_for_push_about_cacnel_league(league_id = league_id)
-        LineBotApi(settings.LINE_BOT_CHANNEL_ACCESS_TOKEN).push_message(channel, message)
+        try:
+            channel = channel or settings.LINE_BOT_GROUP_ID_HASH[settings.LINE_BOT_ENV]
+            message = LeagueTemplateSendMessage.get_for_push_about_cacnel_league(league_id=league_id)
+            LineBotApi(settings.LINE_BOT_CHANNEL_ACCESS_TOKEN).push_message(channel, message)
+        except LineBotApiError:
+            PonnoNotify().notify_about_cancel_league(league_id)
 
     @classmethod
     def push_about_join_end_at_deadline(cls, channel: str = None) -> None:
@@ -59,10 +69,21 @@ class PonnoBot:
         message = LeagueTemplateSendMessage.get_for_push_about_join_end_at_deadline()
         if not message:
             return
-        texts = ["締め切りの近い練習会があるみたいだよ！",
-                 "参加表明がまだの方はお早めにね！"]
-        LineBotApi(settings.LINE_BOT_CHANNEL_ACCESS_TOKEN).push_message(channel, TextSendMessage(text='\n'.join(texts)))
-        LineBotApi(settings.LINE_BOT_CHANNEL_ACCESS_TOKEN).push_message(channel, message)
+        try:
+            texts = ["締め切りの近い練習会があるみたいだよ！",
+                     "参加表明がまだの方はお早めにね！"]
+            LineBotApi(settings.LINE_BOT_CHANNEL_ACCESS_TOKEN).push_message(channel, TextSendMessage(text='\n'.join(texts)))
+            LineBotApi(settings.LINE_BOT_CHANNEL_ACCESS_TOKEN).push_message(channel, message)
+        except LineBotApiError:
+            PonnoNotify().notify_about_join_end_at_deadline()
+
+        leagues = ModelLeague.all()
+        leagues.sort(key=lambda l: l.join_end_at)
+        for l in leagues:
+            if (not l.is_near_join_end_at()) or l.is_status_recruiting_near_join_end_at():
+                continue
+            l.recruiting_near_join_end_at()
+            l.save()
 
     # league_ids の中で、まだ申し込み中のLeagueを投稿する。
     @classmethod
@@ -71,21 +92,27 @@ class PonnoBot:
             return
 
         channel = channel or settings.LINE_BOT_GROUP_ID_HASH[settings.LINE_BOT_ENV]
-        message = LeagueTemplateSendMessage.get_for_push_about_recruiting_leagues(league_ids = league_ids)
+        message = LeagueTemplateSendMessage.get_for_push_about_recruiting_leagues(league_ids=league_ids)
         if not message:
             return
-        texts = ["募集中の練習会が追加されたみたいだよ！",
-                 "ご都合の合う方はどしどし参加表明ボタンを押してね！"]
-        LineBotApi(settings.LINE_BOT_CHANNEL_ACCESS_TOKEN).push_message(channel, TextSendMessage(text='\n'.join(texts)))
-        LineBotApi(settings.LINE_BOT_CHANNEL_ACCESS_TOKEN).push_message(channel, message)
+        try:
+            texts = ["募集中の練習会が追加されたみたいだよ！",
+                     "ご都合の合う方はどしどし参加表明ボタンを押してね！"]
+            LineBotApi(settings.LINE_BOT_CHANNEL_ACCESS_TOKEN).push_message(channel, TextSendMessage(text='\n'.join(texts)))
+            LineBotApi(settings.LINE_BOT_CHANNEL_ACCESS_TOKEN).push_message(channel, message)
+        except LineBotApiError:
+            PonnoNotify().notify_about_recruiting_league_information(league_ids)
 
     @classmethod
     def push_text(cls, text: str, channel: str = None) -> None:
         if not settings.LINE_BOT_ENABLE:
             return
 
-        channel = channel or settings.LINE_BOT_GROUP_ID_HASH[settings.LINE_BOT_ENV]
-        LineBotApi(settings.LINE_BOT_CHANNEL_ACCESS_TOKEN).push_message(channel, TextSendMessage(text=text))
+        try:
+            channel = channel or settings.LINE_BOT_GROUP_ID_HASH[settings.LINE_BOT_ENV]
+            LineBotApi(settings.LINE_BOT_CHANNEL_ACCESS_TOKEN).push_message(channel, TextSendMessage(text=text))
+        except LineBotApiError:
+            PonnoNotify().execute(text)
 
 
 if __name__ == '__main__':
