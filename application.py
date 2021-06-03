@@ -223,8 +223,9 @@ def handle_exception(e):
     with open(path, mode='a') as f:
         f.write(error_msg)
     if app.config['ENV'] is "production":
-        # ぽのちゃん実験場にエラーログを送る
-        PonnoBot.push_text(error_msg, app.config['LINE_BOT_GROUP_ID_HASH']['development'])
+        # ぽのちゃん実験場にエラーログを送る(上限1000文字）
+        length = 995 if len(error_msg) > 995 else len(error_msg)
+        PonnoBot.push_text("...\n" + error_msg[- length:], app.config['LINE_BOT_GROUP_ID_HASH']['development'])
     return render_template("error.html", error_message=str(error_msg))
 
 '''
