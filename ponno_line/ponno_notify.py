@@ -1,6 +1,6 @@
 import requests
 import settings
-from typing import List
+from typing import List, Optional
 from spotto_league.models.league import League as ModelLeague
 from ponno_line.templates.league_button_template import LeagueButtonTemplate
 from ponno_line.messages.league_template_send_message import LeagueTemplateSendMessage
@@ -12,8 +12,8 @@ class PonnoNotify:
     NOTIFY_API = 'https://notify-api.line.me/api/notify'
     __slots__ = ['_access_token']
 
-    def __init__(self) -> None:
-        self._access_token = settings.LINE_NOTIFY_ACCESS_TOKEN
+    def __init__(self, access_token: Optional[str] = None) -> None:
+        self._access_token = access_token if access_token else settings.LINE_NOTIFY_ACCESS_TOKEN_HASH[settings.ENV]
 
     def notify_about_finished_league(self, league_id: int) -> None:
         league = ModelLeague.find(league_id)
