@@ -223,7 +223,7 @@ def handle_exception(e):
     error_msg = " ".join(logs)
     with open(path, mode='a') as f:
         f.write(error_msg)
-    if app.config['ENV'] is "development":
+    if app.config['ENV'] is "production":
         # ぽのちゃん実験場にエラーログを送る(上限1000文字）
         length = 995 if len(error_msg) > 995 else len(error_msg)
         PonnoNotify(app.config['LINE_NOTIFY_ACCESS_TOKEN_HASH']['development']).execute("...\n" + error_msg[- length:])
