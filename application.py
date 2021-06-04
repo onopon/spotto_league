@@ -48,6 +48,7 @@ from spotto_league.controllers.user.post_league_cancel_controller import PostLea
 from spotto_league.modules.password_util import PasswordUtil
 from spotto_league.models.user import User
 from ponno_line.ponno_bot import PonnoBot
+from ponno_line.ponno_notify import PonnoNotify
 
 
 login_manager = flask_login.LoginManager()
@@ -225,7 +226,7 @@ def handle_exception(e):
     if app.config['ENV'] is "production":
         # ぽのちゃん実験場にエラーログを送る(上限1000文字）
         length = 995 if len(error_msg) > 995 else len(error_msg)
-        PonnoBot.push_text("...\n" + error_msg[- length:], app.config['LINE_BOT_GROUP_ID_HASH']['development'])
+        PonnoNotify(app.config['LINE_NOTIFY_ACCESS_TOKEN_HASH']['development']).execute("...\n" + error_msg[- length:])
     return render_template("error.html", error_message=str(error_msg))
 
 '''
@@ -250,7 +251,7 @@ for flask-login
 def request_loader(request):
     name_tuples = db.session.query(User.login_name).all()
     login_names = [t[0] for t in name_tuples]
- 
+
     login_name = request.form.get('login_name')
     if login_name not in login_names:
         return
