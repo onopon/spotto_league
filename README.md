@@ -96,10 +96,10 @@ $poetry run python -m spotto_league.scripts.add_role --login_name=onopon --role_
 
 ### fmtファイルからファイルを生成
 
-#### settings.py の生成
+#### instance/settings.py の生成
 
 ```
-$ cp settings.py.fmt settings.py
+$ cp settings.py.fmt instance/settings.py
 ```
 
 本番環境の場合、 `ENV = "production"` とする。
