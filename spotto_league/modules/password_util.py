@@ -1,5 +1,5 @@
 import hashlib
-from settings import COMMON_PASSWORD, COMMON_VISITOR_PASSWORD
+from instance import settings
 
 
 class PasswordUtil():
@@ -14,8 +14,8 @@ class PasswordUtil():
 
     @classmethod
     def is_correct_common_password(cls, password) -> bool:
-        return password == COMMON_PASSWORD
+        return password == settings.COMMON_PASSWORD
 
     @classmethod
     def is_correct_common_visitor_password(cls, password) -> bool:
-        return password == COMMON_VISITOR_PASSWORD
+        return password == settings.COMMON_VISITOR_PASSWORD

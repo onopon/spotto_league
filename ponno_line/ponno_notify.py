@@ -1,5 +1,5 @@
 import requests
-import settings
+from instance import settings
 from typing import List, Optional
 from spotto_league.models.league import League as ModelLeague
 from ponno_line.templates.league_button_template import LeagueButtonTemplate
