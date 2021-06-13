@@ -1,16 +1,20 @@
 ENV = "development"
-SECRET_KEY = ""
+SECRET_KEY = "secretkey"
 LINE_BOT_ENABLE = False
-LINE_BOT_CHANNEL_ACCESS_TOKEN= ''
-LINE_BOT_CHANNEL_SECRET = ''
-LINE_BOT_ADMIN_USER_IDS = []
+LINE_BOT_CHANNEL_ACCESS_TOKEN= 'dummy'
+LINE_BOT_CHANNEL_SECRET = 'dummy'
+LINE_BOT_ADMIN_USER_IDS = ['U0123456789']
 LINE_BOT_ENV = "development"
-LINE_BOT_GROUP_ID_HASH = {'development': '', 'staging': '', 'production': ''}
-LINE_NOTIFY_ACCESS_TOKEN_HASH = {'development': '', 'staging': '', 'production': ''}
+LINE_BOT_GROUP_ID_HASH = {'development': 'C0123456789development',
+                          'staging': 'C0123456789staging',
+                          'production': 'C0123456789production'}
+LINE_NOTIFY_ACCESS_TOKEN_HASH = {'development': 'dummy_development',
+                                 'staging': 'dummy_staging',
+                                 'production': 'dummy_prdocution'}
 DB_DEBUG = True
 DB_USER = 'root'
 DB_PASSWORD = ''
 DB_HOST = 'localhost'
-DB_NAME = 'spotto_dev'
+DB_NAME = 'spotto_test'
 COMMON_PASSWORD = 'spotto'
 COMMON_VISITOR_PASSWORD = 'spotto'
