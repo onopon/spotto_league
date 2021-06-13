@@ -1,7 +1,7 @@
 from typing import Optional
 from abc import ABCMeta, abstractmethod
 from linebot.models import CarouselColumn
-import settings
+from instance import settings
 
 
 class Base:

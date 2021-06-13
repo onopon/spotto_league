@@ -9,7 +9,7 @@ from linebot.exceptions import LineBotApiError
 from ponno_line.messages.base import Base as MessageBase
 from ponno_line.messages.league_template_send_message import LeagueTemplateSendMessage
 from ponno_line.ponno_notify import PonnoNotify
-import settings
+from instance import settings
 from spotto_league.app import create_app
 from spotto_league.models.league import League as ModelLeague
 
