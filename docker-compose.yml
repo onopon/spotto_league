@@ -18,7 +18,14 @@ services:
   test-app:
     image: onopon/lolipop_web_server_for_python3:latest
     container_name: test_app
-    command: bash -c "service apache2 start && cp /app/settings.py.fmt /app/instance/settings.py && /bin/bash"
+    command: bash -c "service apache2 start &&\
+                      cp /app/settings.py.fmt /app/instance/settings.py &&\
+                      pip install --upgrade pip &&\
+                      pip install -r /app/requirements.txt &&\
+                      cd app/ &&\
+                      python manage.py db upgrade &&\
+                      cd / &&\
+                      /bin/bash"
     tty: true
     volumes:
       - type: bind
