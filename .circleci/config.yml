@@ -1,9 +1,8 @@
 version: 2.1
 jobs:
-  test-on-docker-compose:
-    build:
-      machine:
-        image: circleci/classic:edge
+  build:
+    machine:
+      image: circleci/classic:edge
     working_directory: ~/repo
     steps:
       - checkout
@@ -35,8 +34,3 @@ jobs:
       - run:
         name: docker-compose down
         command: docker-compose down
-
-workflows:
-  main:
-    jobs:
-      - test-on-docker-compose
