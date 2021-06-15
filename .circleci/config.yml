@@ -14,24 +14,24 @@ jobs:
       - run:
           name: Install Dependencies
           command: |
-            poetry install
+            pip install -r requirements_dev.txt
       - save_cache:
           key: deps-{{ checksum "poetry.lock" }}
           paths:
             - /home/circleci/.cache/pypoetry/virtualenvs
 
-      - run:
-          name: Run flake8
-          command: |
-            poetry run flake8
-      - run:
-          name: Run mypy
-          command: |
-            poetry run mypy ./
+              #      - run:
+              #          name: Run flake8
+              #          command: |
+              #            flake8
+              #      - run:
+              #          name: Run mypy
+              #          command: |
+              #            mypy ./
       - run:
           name: Run Pytest, report
           command: |
-            poetry run pytest tests/
+            pytest tests/
 workflows:
   main:
     jobs:
