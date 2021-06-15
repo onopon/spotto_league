@@ -1,39 +1,42 @@
 version: 2.1
-
 jobs:
-  flake8-mypy-test:
-    docker:
-      - image: circleci/python:3.7.4
-
+  test-on-docker-compose:
+    build:
+      machine:
+        image: circleci/classic:edge
+    working_directory: ~/repo
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - deps-{{ checksum "poetry.lock" }}
-
       - run:
-          name: Install Dependencies
-          command: |
-            pip install --user --upgrade pip
-            pip install --user -r requirements_dev.txt
-      - save_cache:
-          key: deps-{{ checksum "poetry.lock" }}
-          paths:
-            - /home/circleci/.cache/pypoetry/virtualenvs
-
-              #      - run:
-              #          name: Run flake8
-              #          command: |
-              #            flake8
-              #      - run:
-              #          name: Run mypy
-              #          command: |
-              #            mypy ./
+        name: Install Docker Compose
+        command: |
+          curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
+          chmod +x ~/docker-compose
+          sudo mv ~/docker-compose /usr/local/bin/docker-compose
       - run:
-          name: Run Pytest, report
-          command: |
-            pytest tests/
+        name: docker-compose up
+        command: |
+          set -x
+          docker-compose up --build -d
+      - run:
+        name: docker-compose stop
+        command: |
+          set -x
+          docker-compose stop
+      - run:
+        name: docker-compose up
+        command: |
+          set -x
+          docker-compose up -d
+      - run:
+        name: Run flake8, mypy, pytest
+        command: |
+          ./test/run
+      - run:
+        name: docker-compose down
+        command: docker-compose down
+
 workflows:
   main:
     jobs:
-      - flake8-mypy-test
+      - test-on-docker-compose
