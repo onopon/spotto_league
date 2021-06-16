@@ -2,6 +2,12 @@ name: Test
 
 on: [push]
 
+env:
+  DOCKER_BUILDKIT: 1
+  COMPOSE_DOCKER_CLI_BUILD: 1
+  APP_IMAGE_TAG: onopon/lolipop_web_server_for_python3
+  APP_IMAGE_CACHE_TAG: 20210617
+
 jobs:
   test:
 
@@ -10,25 +16,53 @@ jobs:
     - uses: actions/checkout@v2
       with:
         ref: ${{github.event.pull_request.head.ref}}
-    - name: Setup docker
-      shell: bash
+
+    - name: cache-images
+      id: cache-images
+      uses: actions/cache@v2
+      with:
+        path: /tmp/images
+        key: ${{ APP_IMAGE_TAG }}-${{ APP_IMAGE_CACHE_TAG }}
+        restore-keys: |
+          ${{ APP_IMAGE_TAG }}-${{ APP_IMAGE_CACHE_TAG }}
+
+    - name: load image
+      id: load-image
+      if: steps.cache-images.outputs.cache-hit == 'true'
+      run: docker image load -i /tmp/images/lolipop_web_server_for_python3.tar
+
+    - name: pull image
+      if: steps.load-image.conclusion == 'skipped'
+      run: docker pull onopon/lolipop_web_server_for_python3:latest
+
+    - name: save image
+      if: steps.load-image.conclusion == 'skipped'
       run: |
-        docker pull onopon/lolipop_web_server_for_python3:latest
+        mkdir -p /tmp/images
+        web_image_id=`docker images --format "{{.ID}} {{.Repository}}" | grep lolipop_web_server_for_python3 | cut -d ' ' -f1`
+        docker save $web_image_id > /tmp/images/lolipop_web_server_for_python3.tar
+
+    - name: docker compose up
+      run: |
         docker-compose up -d
+
     - name: Waiting start app
       shell: bash
       run: |
         .github/waiting_start_app.sh
+
     - name: Run flake8
       shell: bash
       run:  |
         echo "SKIP"
 #        docker-compose exec -T test-app flake8 ./
+
     - name: Run mypy
       shell: bash
       run:  |
         echo "SKIP"
 #        docker-compose exec -T test-app --ignore-missing-imports ./
+
     - name: Run Pytest
       shell: bash
       run:  |
