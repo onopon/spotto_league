@@ -36,6 +36,7 @@ jobs:
           - run:
               name: Run flake8, mypy, pytest
               command: |
+                  cd repo
                   ./test/run
           - run:
               name: docker-compose down
