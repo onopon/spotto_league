@@ -24,15 +24,15 @@ jobs:
           #            key: deps-{{ checksum "docker-compose.yml" }}
           #            paths:
           #              - /home/circleci/.cache/pypoetry/virtualenvs
-          #          - run:
-          #              name: docker-compose up
-          #              command: |
-          #                  set -x
-          #                  docker-compose up -d
-          #          - run:
-          #              name: waiting start app
-          #              command: |
-          #                  .circleci/waiting_start_app.sh
+          - run:
+              name: docker-compose up
+              command: |
+                  set -x
+                  docker-compose up -d
+          - run:
+              name: waiting start app
+              command: |
+                  .circleci/waiting_start_app.sh
           - run:
               name: Run flake8, mypy, pytest
               command: |
