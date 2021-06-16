@@ -1,0 +1,35 @@
+name: Test
+
+on: [push]
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: ${{github.event.pull_request.head.ref}}
+    - name: Setup docker
+      shell: bash
+      run: |
+        docker pull onopon/lolipop_web_server_for_python3:latest
+        docker-compose up -d
+    - name: Waiting start app
+      shell: bash
+      run: |
+        .github/waiting_start_app.sh
+    - name: Run flake8
+      shell: bash
+      run:  |
+        echo "SKIP"
+#        docker-compose exec -T test-app flake8 ./
+    - name: Run mypy
+      shell: bash
+      run:  |
+        echo "SKIP"
+#        docker-compose exec -T test-app --ignore-missing-imports ./
+    - name: Run Pytest
+      shell: bash
+      run:  |
+        docker-compose exec -T test-app pytest tests/
