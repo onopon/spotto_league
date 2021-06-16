@@ -1,51 +1,52 @@
-version: '3'
+version: '3.4'
 services:
-  test-db:
-    image: mysql/mysql-server:8.0.16
-    container_name: test_ponno_db
-    tty: true
-    environment:
-      MYSQL_ROOT_PASSWORD: ''
-      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-      MYSQL_USER: root
-      MYSQL_PASSWORD: ''
-      MYSQL_DATABASE: spotto_test
-      MYSQL_ROOT_HOST: '%'
-      TZ: 'Asia/Tokyo'
-    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-    ports:
-      - "3306:3306"
-  test-app:
-    image: onopon/lolipop_web_server_for_python3:latest
-    container_name: test_app
-    command: bash -c "service apache2 start &&\
-                      cp /app/settings.py.fmt /app/instance/settings.py &&\
-                      pip install --upgrade pip &&\
-                      pip install -r /app/requirements_dev.txt &&\
-                      python manage.py db upgrade &&\
-                      /bin/sh"
-    tty: true
-    volumes:
-      - type: bind
-        source: ./log
-        target: /app/log
-      - type: bind
-        source: .
-        target: /app
-      - type: bind
-        source: .docker_settings/httpd.conf
-        target: /etc/apache2/sites-enabled/httpd.conf
-      - ignore:/app/instance
-    build: .
-    depends_on:
-      - test-db
-    ports:
-      - 8080:80
-    environment:
-      ENV_CONFIG: docker
-      SQLALCHEMY_POOL_SIZE: 5
-      SQLALCHEMY_MAX_OVERFLOW: 10
-      SQLALCHEMY_POOL_TIMEOUT: 30
+    test-db:
+      image: mysql/mysql-server:8.0.16
+      container_name: test_ponno_db
+      tty: true
+      environment:
+          MYSQL_ROOT_PASSWORD: ''
+          MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+          MYSQL_USER: root
+          MYSQL_PASSWORD: ''
+          MYSQL_DATABASE: spotto_test
+          MYSQL_ROOT_HOST: '%'
+          TZ: 'Asia/Tokyo'
+      command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+      ports:
+          - "3306:3306"
+    test-app:
+        image: onopon/lolipop_web_server_for_python3:latest
+        container_name: test_app
+        command: >
+            bash -c "cp /app/settings.py.fmt /app/instance/settings.py &&
+                     pip install --upgrade pip &&
+                     pip install -r /app/requirements_dev.txt &&
+                     python manage.py db upgrade &&
+                     service apache2 start &&
+                     /bin/sh"
+        tty: true
+        volumes:
+            - type: bind
+              source: ./log
+              target: /app/log
+            - type: bind
+              source: .
+              target: /app
+            - type: bind
+              source: .docker_settings/httpd.conf
+              target: /etc/apache2/sites-enabled/httpd.conf
+            - ignore:/app/instance
+        build: .
+        depends_on:
+            - test-db
+        ports:
+           - 8080:80
+        environment:
+           ENV_CONFIG: docker
+           SQLALCHEMY_POOL_SIZE: 5
+           SQLALCHEMY_MAX_OVERFLOW: 10
+           SQLALCHEMY_POOL_TIMEOUT: 30
 volumes:
-  ignore:
-    driver: 'local'
+    ignore:
+        driver: 'local'
