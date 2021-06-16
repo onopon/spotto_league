@@ -36,13 +36,6 @@ jobs:
       if: steps.load-image.conclusion == 'skipped'
       run: docker pull onopon/lolipop_web_server_for_python3:latest
 
-    - name: save image
-      if: steps.load-image.conclusion == 'skipped'
-      run: |
-        mkdir -p /tmp/images
-        web_image_id=`docker images --format "{{.ID}} {{.Repository}}" | grep lolipop_web_server_for_python3 | cut -d ' ' -f1`
-        docker save -o /tmp/images/lolipop_web_server_for_python3.tar ${{ APP_IMAGE_TAG }}:latest
-
     - name: docker compose up
       run: |
         docker-compose up -d
@@ -68,3 +61,10 @@ jobs:
       shell: bash
       run:  |
         docker-compose exec -T test-app pytest tests/
+
+    - name: save image
+      if: steps.load-image.conclusion == 'skipped'
+      run: |
+        mkdir -p /tmp/images
+        web_image_id=`docker ps --format "{{.Image}} {{.Names}}" | grep test_app | cut -d ' ' -f1`
+        docker save $web_image_id > /tmp/images/lolipop_web_server_for_python3.tar
