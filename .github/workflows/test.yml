@@ -28,7 +28,9 @@ jobs:
     - name: load image
       id: load-image
       if: steps.cache-images.outputs.cache-hit == 'true'
-      run: docker image load -i /tmp/images/lolipop_web_server_for_python3.tar
+      run: |
+        image_id=`docker image load -i /tmp/images/lolipop_web_server_for_python3.tar | cut -d ':' -f 3 | cut -c 1-6`
+        docker tag $image_id onopon/lolipop_web_server_for_python3:latest
 
     - name: pull image
       if: steps.load-image.conclusion == 'skipped'
@@ -39,7 +41,7 @@ jobs:
       run: |
         mkdir -p /tmp/images
         web_image_id=`docker images --format "{{.ID}} {{.Repository}}" | grep lolipop_web_server_for_python3 | cut -d ' ' -f1`
-        docker save $web_image_id > /tmp/images/lolipop_web_server_for_python3.tar
+        docker save -o /tmp/images/lolipop_web_server_for_python3.tar ${{ APP_IMAGE_TAG }}:latest
 
     - name: docker compose up
       run: |
