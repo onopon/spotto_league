@@ -1,35 +1,68 @@
 name: Test
-
 on: [push]
 
 jobs:
   test:
-
     runs-on: ubuntu-latest
+    env:
+      DOCKER_BUILDKIT: 1
+      COMPOSE_DOCKER_CLI_BUILD: 1
+      APP_IMAGE_TAG: onopon/lolipop_web_server_for_python3
+      APP_IMAGE_CACHE_TAG: 202106170306
     steps:
     - uses: actions/checkout@v2
       with:
         ref: ${{github.event.pull_request.head.ref}}
-    - name: Setup docker
-      shell: bash
+
+    - name: cache-images
+      id: cache-images
+      uses: actions/cache@v2
+      with:
+        path: /tmp/images
+        key: ${{ env.APP_IMAGE_TAG }}-${{ env.APP_IMAGE_CACHE_TAG }}
+        restore-keys: |
+          ${{ env.APP_IMAGE_TAG }}-${{ env.APP_IMAGE_CACHE_TAG }}
+
+    - name: load image
+      id: load-image
+      if: steps.cache-images.outputs.cache-hit == 'true'
       run: |
-        docker pull onopon/lolipop_web_server_for_python3:latest
+        image_id=`docker image load -i /tmp/images/lolipop_web_server_for_python3.tar | cut -d ':' -f 3 | cut -c 1-6`
+        docker tag $image_id onopon/lolipop_web_server_for_python3:latest
+
+    - name: pull image
+      if: steps.load-image.conclusion == 'skipped'
+      run: docker pull onopon/lolipop_web_server_for_python3:latest
+
+    - name: docker compose up
+      run: |
         docker-compose up -d
+
     - name: Waiting start app
       shell: bash
       run: |
         .github/waiting_start_app.sh
+
     - name: Run flake8
       shell: bash
       run:  |
         echo "SKIP"
 #        docker-compose exec -T test-app flake8 ./
+
     - name: Run mypy
       shell: bash
       run:  |
         echo "SKIP"
 #        docker-compose exec -T test-app --ignore-missing-imports ./
+
     - name: Run Pytest
       shell: bash
       run:  |
         docker-compose exec -T test-app pytest tests/
+
+    - name: save image
+      if: steps.load-image.conclusion == 'skipped'
+      run: |
+        mkdir -p /tmp/images
+        web_image_id=`docker ps --format "{{.Image}} {{.Names}}" | grep test_app | cut -d ' ' -f1`
+        docker save $web_image_id > /tmp/images/lolipop_web_server_for_python3.tar
