@@ -6,6 +6,9 @@ jobs:
         working_directory: ~/repo
         steps:
           - checkout
+          #          - restore_cache:
+          #            keys:
+          #              - deps-{{ checksum "docker-compose.yml" }}
           - run:
               name: Install Docker & Docker Compose
               command: |
@@ -17,22 +20,19 @@ jobs:
                   chmod +x ~/docker-compose
                   sudo mv ~/docker-compose /usr/local/bin/docker-compose
                   docker pull onopon/lolipop_web_server_for_python3:latest
-
-                  #          - run:
-                  #              name: docker-compose up
-                  #              command: |
-                  #                  set -x
-                  #                  docker-compose up --build -d
-                  #          - run:
-                  #              name: docker-compose stop
-                  #              command: |
-                  #                  set -x
-                  #                  docker-compose stop
+          #          - save_cache:
+          #            key: deps-{{ checksum "docker-compose.yml" }}
+          #            paths:
+          #              - /home/circleci/.cache/pypoetry/virtualenvs
           - run:
               name: docker-compose up
               command: |
                   set -x
                   docker-compose up -d
+          - run:
+              name: waiting start app
+              command: |
+                  .circleci/waiting_start_app.sh
           - run:
               name: Run flake8, mypy, pytest
               command: |
