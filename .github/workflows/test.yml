@@ -2,16 +2,15 @@ name: Test
 
 on: [push]
 
-env:
-  DOCKER_BUILDKIT: 1
-  COMPOSE_DOCKER_CLI_BUILD: 1
-  APP_IMAGE_TAG: onopon/lolipop_web_server_for_python3
-  APP_IMAGE_CACHE_TAG: 20210617
 
 jobs:
   test:
-
     runs-on: ubuntu-latest
+    env:
+      DOCKER_BUILDKIT: 1
+      COMPOSE_DOCKER_CLI_BUILD: 1
+      APP_IMAGE_TAG: onopon/lolipop_web_server_for_python3
+      APP_IMAGE_CACHE_TAG: 20210617
     steps:
     - uses: actions/checkout@v2
       with:
