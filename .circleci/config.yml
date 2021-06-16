@@ -7,11 +7,15 @@ jobs:
         steps:
           - checkout
           - run:
-              name: Install Docker Compose
+              name: Install Docker & Docker Compose
               command: |
-                  curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
+                  sudo apt update
+                  sudo apt-get remove docker docker-engine docker.io containerd runc
+                  sudo apt install docker-ce docker-ce-cli containerd.io
+                  curl -L https://github.com/docker/compose/releases/download/1.29.2/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
                   chmod +x ~/docker-compose
                   sudo mv ~/docker-compose /usr/local/bin/docker-compose
+                  docker pull onopon/lolipop_web_server_for_python3:latest
 
                   #          - run:
                   #              name: docker-compose up
