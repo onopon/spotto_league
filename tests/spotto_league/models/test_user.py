@@ -6,4 +6,3 @@ def test_set_password():
     password = "password"
     user.set_password(password)
     assert user.password == PasswordUtil.make_hex(password)
-    assert False
