@@ -19,8 +19,17 @@ jobs:
       shell: bash
       run: |
         .github/waiting_start_app.sh
-
+    - name: Run flake8
+      is_skip: true
+      shell: bash
+      run:  |
+        docker-compose exec -T test-app flake8 ./
+    - name: Run mypy
+      is_skip: true
+      shell: bash
+      run:  |
+        docker-compose exec -T test-app --ignore-missing-imports ./
     - name: Run Pytest
       shell: bash
       run:  |
-        ./tests/run
+        docker-compose exec -T test-app pytest tests/
