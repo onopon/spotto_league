@@ -21,9 +21,9 @@ jobs:
       uses: actions/cache@v2
       with:
         path: /tmp/images
-        key: ${{ APP_IMAGE_TAG }}-${{ APP_IMAGE_CACHE_TAG }}
+        key: ${{ env.APP_IMAGE_TAG }}-${{ env.APP_IMAGE_CACHE_TAG }}
         restore-keys: |
-          ${{ APP_IMAGE_TAG }}-${{ APP_IMAGE_CACHE_TAG }}
+          ${{ env.APP_IMAGE_TAG }}-${{ env.APP_IMAGE_CACHE_TAG }}
 
     - name: load image
       id: load-image
