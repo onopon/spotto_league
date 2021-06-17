@@ -5,7 +5,6 @@ SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://{user}:{password}@{host}/{db}?charset
     'password': settings.DB_PASSWORD,
     'host': settings.DB_HOST,
     'db': settings.DB_NAME
-    })
+})
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_ECHO = False
-

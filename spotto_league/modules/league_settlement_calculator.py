@@ -1,4 +1,4 @@
-from typing import Any, List
+from typing import List
 from spotto_league.models.league_member import LeagueMember
 from spotto_league.models.league_log import LeagueLog
 from spotto_league.models.league_log_detail import LeagueLogDetail
@@ -14,7 +14,7 @@ class LeagueSettlementCalculator():
             settlement_hash[member.user_id]['logs'] = member_logs
             settlement_hash[member.user_id]['details'] = LeagueLogDetail.find_all_by_league_log_ids([l.id for l in member_logs])
         return settlement_hash
-        
+ 
     @classmethod
     def get_win_of_head_to_head_user_id(cls, log, details) -> int:
         count_1 = [d.score_1 > d.score_2 for d in details].count(True)

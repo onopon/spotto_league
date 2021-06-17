@@ -1,5 +1,3 @@
-import os
-import argparse
 from spotto_league.models.league_point import LeaguePoint
 from .base import Base
 
@@ -55,6 +53,7 @@ class AddLeaguePoint(Base):
                 league_point.save()
         except Exception as e:
             print("エラーが発生しました。 {}".format(e.args))
+
 
 if __name__ == '__main__':
     '''

@@ -15,6 +15,7 @@ class AddRole(Base):
         except Exception as e:
             print("エラーが発生しました。 {}".format(e.args))
 
+
 if __name__ == '__main__':
     '''
     使用例)

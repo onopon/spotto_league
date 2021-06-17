@@ -1,8 +1,6 @@
-import os
 import argparse
 from spotto_league.models.user import User
 from spotto_league.models.bonus_point import BonusPoint
-from spotto_league.models.role import Role, RoleType
 from .base import Base
 
 
@@ -17,6 +15,7 @@ class AddBonusPoint(Base):
             bonus_point.save()
         except Exception as e:
             print("エラーが発生しました。 {}".format(e.args))
+
 
 if __name__ == '__main__':
     '''

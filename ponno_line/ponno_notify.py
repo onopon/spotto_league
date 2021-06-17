@@ -5,8 +5,6 @@ from spotto_league.models.league import League as ModelLeague
 from ponno_line.templates.league_button_template import LeagueButtonTemplate
 from ponno_line.messages.league_template_send_message import LeagueTemplateSendMessage
 
-from ponno_line.templates.league_button_carousel_template import LeagueButtonCarouselTemplate
-
 
 class PonnoNotify:
     NOTIFY_API = 'https://notify-api.line.me/api/notify'
@@ -50,7 +48,7 @@ class PonnoNotify:
 
     def notify_about_recruiting_league_information(self, league_ids: List[int]) -> None:
         leagues = ModelLeague.find_all_by_ids(league_ids)
-        leagues.sort(key=lambda l:l.date)
+        leagues.sort(key=lambda l: l.date)
         messages = []
         for l in leagues:
             messages.append("{}@{}".format(l.name, l.place.name))
