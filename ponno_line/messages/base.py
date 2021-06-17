@@ -1,13 +1,10 @@
 from abc import abstractmethod
 from typing import Optional
-from linebot.models import (
-    Message,
-    MessageEvent
-)
+from linebot.models import Message, MessageEvent
 
 
 class Base:
-    __slots__ = ['_event']
+    __slots__ = ["_event"]
 
     def __init__(self, event: MessageEvent) -> None:
         self._event = event

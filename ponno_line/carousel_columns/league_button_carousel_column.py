@@ -14,9 +14,7 @@ class LeagueButtonCarouselColumn(Base):
         text = self._create_near_join_end_at_text(league)
 
         return CarouselColumn(
-            text=text,
-            title=title,
-            actions=[DetailURIAction().create(uri=uri)]
+            text=text, title=title, actions=[DetailURIAction().create(uri=uri)]
         )
 
     # 3行までしか表示できない
@@ -25,4 +23,4 @@ class LeagueButtonCarouselColumn(Base):
         texts = []
         texts.append("日時:{}".format(league.date_for_display))
         texts.append("締切:{}".format(league.join_end_at_for_display))
-        return '\n'.join(texts)
+        return "\n".join(texts)

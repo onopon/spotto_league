@@ -1,12 +1,10 @@
 from typing import Optional
 from ponno_line.messages.base import Base
-from linebot.models import (
-    Message,
-    TextSendMessage,
-    TemplateSendMessage
-)
+from linebot.models import Message, TextSendMessage, TemplateSendMessage
 from ponno_line.templates.league_button_template import LeagueButtonTemplate
-from ponno_line.templates.league_button_carousel_template import LeagueButtonCarouselTemplate
+from ponno_line.templates.league_button_carousel_template import (
+    LeagueButtonCarouselTemplate,
+)
 from spotto_league.models.league import League as ModelLeague
 
 
@@ -24,8 +22,10 @@ class LeagueTemplateSendMessage(Base):
         league_id = kwargs["league_id"]
         league = ModelLeague.find(league_id)
         kwargs["league"] = league
-        return TemplateSendMessage(alt_text="{}の結果をお送りします。".format(league.name),
-                                   template=LeagueButtonTemplate().create(**kwargs))
+        return TemplateSendMessage(
+            alt_text="{}の結果をお送りします。".format(league.name),
+            template=LeagueButtonTemplate().create(**kwargs),
+        )
 
     @classmethod
     def get_for_push_about_cacnel_league(cls, **kwargs) -> Optional[Message]:
@@ -38,15 +38,14 @@ class LeagueTemplateSendMessage(Base):
             texts.append("参加表明を出していた")
             texts.extend(user_names)
         texts.append("申し訳ございません。")
-        return TextSendMessage(text='\n'.join(texts))
+        return TextSendMessage(text="\n".join(texts))
 
     @classmethod
     def get_for_push_about_join_end_at_deadline(cls, **kwargs) -> Optional[Message]:
         template = LeagueButtonCarouselTemplate().create(**kwargs)
         if not template:
             return None
-        return TemplateSendMessage(alt_text="参加締め切りの近い練習会をお知らせします。",
-                                   template=template)
+        return TemplateSendMessage(alt_text="参加締め切りの近い練習会をお知らせします。", template=template)
 
     @classmethod
     def get_for_push_about_recruiting_leagues(cls, **kwargs) -> Optional[Message]:
@@ -55,5 +54,4 @@ class LeagueTemplateSendMessage(Base):
         template = LeagueButtonCarouselTemplate().create(**kwargs)
         if not template:
             return None
-        return TemplateSendMessage(alt_text="募集中の練習会をお知らせします。",
-                                   template=template)
+        return TemplateSendMessage(alt_text="募集中の練習会をお知らせします。", template=template)

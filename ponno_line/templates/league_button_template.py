@@ -16,10 +16,8 @@ class LeagueButtonTemplate(Base):
         text = self.create_result_text(league)
 
         return ButtonsTemplate(
-                text=text,
-                title=title,
-                actions=[DetailURIAction().create(uri=uri)]
-                )
+            text=text, title=title, actions=[DetailURIAction().create(uri=uri)]
+        )
 
     # 3行までしか表示できない
     def create_result_text(self, league: ModelLeague) -> str:
@@ -29,4 +27,4 @@ class LeagueButtonTemplate(Base):
         r = ranks[0]
         texts.append("{}勝{}敗 {}さん".format(r.win, r.lose, r.user.name))
         texts.append("でした。おめでとうございます！")
-        return '\n'.join(texts)
+        return "\n".join(texts)
