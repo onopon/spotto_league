@@ -5,6 +5,8 @@ from spotto_league.database import db
 class Base:
     __slots__ = ["_session"]
 
+    id = db.Column(db.Integer)
+
     # 後ほど削除予定
     @property
     def session(self) -> db.session:

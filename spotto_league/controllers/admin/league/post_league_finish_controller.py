@@ -18,21 +18,21 @@ class PostLeagueFinishController(BaseController):
     # override
     @asyncio.coroutine
     def validate(self, request: BaseRequest, **kwargs) -> None:
-        self._league = League.find_by_id(kwargs["league_id"])
-        if not self._league:
-            raise Exception("League: {} does not exist".kwargs["league_id"])
-        if not self._league.is_status_ready():
-            raise Exception("League status is not ready")
-
-        if request.form.get("league_point_group_id") is None:
-            raise Exception("league_point_group_id does not exist")
+        try:
+            self._league = League.find(kwargs["league_id"])
+            if not self._league.is_status_ready():
+                raise Exception("League status is not ready")
+            if request.form.get("league_point_group_id") is None:
+                raise Exception("league_point_group_id does not exist")
+        except Exception as e:
+            raise e
 
     # override
     @asyncio.coroutine
     def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
         # session = db.session
         ranks = Rank.make_rank_list(self._league)
-        group_id = request.form.get("league_point_group_id")
+        group_id = int(request.form.get("league_point_group_id", 0))
 
         league_points = LeaguePoint.find_all_by_group_id(group_id)
         bonus_points = BonusPoint.find_all_by_user_ids([r.user_id for r in ranks])

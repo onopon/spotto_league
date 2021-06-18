@@ -32,16 +32,17 @@ class PostRegisterController(BaseController):
         if any([len(str(target)) == 0 for target in targets]):
             raise Exception("必要なデータが入力されていません。")
 
-        place_mode = int(request.form.get("placetab"))
+        place_mode = int(request.form.get("placetab", 0))
         if place_mode == MODE_FIND_PLACE:
-            place_id = int(request.form.get("place-select"))
-            self._place = Place.find_by_id(place_id)
-            if not self._place:
+            place_id = int(request.form.get("place-select", 0))
+            try:
+                self._place = Place.find(place_id)
+            except Exception:
                 raise Exception("Place: {} は存在しません。".format(place_id))
         elif place_mode == MODE_MAKE_PLACE:
             place_name = request.form.get("place-name")
             url = request.form.get("url")
-            capacity = request.form.get("capacity")
+            capacity = request.form.get("capacity", 0)
             if any([len(str(target)) == 0 for target in [place_name, url, capacity]]):
                 raise Exception("会場に関する必要なデータが入力されていません。")
             self._place = Place()
@@ -54,12 +55,12 @@ class PostRegisterController(BaseController):
     # override
     @asyncio.coroutine
     def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
-        league_id = request.form.get("league_id")
+        league_id = int(request.form.get("league_id", 0))
         date_str = request.form.get("date")
         start_at = request.form.get("start_at")
         end_at = request.form.get("end_at")
         name = request.form.get("name")
-        game_count = request.form.get("game_count")
+        game_count = request.form.get("game_count", 1)
         join_end_at = request.form.get("join_end_at")
 
         league = League.find_by_id(league_id) or League()

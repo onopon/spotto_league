@@ -12,13 +12,14 @@ class LeagueCancelController(BaseController):
     # override
     @asyncio.coroutine
     def validate(self, request: BaseRequest, **kwargs) -> None:
-        self._league = League.find_by_id(kwargs["league_id"])
-        if not self._league:
-            raise Exception("League: {} does not exist".kwargs["league_id"])
-        if self._league.is_in_session():
-            raise Exception("League status is in session. So it can not cancel.")
-        if self._league.is_status_finished():
-            raise Exception("League status is still finished.")
+        try:
+            self._league = League.find(kwargs["league_id"])
+            if self._league.is_in_session():
+                raise Exception("League status is in session. So it can not cancel.")
+            if self._league.is_status_finished():
+                raise Exception("League status is still finished.")
+        except Exception as e:
+            raise e
 
     # override
     @asyncio.coroutine

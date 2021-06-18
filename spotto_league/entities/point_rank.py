@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List, Dict
+from typing import List, Dict, Any
 from itertools import groupby
 from spotto_league.models.league import League
 from spotto_league.models.bonus_point import BonusPoint
@@ -32,7 +32,7 @@ class PointRank:
         user: User,
         before_points_hash: Dict[str, List[int]],
         current_points_hash: Dict[str, List[int]],
-    ):
+    ) -> None:
         self._user = user
         self._before_points_hash = before_points_hash
         self._current_points_hash = current_points_hash
@@ -92,7 +92,7 @@ class PointRank:
     def is_up(self) -> bool:
         return self._before_rank > self._current_rank
 
-    def to_hash(self) -> Dict[str, any]:
+    def to_hash(self) -> Dict[str, Any]:
         return {
             "user_name": self.user.name,
             "current_points_hash": self._current_points_hash,
@@ -110,7 +110,7 @@ class PointRank:
         for user in users:
             m_user_points = list(filter(lambda up: up.user_id == user.id, user_points))
             current_points = cls.get_sorted_points_hash(m_user_points, bonus_points)
-            before_points = {
+            before_points: Dict[str, List[int]] = {
                 POINT_HASH_KEY_BASE: [],
                 POINT_HASH_KEY_LEAGUE: [],
                 POINT_HASH_KEY_BONUS: [],
@@ -183,8 +183,8 @@ class PointRank:
     @classmethod
     def get_sorted_points_hash(
         cls, user_points: List[UserPoint], bonus_points: List[BonusPoint]
-    ) -> int:
-        sorted_points_hash = {
+    ) -> Dict[str, List[int]]:
+        sorted_points_hash: Dict[str, List[int]] = {
             POINT_HASH_KEY_BASE: [],
             POINT_HASH_KEY_LEAGUE: [],
             POINT_HASH_KEY_BONUS: [],

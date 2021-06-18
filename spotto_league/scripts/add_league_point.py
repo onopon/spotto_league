@@ -1,14 +1,16 @@
+from typing import List
 from spotto_league.models.league_point import LeaguePoint
 from .base import Base
 
 
 class AddLeaguePoint(Base):
+
     # override
-    def execute_task(self) -> None:
+    def execute_task(self, **kwargs) -> None:
         try:
             if len(LeaguePoint.all()):
                 raise Exception("既存データが存在するため、実行できません。")
-            league_point_list = [
+            league_point_list: List[List] = [
                 [1, 1, 3000],
                 [1, 2, 2000],
                 [1, 3, 1500],

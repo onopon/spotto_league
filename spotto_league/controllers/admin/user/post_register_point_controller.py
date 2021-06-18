@@ -9,7 +9,7 @@ from spotto_league.models.user_point import UserPoint
 
 
 class PostRegisterPointController(BaseController):
-    __slots__ = ["_bonus_points"]
+    __slots__ = ["_user", "_bonus_points"]
 
     # override
     @asyncio.coroutine
@@ -30,20 +30,23 @@ class PostRegisterPointController(BaseController):
 
         login_name = request.form.get("user-select")
         user = User.find_by_login_name(login_name)
+        if not user:
+            raise Exception("ユーザが存在しません。")
+
         for bp in self._bonus_points:
             count = int(request.form.get("bonus_{}".format(bp.id)) or 0)
             if count < 0:
                 raise exception
             if bp.user_id == user.id and count > 0:
                 raise Exception("ボーナスポイントは自分自身に付与できません。")
+        self._user = user
 
     # override
     @asyncio.coroutine
     def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
         memo = "created by {}".format(self.login_user.login_name)
-        login_name = request.form.get("user-select")
         base_point = int(request.form.get("base") or 0)
-        user = User.find_by_login_name(login_name)
+        user = self._user
         if base_point > 0:
             user_point = UserPoint()
             user_point.user_id = user.id

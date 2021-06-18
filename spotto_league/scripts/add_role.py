@@ -6,9 +6,13 @@ from .base import Base
 
 class AddRole(Base):
     # override
-    def execute_task(self, login_name: str, role_type: int) -> None:
+    def execute_task(self, **kwargs) -> None:
         try:
+            login_name = kwargs["login_name"]
+            role_type = kwargs["role_type"]
             user = User.find_by_login_name(login_name)
+            if not user:
+                raise Exception("User does not find: {}".format(login_name))
             role = Role.find_or_initialize_by_user_id(user.id)
             role.role_type = RoleType(role_type).value
             role.save()

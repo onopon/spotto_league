@@ -22,12 +22,12 @@ class PostRegisterController(BaseController):
 
         login_name = request.form.get("login_name")
         name = request.form.get("name")
-        gender = int(request.form.get("gender"))
-        year = int(request.form.get("year"))
-        month = int(request.form.get("month"))
-        day = int(request.form.get("day"))
+        gender = request.form.get("gender")
+        year = request.form.get("year")
+        month = request.form.get("month")
+        day = request.form.get("day")
         targets = [login_name, name, gender, year, month, day]
-        if any([len(str(target)) == 0 for target in targets]):
+        if any([target is None for target in targets]):
             raise Exception("必要なデータが入力されていません。")
 
         password = request.form.get("password")
@@ -40,11 +40,11 @@ class PostRegisterController(BaseController):
     def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
         login_name = request.form.get("login_name")
         name = request.form.get("name")
-        password = request.form.get("password")
-        gender = int(request.form.get("gender"))
-        year = int(request.form.get("year"))
-        month = int(request.form.get("month"))
-        day = int(request.form.get("day"))
+        password = request.form.get("password", "")
+        gender = int(request.form.get("gender", 1))
+        year = int(request.form.get("year", 1900))
+        month = int(request.form.get("month", 1))
+        day = int(request.form.get("day", 1))
         user = User()
         user.login_name = login_name
         user.name = name

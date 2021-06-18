@@ -51,7 +51,7 @@ class User(flask_login.UserMixin, db.Model, Base):
         return {"id": self.id, "login_name": self.login_name, "name": self.name}
 
     @property
-    def role(self) -> Optional[Role]:
+    def role(self) -> Role:
         if not self._role:
             self._role = Role.find_or_initialize_by_user_id(self.id)
         return self._role

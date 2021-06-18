@@ -1,4 +1,5 @@
 import asyncio
+from typying import Any, Dict
 from spotto_league.controllers.base_controller import BaseController
 from werkzeug.wrappers import BaseRequest, BaseResponse
 from spotto_league.models.user import User
@@ -13,22 +14,23 @@ class InfoController(BaseController):
     # override
     @asyncio.coroutine
     def validate(self, request: BaseRequest, **kwargs) -> None:
-        self._user = User.find_by_login_name(kwargs["login_name"])
-        if not self._user:
+        user = User.find_by_login_name(kwargs["login_name"])
+        if not user:
             raise Exception("{}というユーザは存在しません。".format(kwargs["login_name"]))
 
-        if self._user.is_visitor():
+        if user.is_visitor():
             raise Exception(
                 "ビジターアカウントはの情報は見ることができません。{}の誕生日は{}だよ。".format(
-                    self._user.name, self._user.birthday_for_display
+                    user.name, user.birthday_for_display
                 )
             )
+        self._user = user
 
     # override
     @asyncio.coroutine
     def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
         date = dt.now().date()
-        render_hash = {}
+        render_hash: Dict[str, Any] = {}
         render_hash["is_update_for_admin"] = int(
             request.form.get("is_update_for_admin") or 0
         )

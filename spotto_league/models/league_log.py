@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Optional
 from sqlalchemy import Index
 from typing import List
 from spotto_league.database import db
@@ -23,7 +22,7 @@ class LeagueLog(db.Model, Base):
     @classmethod
     def find_or_initialize(
         cls, league_id, user_id_1, user_id_2
-    ) -> Optional["LeagueLog"]:
+    ) -> "LeagueLog":
         id_1 = user_id_1 if user_id_1 < user_id_2 else user_id_2
         id_2 = user_id_2 if user_id_1 < user_id_2 else user_id_1
         result = (

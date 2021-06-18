@@ -10,14 +10,14 @@ from .bonus_point import BonusPoint
 from .league_point import LeaguePoint
 
 __all__ = [
-    User,
-    UserPoint,
-    League,
-    LeagueLog,
-    LeagueLogDetail,
-    LeagueMember,
-    Role,
-    Place,
-    BonusPoint,
-    LeaguePoint,
+    "User",
+    "UserPoint",
+    "League",
+    "LeagueLog",
+    "LeagueLogDetail",
+    "LeagueMember",
+    "Role",
+    "Place",
+    "BonusPoint",
+    "LeaguePoint",
 ]
