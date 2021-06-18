@@ -19,6 +19,7 @@ gunicorn = "^19.6.0"
 line-bot-sdk = "^1.19.0"
 mypy = "^0.812"
 flake8 = "^3.9.2"
+black = "^21.6b0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^4.6"
