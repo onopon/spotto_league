@@ -17,16 +17,20 @@ class AddBonusPoint(Base):
             print("エラーが発生しました。 {}".format(e.args))
 
 
-if __name__ == '__main__':
-    '''
+if __name__ == "__main__":
+    """
     使用例)
     maguに勝つと4回まで1500ポイントボーナスでもらえるようにする場合。
     poetry run python -m spotto_league.scripts.add_bonus_point --login_name=magu --point=1500 --available_count=4
-    '''
+    """
     parser = argparse.ArgumentParser()
-    parser.add_argument('--login_name', required=True, type=str)
-    parser.add_argument('--point', required=True, type=int)
-    parser.add_argument('--available_count', type=int, default=4)
+    parser.add_argument("--login_name", required=True, type=str)
+    parser.add_argument("--point", required=True, type=int)
+    parser.add_argument("--available_count", type=int, default=4)
     args = parser.parse_args()
-    AddBonusPoint().execute(login_name=args.login_name, point=args.point, available_count=args.available_count)
-    print('Done')
+    AddBonusPoint().execute(
+        login_name=args.login_name,
+        point=args.point,
+        available_count=args.available_count,
+    )
+    print("Done")

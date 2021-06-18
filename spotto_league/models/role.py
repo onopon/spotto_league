@@ -14,30 +14,34 @@ class RoleType(Enum):
     @classmethod
     def all(cls):
         # GUEST と VISITOR は特別枠なので、allには含めない。
-        return [{'id': RoleType.ADMIN.value, 'name': '管理者'},
-                {'id': RoleType.MEMBER.value, 'name': 'メンバー'}]
+        return [
+            {"id": RoleType.ADMIN.value, "name": "管理者"},
+            {"id": RoleType.MEMBER.value, "name": "メンバー"},
+        ]
 
 
 class Role(db.Model, Base):
 
-    __tablename__ = 'roles'
+    __tablename__ = "roles"
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, nullable=False, index=True)
     role_type = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
+    updated_at = db.Column(
+        db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now
+    )
 
     @classmethod
-    def all(cls) -> List['Role']:
+    def all(cls) -> List["Role"]:
         return db.session.query(Role).all()
 
     @classmethod
-    def find_by_user_id(cls, user_id: int) -> Optional['Role']:
+    def find_by_user_id(cls, user_id: int) -> Optional["Role"]:
         return db.session.query(cls).filter(cls.user_id == user_id).one_or_none()
 
     @classmethod
-    def find_or_initialize_by_user_id(cls, user_id: int) -> 'Role':
+    def find_or_initialize_by_user_id(cls, user_id: int) -> "Role":
         role = Role()
         role.user_id = user_id
         role.role_type = RoleType.GUEST.value

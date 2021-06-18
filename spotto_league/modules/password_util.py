@@ -2,10 +2,10 @@ import hashlib
 from instance import settings
 
 
-class PasswordUtil():
+class PasswordUtil:
     @classmethod
     def make_hex(cls, password) -> str:
-        password_byte = bytes(password, 'utf-8')
+        password_byte = bytes(password, "utf-8")
         return hashlib.sha256(password_byte).hexdigest()
 
     @classmethod

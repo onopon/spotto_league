@@ -1,7 +1,7 @@
 import asyncio
 from spotto_league.controllers.base_controller import BaseController
 from werkzeug.wrappers import BaseRequest, BaseResponse
-from flask import Flask, request, render_template, redirect, url_for
+from flask import redirect, url_for
 from spotto_league.models.user import User
 from datetime import date
 from spotto_league.modules.password_util import PasswordUtil
@@ -30,10 +30,9 @@ class PostRegisterController(BaseController):
         if any([len(str(target)) == 0 for target in targets]):
             raise Exception("必要なデータが入力されていません。")
 
-
         password = request.form.get("password")
         confirm_password = request.form.get("confirm_password")
-        if (password != confirm_password):
+        if password != confirm_password:
             raise Exception("パスワードが一致しません。")
 
     # override
@@ -59,4 +58,4 @@ class PostRegisterController(BaseController):
         login_user.login_name = user.login_name
         flask_login.login_user(login_user)
 
-        return redirect(url_for('league_list'), code=307)
+        return redirect(url_for("league_list"), code=307)

@@ -4,19 +4,18 @@ from spotto_league.models.league_log import LeagueLog
 from spotto_league.models.place import Place
 from spotto_league.models.league_member import LeagueMember
 from spotto_league.models.league_point import (
-        RATING_BORDER_MEMBER_COUNT,
-        BASE_GROUP_ID,
-        ONE_AND_HALF_TIMES_GROUP_ID,
-        LeaguePoint
+    RATING_BORDER_MEMBER_COUNT,
+    BASE_GROUP_ID,
+    ONE_AND_HALF_TIMES_GROUP_ID,
+    LeaguePoint,
 )
 from .base import Base
-import datetime
 from datetime import datetime as dt
-from time import strftime
 from enum import Enum
 
 
-NEAR_JOIN_END_AT_SECONDS = 3*60*60 # 参加締め切り時刻に近いとする時間（秒）
+NEAR_JOIN_END_AT_SECONDS = 3 * 60 * 60  # 参加締め切り時刻に近いとする時間（秒）
+
 
 class LeagueStatus(Enum):
     RECRUITING = 0
@@ -28,7 +27,7 @@ class LeagueStatus(Enum):
 
 class League(db.Model, Base):
 
-    __tablename__ = 'leagues'
+    __tablename__ = "leagues"
 
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.Date, nullable=False, default=dt.now().date, index=True)
@@ -81,28 +80,38 @@ class League(db.Model, Base):
         if self.league_point_group_id is None:
             return []
         if not self._league_points:
-            self._league_points = LeaguePoint.find_all_by_group_id(self.league_point_group_id)
+            self._league_points = LeaguePoint.find_all_by_group_id(
+                self.league_point_group_id
+            )
         return self._league_points
 
     @property
     def date_for_display(self) -> str:
-        w_list = ['月', '火', '水', '木', '金', '土', '日']
-        date_str = self.date.strftime('%m月%d日')
-        time_format = ('%H:%M')
-        start_at_str = "{}:{}".format(str(self.start_at.hour).zfill(2), str(self.start_at.minute).zfill(2))
-        end_at_str = "{}:{}".format(str(self.end_at.hour).zfill(2), str(self.end_at.minute).zfill(2))
-        return "{}（{}）{} - {}".format(date_str, w_list[self.date.weekday()], start_at_str, end_at_str)
+        w_list = ["月", "火", "水", "木", "金", "土", "日"]
+        date_str = self.date.strftime("%m月%d日")
+        start_at_str = "{}:{}".format(
+            str(self.start_at.hour).zfill(2), str(self.start_at.minute).zfill(2)
+        )
+        end_at_str = "{}:{}".format(
+            str(self.end_at.hour).zfill(2), str(self.end_at.minute).zfill(2)
+        )
+        return "{}（{}）{} - {}".format(
+            date_str, w_list[self.date.weekday()], start_at_str, end_at_str
+        )
 
     @property
     def time_for_display(self) -> str:
-        time_format = ('%H:%M')
-        start_at_str = "{}:{}".format(str(self.start_at.hour).zfill(2), str(self.start_at.minute).zfill(2))
-        end_at_str = "{}:{}".format(str(self.end_at.hour).zfill(2), str(self.end_at.minute).zfill(2))
+        start_at_str = "{}:{}".format(
+            str(self.start_at.hour).zfill(2), str(self.start_at.minute).zfill(2)
+        )
+        end_at_str = "{}:{}".format(
+            str(self.end_at.hour).zfill(2), str(self.end_at.minute).zfill(2)
+        )
         return "{} - {}".format(start_at_str, end_at_str)
 
     @property
     def join_end_at_for_display(self) -> str:
-        return self.join_end_at.strftime('%m月%d日（%a）%H:%M')
+        return self.join_end_at.strftime("%m月%d日（%a）%H:%M")
 
     def league_point_group_id_is(self, group_id: int) -> bool:
         return group_id == self.recommend_league_point_group_id
@@ -123,8 +132,10 @@ class League(db.Model, Base):
         return self.date == dt.now().date()
 
     def is_status_recruiting(self) -> bool:
-        return LeagueStatus(self.status) == LeagueStatus.RECRUITING or\
-                self.is_status_recruiting_near_join_end_at()
+        return (
+            LeagueStatus(self.status) == LeagueStatus.RECRUITING
+            or self.is_status_recruiting_near_join_end_at()
+        )
 
     def is_status_recruiting_near_join_end_at(self) -> bool:
         return LeagueStatus(self.status) == LeagueStatus.RECRUITING_NEAR_JOIN_END_AT
@@ -133,14 +144,16 @@ class League(db.Model, Base):
         return LeagueStatus(self.status) == LeagueStatus.READY
 
     def is_status_finished(self) -> bool:
-        return LeagueStatus(self.status) == LeagueStatus.FINISHED or\
-                self.is_status_cancel()
+        return (
+            LeagueStatus(self.status) == LeagueStatus.FINISHED
+            or self.is_status_cancel()
+        )
 
     def is_status_cancel(self) -> bool:
         return LeagueStatus(self.status) == LeagueStatus.CANCEL
 
     @classmethod
-    def all(cls) -> List['League']:
+    def all(cls) -> List["League"]:
         return db.session.query(League).all()
 
     def is_in_join_session(self) -> bool:
@@ -154,7 +167,9 @@ class League(db.Model, Base):
 
     def is_in_session(self) -> bool:
         now = dt.now()
-        return dt.combine(self.date, self.start_at) <= now and now <= dt.combine(self.date, self.end_at)
+        return dt.combine(self.date, self.start_at) <= now and now <= dt.combine(
+            self.date, self.end_at
+        )
 
     def is_after_session(self) -> bool:
         return dt.combine(self.date, self.end_at) < dt.now()

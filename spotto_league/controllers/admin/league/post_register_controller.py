@@ -1,8 +1,7 @@
 import asyncio
-import datetime
 from spotto_league.controllers.base_controller import BaseController
 from werkzeug.wrappers import BaseRequest, BaseResponse
-from flask import Flask, request, render_template, redirect, url_for
+from flask import redirect, url_for
 from spotto_league.models.place import Place
 from spotto_league.models.league import League
 
@@ -12,6 +11,7 @@ MODE_MAKE_PLACE = 1
 
 class PostRegisterController(BaseController):
     __slots__ = ["_place"]
+
     # override
     @asyncio.coroutine
     def validate(self, request: BaseRequest, **kwargs) -> None:
@@ -21,7 +21,14 @@ class PostRegisterController(BaseController):
         name = request.form.get("name")
         game_count = request.form.get("game_count")
         join_end_at_str = request.form.get("join_end_at")
-        targets = [date_str, start_at_str, end_at_str, name, game_count, join_end_at_str]
+        targets = [
+            date_str,
+            start_at_str,
+            end_at_str,
+            name,
+            game_count,
+            join_end_at_str,
+        ]
         if any([len(str(target)) == 0 for target in targets]):
             raise Exception("必要なデータが入力されていません。")
 
@@ -42,7 +49,7 @@ class PostRegisterController(BaseController):
             self._place.url = url
             self._place.capacity = int(capacity)
         else:
-            raise Exeption()
+            raise Exception("予期せぬエラーです。")
 
     # override
     @asyncio.coroutine
@@ -66,4 +73,4 @@ class PostRegisterController(BaseController):
         self._place.save()
         league.place_id = self._place.id
         league.save()
-        return redirect(url_for('user_info', login_name = self.login_user.login_name))
+        return redirect(url_for("user_info", login_name=self.login_user.login_name))

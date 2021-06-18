@@ -1,12 +1,9 @@
 import asyncio
 from spotto_league.controllers.base_controller import BaseController
 from werkzeug.wrappers import BaseRequest, BaseResponse
-from flask import Flask, request, redirect, url_for
-from flask_login import current_user
-from spotto_league.models.user import User
-from spotto_league.models.league import League, LeagueStatus
-from spotto_league.entities.point_rank import PointRank
+from flask import redirect, url_for
 from datetime import date
+
 
 class PostModifyController(BaseController):
     # override
@@ -16,9 +13,10 @@ class PostModifyController(BaseController):
             raise Exception("管理者、チームメンバーのユーザは本名の設定は必須です。")
 
     @asyncio.coroutine
-    def get_layout_as_exception(self, request: BaseRequest, error: Exception, **kwargs) -> None:
-        return self.render_template("user/modify.html",
-                                    error_message=str(error))
+    def get_layout_as_exception(
+        self, request: BaseRequest, error: Exception, **kwargs
+    ) -> None:
+        return self.render_template("user/modify.html", error_message=str(error))
 
     # override
     @asyncio.coroutine
@@ -33,4 +31,4 @@ class PostModifyController(BaseController):
         self.login_user.birthday = date(year, month, day)
         self.login_user.save()
 
-        return redirect(url_for('user_info', login_name=self.login_user.login_name))
+        return redirect(url_for("user_info", login_name=self.login_user.login_name))

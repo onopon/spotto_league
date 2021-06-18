@@ -1,16 +1,15 @@
 from enum import Enum
-from typing import List, Dict, Any
+from typing import List, Dict
 from itertools import groupby
 from spotto_league.models.league import League
-from spotto_league.models.league_point import LeaguePoint
 from spotto_league.models.bonus_point import BonusPoint
 from spotto_league.models.user import User
 from spotto_league.models.user_point import UserPoint
 
 BASIC_AVAILABLE_COUNT = 8
-POINT_HASH_KEY_BASE = 'BasePoint'
-POINT_HASH_KEY_BONUS = 'BonusPoint'
-POINT_HASH_KEY_LEAGUE = 'LeaguePoint'
+POINT_HASH_KEY_BASE = "BasePoint"
+POINT_HASH_KEY_BONUS = "BonusPoint"
+POINT_HASH_KEY_LEAGUE = "LeaguePoint"
 
 
 class RankSatus(Enum):
@@ -18,17 +17,22 @@ class RankSatus(Enum):
     DOWN = 2
     UP = 3
 
-class PointRank():
-    __slots__ = ['_user',
-                 '_before_rank',
-                 '_current_rank',
-                 '_before_points_hash',
-                 '_current_points_hash']
 
-    def __init__(self,
-                 user: User,
-                 before_points_hash: Dict[str, List[int]],
-                 current_points_hash: Dict[str, List[int]]):
+class PointRank:
+    __slots__ = [
+        "_user",
+        "_before_rank",
+        "_current_rank",
+        "_before_points_hash",
+        "_current_points_hash",
+    ]
+
+    def __init__(
+        self,
+        user: User,
+        before_points_hash: Dict[str, List[int]],
+        current_points_hash: Dict[str, List[int]],
+    ):
         self._user = user
         self._before_points_hash = before_points_hash
         self._current_points_hash = current_points_hash
@@ -89,13 +93,15 @@ class PointRank():
         return self._before_rank > self._current_rank
 
     def to_hash(self) -> Dict[str, any]:
-        return {'user_name': self.user.name,
-                'current_points_hash': self._current_points_hash,
-                'before_points_hash': self._before_points_hash,
-                'current_rank': self._current_rank}
+        return {
+            "user_name": self.user.name,
+            "current_points_hash": self._current_points_hash,
+            "before_points_hash": self._before_points_hash,
+            "current_rank": self._current_rank,
+        }
 
     @classmethod
-    def make_point_rank_list_in_season(cls, year: int) -> List['PointRank']:
+    def make_point_rank_list_in_season(cls, year: int) -> List["PointRank"]:
         user_points = UserPoint.find_all_in_season(year)
         users = User.all_without_visitor()
         bonus_points = BonusPoint.find_all_by_user_ids([u.id for u in users])
@@ -104,7 +110,11 @@ class PointRank():
         for user in users:
             m_user_points = list(filter(lambda up: up.user_id == user.id, user_points))
             current_points = cls.get_sorted_points_hash(m_user_points, bonus_points)
-            before_points = {POINT_HASH_KEY_BASE: [], POINT_HASH_KEY_LEAGUE: [], POINT_HASH_KEY_BONUS: []}
+            before_points = {
+                POINT_HASH_KEY_BASE: [],
+                POINT_HASH_KEY_LEAGUE: [],
+                POINT_HASH_KEY_BONUS: [],
+            }
             rank_list.append(PointRank(user, before_points, current_points))
 
         current_rank = 1
@@ -118,20 +128,28 @@ class PointRank():
             current_rank += len(ranks)
         return sorted_rank_list
 
-
     @classmethod
-    def make_point_rank_list(cls, league: League) -> List['PointRank']:
+    def make_point_rank_list(cls, league: League) -> List["PointRank"]:
         user_points = UserPoint.find_all_in_season(league.updated_at.year)
-        members = league.enable_members
         users = User.all_without_visitor()
 
         bonus_points = BonusPoint.find_all_by_user_ids([u.id for u in users])
         rank_list = []
         for user in users:
-            m_user_points = list(filter(lambda up: up.user_id == user.id and\
-                    up.created_at <= league.updated_at, user_points))
-            m_before_points = list(filter(lambda up: up.league_id != league.id and\
-                    up.created_at < league.updated_at, m_user_points))
+            m_user_points = list(
+                filter(
+                    lambda up: up.user_id == user.id
+                    and up.created_at <= league.updated_at,
+                    user_points,
+                )
+            )
+            m_before_points = list(
+                filter(
+                    lambda up: up.league_id != league.id
+                    and up.created_at < league.updated_at,
+                    m_user_points,
+                )
+            )
             current_points = cls.get_sorted_points_hash(m_user_points, bonus_points)
             before_points = cls.get_sorted_points_hash(m_before_points, bonus_points)
             rank_list.append(PointRank(user, before_points, current_points))
@@ -158,24 +176,43 @@ class PointRank():
 
         return sorted_rank_list
 
-    '''
+    """
     全リーグのうち高いポイントをBASIC_AVAILABLE_COUNT分と、ボーナスポイントをavailable_countの分だけ取得
-    '''
+    """
+
     @classmethod
-    def get_sorted_points_hash(cls, user_points: List[UserPoint], bonus_points: List[BonusPoint]) -> int:
-        sorted_points_hash = {POINT_HASH_KEY_BASE: [], POINT_HASH_KEY_LEAGUE: [], POINT_HASH_KEY_BONUS: []}
+    def get_sorted_points_hash(
+        cls, user_points: List[UserPoint], bonus_points: List[BonusPoint]
+    ) -> int:
+        sorted_points_hash = {
+            POINT_HASH_KEY_BASE: [],
+            POINT_HASH_KEY_LEAGUE: [],
+            POINT_HASH_KEY_BONUS: [],
+        }
         if len(user_points) == 0:
             return sorted_points_hash
 
-        user_base_points = [up.point for up in user_points if up.reason_class == 'BasePoint']
+        user_base_points = [
+            up.point for up in user_points if up.reason_class == "BasePoint"
+        ]
         sorted_points_hash[POINT_HASH_KEY_BASE].extend(user_base_points)
 
-        user_bonus_points = [up for up in user_points if up.reason_class == 'BonusPoint']
+        user_bonus_points = [
+            up for up in user_points if up.reason_class == "BonusPoint"
+        ]
         for bp in bonus_points:
-            m_bonus_points = [up.point for up in user_bonus_points if up.reason_id == bp.id]
-            sorted_points_hash[POINT_HASH_KEY_BONUS].extend(m_bonus_points[:bp.available_count])
+            m_bonus_points = [
+                up.point for up in user_bonus_points if up.reason_id == bp.id
+            ]
+            sorted_points_hash[POINT_HASH_KEY_BONUS].extend(
+                m_bonus_points[: bp.available_count]
+            )
         sorted_points_hash[POINT_HASH_KEY_BONUS].sort(reverse=True)
-        league_point_list = [up.point for up in user_points if up.reason_class == 'LeaguePoint']
+        league_point_list = [
+            up.point for up in user_points if up.reason_class == "LeaguePoint"
+        ]
         league_point_list.sort(reverse=True)
-        sorted_points_hash[POINT_HASH_KEY_LEAGUE] = league_point_list[:BASIC_AVAILABLE_COUNT]
+        sorted_points_hash[POINT_HASH_KEY_LEAGUE] = league_point_list[
+            :BASIC_AVAILABLE_COUNT
+        ]
         return sorted_points_hash

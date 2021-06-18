@@ -1,21 +1,15 @@
 import asyncio
-import json
-from typing import Dict, Any, List
-from collections import defaultdict
 from spotto_league.controllers.base_controller import BaseController
 from werkzeug.wrappers import BaseRequest, BaseResponse
-from flask import Flask, request, render_template
 from flask_login import current_user
 from spotto_league.models.league import League
-from spotto_league.models.league_member import LeagueMember
-from spotto_league.models.league_log import LeagueLog
-from spotto_league.models.league_log_detail import LeagueLogDetail
 from spotto_league.entities.rank import Rank
 from spotto_league.models.user import User
 
 
 class LeagueController(BaseController):
-    __slots__ = ['_league']
+    __slots__ = ["_league"]
+
     # override
     @asyncio.coroutine
     def validate(self, request: BaseRequest, **kwargs) -> None:
@@ -31,4 +25,9 @@ class LeagueController(BaseController):
         rank_list = Rank.make_rank_list(self._league)
         league_member_user_ids = [m.user_id for m in self._league.members]
         users = [u for u in User.all() if u.id not in league_member_user_ids]
-        return self.render_template("admin/league/league.html", league=self._league, rank_list=rank_list, users=users)
+        return self.render_template(
+            "admin/league/league.html",
+            league=self._league,
+            rank_list=rank_list,
+            users=users,
+        )

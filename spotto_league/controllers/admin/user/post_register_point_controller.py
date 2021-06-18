@@ -1,10 +1,7 @@
 import asyncio
-import json
-from typing import Dict, Any, List
-from collections import defaultdict
 from spotto_league.controllers.base_controller import BaseController
 from werkzeug.wrappers import BaseRequest, BaseResponse
-from flask import Flask, request, redirect, url_for
+from flask import redirect, url_for
 from flask_login import current_user
 from spotto_league.models.user import User
 from spotto_league.models.bonus_point import BonusPoint
@@ -12,7 +9,7 @@ from spotto_league.models.user_point import UserPoint
 
 
 class PostRegisterPointController(BaseController):
-    __slots__ = ['_bonus_points']
+    __slots__ = ["_bonus_points"]
 
     # override
     @asyncio.coroutine
@@ -50,7 +47,7 @@ class PostRegisterPointController(BaseController):
         if base_point > 0:
             user_point = UserPoint()
             user_point.user_id = user.id
-            user_point.set_point(int(request.form.get("base") or 0), 'BasePoint', memo)
+            user_point.set_point(int(request.form.get("base") or 0), "BasePoint", memo)
             user_point.save()
 
         for i in range(8):
@@ -58,7 +55,7 @@ class PostRegisterPointController(BaseController):
             if point > 0:
                 up = UserPoint()
                 up.user_id = user.id
-                up.set_point(point, 'LeaguePoint', memo)
+                up.set_point(point, "LeaguePoint", memo)
                 up.save()
 
         for bp in self._bonus_points:
@@ -72,4 +69,4 @@ class PostRegisterPointController(BaseController):
                 up.memo = memo
                 up.save()
 
-        return redirect(url_for('user_info', login_name=user.login_name), code=307)
+        return redirect(url_for("user_info", login_name=user.login_name), code=307)
