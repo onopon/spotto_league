@@ -38,13 +38,13 @@ class PostRegisterController(BaseController):
     # override
     @asyncio.coroutine
     def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
-        login_name = request.form.get("login_name")
-        name = request.form.get("name")
-        password = request.form.get("password", "")
-        gender = int(request.form.get("gender", 1))
-        year = int(request.form.get("year", 1900))
-        month = int(request.form.get("month", 1))
-        day = int(request.form.get("day", 1))
+        login_name = request.form["login_name"]
+        name = request.form["name"]
+        password = request.form["password"]
+        gender = int(request.form["gender"])
+        year = int(request.form["year"])
+        month = int(request.form["month"])
+        day = int(request.form["day"])
         user = User()
         user.login_name = login_name
         user.name = name

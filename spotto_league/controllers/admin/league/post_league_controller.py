@@ -15,7 +15,7 @@ class PostLeagueController(BaseController):
         try:
             self._league = League.find(kwargs["league_id"])
             if not self._league:
-                raise Exception("League: {} does not exist".kwargs["league_id"])
+                raise Exception("League: {} does not exist".format(kwargs["league_id"]))
             league_member_ids = request.form.getlist("enabled_league_member_ids")
             # TODO: リーグ戦最低人数を決める
             if len(league_member_ids) < 2:

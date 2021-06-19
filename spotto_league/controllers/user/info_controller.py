@@ -32,7 +32,7 @@ class InfoController(BaseController):
         date = dt.now().date()
         render_hash: Dict[str, Any] = {}
         render_hash["is_update_for_admin"] = int(
-            request.form.get("is_update_for_admin") or 0
+            request.form.get("is_update_for_admin", 0)
         )
         render_hash["year"] = date.year
         render_hash["user"] = self._user

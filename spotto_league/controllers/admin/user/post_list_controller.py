@@ -47,7 +47,7 @@ class PostListController(BaseController):
         role_type_hash_list = RoleType.all()
         for user in self._users:
             role_type_key = "radio_{}".format(user.login_name)
-            role_type_value = int(request.form.get(role_type_key))
+            role_type_value = int(request.form[role_type_key])
             if role_type_value == ROLE_TYPE_GUEST:
                 if user.role:
                     user.role.delete()

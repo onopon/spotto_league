@@ -9,7 +9,7 @@ class PostModifyController(BaseController):
     # override
     @asyncio.coroutine
     def validate(self, request: BaseRequest, **kwargs) -> None:
-        if self.login_user.role and not request.form.get("first-name"):
+        if (self.login_user.is_admin() or self.login_user.is_member()) and not request.form.get("first-name"):
             raise Exception("管理者、チームメンバーのユーザは本名の設定は必須です。")
 
     @asyncio.coroutine
@@ -24,10 +24,10 @@ class PostModifyController(BaseController):
         self.login_user.name = request.form.get("name")
         self.login_user.first_name = request.form.get("first-name")
         self.login_user.last_name = request.form.get("last-name")
-        self.login_user.gender = int(request.form.get("gender"))
-        year = int(request.form.get("year"))
-        month = int(request.form.get("month"))
-        day = int(request.form.get("day"))
+        self.login_user.gender = int(request.form["gender"])
+        year = int(request.form["year"])
+        month = int(request.form["month"])
+        day = int(request.form["day"])
         self.login_user.birthday = date(year, month, day)
         self.login_user.save()
 

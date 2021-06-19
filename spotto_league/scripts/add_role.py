@@ -12,7 +12,7 @@ class AddRole(Base):
             role_type = kwargs["role_type"]
             user = User.find_by_login_name(login_name)
             if not user:
-                raise Exception("User does not find: {}".format(login_name))
+                raise Exception("User does not found: {}".format(login_name))
             role = Role.find_or_initialize_by_user_id(user.id)
             role.role_type = RoleType(role_type).value
             role.save()

@@ -21,31 +21,31 @@ class PostLoginController(BaseController):
     # override
     @asyncio.coroutine
     def validate(self, request: BaseRequest, **kwargs) -> None:
-        login_name = request.form.get("login_name")
-        password = request.form.get("password")
-        common_password = request.form.get("common_password")
+        login_name = request.form.get("login_name", "")
+        password = request.form.get("password", "")
+        common_password = request.form.get("common_password", "")
 
         # Visitor用validate
         if PasswordUtil.is_correct_common_visitor_password(common_password):
             user = User.find_by_login_name(login_name)
-            self._validate(user, password)
+            if not user:
+                raise Exception("ログイン失敗")
+            if not PasswordUtil.is_same(password, user.password):
+                raise Exception("ログイン失敗")
             if not user.is_visitor():
                 raise Exception("ログイン失敗")
         # それ以外の人用validate
         elif PasswordUtil.is_correct_common_password(common_password):
             user = User.find_by_login_name(login_name)
-            self._validate(user, password)
+            if not user:
+                raise Exception("ログイン失敗")
+            if not PasswordUtil.is_same(password, user.password):
+                raise Exception("ログイン失敗")
             if user.is_visitor():
                 raise Exception("ログイン失敗")
         else:
             raise Exception("ログイン失敗")
         self._user = user
-
-    def _validate(self, user: User, password: str) -> None:
-        if not user:
-            raise Exception("ログイン失敗")
-        if not PasswordUtil.is_same(password, user.password):
-            raise Exception("ログイン失敗")
 
     @asyncio.coroutine
     def get_layout_as_exception(

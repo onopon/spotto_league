@@ -15,9 +15,10 @@ class LeagueController(BaseController):
     def validate(self, request: BaseRequest, **kwargs) -> None:
         if not self.login_user.is_admin():
             raise Exception("User: {} is not admin.".format(current_user.login_name))
-        self._league = League.find_by_id(kwargs["league_id"])
-        if not self._league:
-            raise Exception("League: {} does not exist.".format(kwargs["league_id"]))
+        try:
+            self._league = League.find(kwargs["league_id"])
+        except Exception as e:
+            raise e
 
     # override
     @asyncio.coroutine

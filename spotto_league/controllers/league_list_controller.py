@@ -19,7 +19,7 @@ class LeagueListController(BaseController):
     # override
     @asyncio.coroutine
     def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
-        is_from_register = bool(request.form.get("is_from_register", 0))
+        is_from_register = bool(request.form["is_from_register"])
         league_list = League.all()
         league_list.sort(key=lambda r: r.date, reverse=False)
 

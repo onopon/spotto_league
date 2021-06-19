@@ -1,4 +1,5 @@
 import asyncio
+from flask import jsonify
 from spotto_league.controllers.base_controller import BaseController
 from werkzeug.wrappers import BaseRequest, BaseResponse
 from spotto_league.models.league import League
@@ -13,7 +14,7 @@ class PostLeagueCancelController(BaseController):
     # override
     @asyncio.coroutine
     def validate(self, request: BaseRequest, **kwargs) -> None:
-        league_id = request.form.get("league_id")
+        league_id = int(request.form.get("league_id", 0))
         try:
             League.find(league_id)
         except Exception:
@@ -22,9 +23,9 @@ class PostLeagueCancelController(BaseController):
     # override
     @asyncio.coroutine
     def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
-        league_id = request.form.get("league_id")
+        league_id = request.form["league_id"]
         league_member = LeagueMember.find_or_initialize_by_league_id_and_user_id(
             league_id, self.login_user.id
         )
         league_member.delete()
-        return "success"
+        return jsonify({"result": "success"})

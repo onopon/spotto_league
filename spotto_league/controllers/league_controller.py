@@ -1,5 +1,5 @@
 import asyncio
-import json
+from flask import jsonify
 from typing import Dict, Any, List
 from .base_controller import BaseController
 from werkzeug.wrappers import BaseRequest, BaseResponse
@@ -10,6 +10,8 @@ from spotto_league.entities.point_rank import PointRank
 
 
 class LeagueController(BaseController):
+    __slots__ = ["_league"]
+
     # override
     def enable_for_visitor(self) -> bool:
         return True
@@ -22,14 +24,14 @@ class LeagueController(BaseController):
             raise Exception("league_id: {} のリーグ戦情報は存在しません。".format(kwargs["league_id"]))
         if self.login_user.is_visitor() and not league.is_on_today():
             raise Exception("ゲストの方はこのページを閲覧することはできません。")
+        self._league = league
 
     # override
     @asyncio.coroutine
     def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
         params = {}
 
-        league_id = kwargs["league_id"]
-        league = League.find(league_id)
+        league = self._league
         point_ranks = PointRank.make_point_rank_list(league)
         user_hash, league_log_hash = self._get_user_hash_and_league_log_hash(
             league, point_ranks
@@ -57,8 +59,7 @@ class LeagueController(BaseController):
     # override
     @asyncio.coroutine
     def get_json(self, request: BaseRequest, **kwargs) -> Dict[str, Any]:
-        league_id = kwargs["league_id"]
-        league = League.find_by_id(league_id)
+        league = self._league
         point_ranks = PointRank.make_point_rank_list(league)
         _, league_log_hash = self._get_user_hash_and_league_log_hash(
             league, point_ranks
@@ -76,7 +77,7 @@ class LeagueController(BaseController):
                 )
             ),
         }
-        return json.dumps(params)
+        return jsonify(params)
 
     def _get_user_hash_and_league_log_hash(
         self, league: League, point_ranks: List[PointRank]

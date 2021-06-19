@@ -36,8 +36,8 @@ class Rank:
         self._user_id = league_member.user_id
         self._logs = logs
         self._details = details
-        self._win_user_ids = []
-        self._lose_user_ids = []
+        self._win_user_ids: List[int] = []
+        self._lose_user_ids: List[int] = []
         self._got_game = 0
         self._lost_game = 0
         self._got_point = 0
@@ -176,7 +176,8 @@ class Rank:
             ranks = list(group)
             # 単独で順位が確定してる場合
             if len(ranks) == 1:
-                [r.set_reason_for_priority(grouping_point) for r in ranks]
+                for r in ranks:
+                    r.set_reason_for_priority(grouping_point)
                 sorted_rank_list.extend(ranks)
                 continue
             # ポイントが並んでいる選手が2人いる場合

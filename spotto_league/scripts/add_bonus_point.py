@@ -13,7 +13,7 @@ class AddBonusPoint(Base):
             available_count = kwargs["available_count"]
             user = User.find_by_login_name(login_name)
             if not user:
-                raise Exception("User does not find: {}".format(login_name))
+                raise Exception("User does not found: {}".format(login_name))
             bonus_point = BonusPoint.find_or_initialize_by_user_id(user.id)
             bonus_point.point = point
             bonus_point.available_count = available_count

@@ -18,9 +18,9 @@ class PostLeagueLogController(BaseController):
     # override
     @asyncio.coroutine
     def validate(self, request: BaseRequest, **kwargs) -> None:
-        league_id = int(request.form.get("league_id", 0))
-        user_id_1 = int(request.form.get("user_id_1", 0))
-        user_id_2 = int(request.form.get("user_id_2", 0))
+        league_id = int(request.form["league_id"])
+        user_id_1 = int(request.form["user_id_1"])
+        user_id_2 = int(request.form["user_id_2"])
         score_1_list = [int(s or 0) for s in request.form.getlist("score_1_list[]")]
         score_2_list = [int(s or 0) for s in request.form.getlist("score_2_list[]")]
         if not all([league_id, user_id_1, user_id_2]):
@@ -36,9 +36,9 @@ class PostLeagueLogController(BaseController):
     # override
     @asyncio.coroutine
     def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
-        league_id = int(request.form.get("league_id", 0))
-        user_id_1 = int(request.form.get("user_id_1", 0))
-        user_id_2 = int(request.form.get("user_id_2", 0))
+        league_id = int(request.form["league_id"])
+        user_id_1 = int(request.form["user_id_1"])
+        user_id_2 = int(request.form["user_id_2"])
         self._league_log = LeagueLog.find_or_initialize(league_id, user_id_1, user_id_2)
         if not self._league_log.id:
             self._league_log.save()
