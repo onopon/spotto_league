@@ -1,4 +1,4 @@
-from typying import Any, Dict
+from typing import Any, Dict
 from spotto_league.controllers.base_controller import BaseController, AnyResponse
 from werkzeug.wrappers import BaseRequest
 from spotto_league.models.user import User

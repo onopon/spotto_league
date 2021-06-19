@@ -1,4 +1,4 @@
-from frask import jsonify
+from flask import jsonify
 from typing import Dict, Any
 from spotto_league.controllers.base_controller import BaseController, AnyResponse
 from werkzeug.wrappers import BaseRequest
