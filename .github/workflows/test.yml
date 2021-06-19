@@ -28,6 +28,7 @@ jobs:
       if: steps.cache-images.outputs.cache-hit == 'true'
       run: |
         load_result=`docker image load -i /tmp/images/lolipop_web_server_for_python3.tar`
+        echo $load_result
         image_id=`echo $load_result | cut -d ':' -f 3 | cut -c 1-6`
         echo $image_id
         docker tag $image_id onopon/lolipop_web_server_for_python3:latest
