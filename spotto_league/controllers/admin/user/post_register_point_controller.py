@@ -1,6 +1,5 @@
-import asyncio
-from spotto_league.controllers.base_controller import BaseController
-from werkzeug.wrappers import BaseRequest, BaseResponse
+from spotto_league.controllers.base_controller import BaseController, AnyResponse
+from werkzeug.wrappers import BaseRequest
 from flask import redirect, url_for
 from flask_login import current_user
 from spotto_league.models.user import User
@@ -12,8 +11,7 @@ class PostRegisterPointController(BaseController):
     __slots__ = ["_user", "_bonus_points"]
 
     # override
-    @asyncio.coroutine
-    def validate(self, request: BaseRequest, **kwargs) -> None:
+    async def validate(self, request: BaseRequest, **kwargs) -> None:
         if not self.login_user.is_admin():
             raise Exception("User: {} is not admin.".format(current_user.login_name))
 
@@ -42,8 +40,7 @@ class PostRegisterPointController(BaseController):
         self._user = user
 
     # override
-    @asyncio.coroutine
-    def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
+    async def get_layout(self, request: BaseRequest, **kwargs) -> AnyResponse:
         memo = "created by {}".format(self.login_user.login_name)
         base_point = int(request.form.get("base") or 0)
         user = self._user

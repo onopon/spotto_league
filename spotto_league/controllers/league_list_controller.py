@@ -1,6 +1,5 @@
-import asyncio
-from .base_controller import BaseController
-from werkzeug.wrappers import BaseRequest, BaseResponse
+from .base_controller import BaseController, AnyResponse
+from werkzeug.wrappers import BaseRequest
 from spotto_league.models.league import League
 from spotto_league.models.league_member import LeagueMember
 from collections import defaultdict
@@ -12,13 +11,11 @@ class LeagueListController(BaseController):
         return True
 
     # override
-    @asyncio.coroutine
-    def validate(self, request: BaseRequest, **kwargs) -> None:
+    async def validate(self, request: BaseRequest, **kwargs) -> None:
         pass
 
     # override
-    @asyncio.coroutine
-    def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
+    async def get_layout(self, request: BaseRequest, **kwargs) -> AnyResponse:
         is_from_register = bool(request.form["is_from_register"])
         league_list = League.all()
         league_list.sort(key=lambda r: r.date, reverse=False)

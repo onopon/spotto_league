@@ -1,9 +1,8 @@
-import asyncio
 import json
 from typing import Optional
 from flask import jsonify
-from .base_controller import BaseController
-from werkzeug.wrappers import BaseRequest, BaseResponse
+from .base_controller import BaseController, AnyResponse
+from werkzeug.wrappers import BaseRequest
 from spotto_league.models.league_log import LeagueLog
 from spotto_league.models.league_log_detail import LeagueLogDetail
 
@@ -16,8 +15,7 @@ class PostLeagueLogController(BaseController):
         self._league_log: Optional[LeagueLog] = None
 
     # override
-    @asyncio.coroutine
-    def validate(self, request: BaseRequest, **kwargs) -> None:
+    async def validate(self, request: BaseRequest, **kwargs) -> None:
         league_id = int(request.form["league_id"])
         user_id_1 = int(request.form["user_id_1"])
         user_id_2 = int(request.form["user_id_2"])
@@ -34,8 +32,7 @@ class PostLeagueLogController(BaseController):
             raise Exception("Score List is invalid.")
 
     # override
-    @asyncio.coroutine
-    def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
+    async def get_layout(self, request: BaseRequest, **kwargs) -> AnyResponse:
         league_id = int(request.form["league_id"])
         user_id_1 = int(request.form["user_id_1"])
         user_id_2 = int(request.form["user_id_2"])

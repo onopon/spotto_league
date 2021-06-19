@@ -1,11 +1,14 @@
 from abc import ABCMeta, abstractmethod
 import asyncio
-from werkzeug.wrappers import BaseRequest, BaseResponse
-from typing import Dict, Any
+from werkzeug.wrappers import BaseRequest, Response
+from typing import Dict, Any, Union
 import time
 from flask import render_template, redirect, url_for
 from flask_login import current_user
 from spotto_league.models.user import User
+
+# AnyResponse = TypeVar('AnyResponse', str, Response)
+AnyResponse = Union[str, Response]
 
 
 class BaseController(metaclass=ABCMeta):
@@ -23,34 +26,29 @@ class BaseController(metaclass=ABCMeta):
     def enable_for_visitor(self) -> bool:
         return False
 
-    @asyncio.coroutine
-    def validate_for_visitor(self) -> None:
+    async def validate_for_visitor(self) -> None:
         if self.enable_for_visitor():
             return
         if current_user.is_authenticated and self.login_user.is_visitor():
             raise Exception("ゲストの方はこのページを閲覧することはできません。")
 
     @abstractmethod
-    @asyncio.coroutine
-    def validate(self, request: BaseRequest, **kwargs) -> None:
+    async def validate(self, request: BaseRequest, **kwargs) -> None:
         pass
 
-    @asyncio.coroutine
-    def get_layout_as_exception(
+    async def get_layout_as_exception(
         self, request: BaseRequest, error: Exception, **kwargs
-    ) -> None:
+    ) -> AnyResponse:
         return self.render_template("error.html", error_message=str(error))
 
     @abstractmethod
-    @asyncio.coroutine
-    def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
+    async def get_layout(self, request: BaseRequest, **kwargs) -> AnyResponse:
         pass
 
-    @asyncio.coroutine
-    def get_json(self, request: BaseRequest, **kwargs) -> Dict[str, Any]:
+    async def get_json(self, request: BaseRequest, **kwargs) -> Dict[str, Any]:
         return {}
 
-    def render(self, request: BaseRequest, **kwargs) -> BaseResponse:
+    def render(self, request: BaseRequest, **kwargs) -> AnyResponse:
         loop = asyncio.get_event_loop()
         try:
             loop.run_until_complete(self.validate_for_visitor())
@@ -71,7 +69,7 @@ class BaseController(metaclass=ABCMeta):
 
         return asyncio.get_event_loop().run_until_complete(_render())
 
-    def render_template(self, template_name_or_list, **context):
+    def render_template(self, template_name_or_list, **context) -> AnyResponse:
         context["timestamp"] = time.time()
         if current_user.is_authenticated:
             context["login_user"] = self.login_user

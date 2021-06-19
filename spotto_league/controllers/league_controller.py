@@ -1,8 +1,7 @@
-import asyncio
 from flask import jsonify
 from typing import Dict, Any, List
-from .base_controller import BaseController
-from werkzeug.wrappers import BaseRequest, BaseResponse
+from .base_controller import BaseController, AnyResponse
+from werkzeug.wrappers import BaseRequest
 from spotto_league.models.league import League
 from spotto_league.models.league_log import LeagueLog
 from spotto_league.entities.rank import Rank
@@ -17,8 +16,7 @@ class LeagueController(BaseController):
         return True
 
     # override
-    @asyncio.coroutine
-    def validate(self, request: BaseRequest, **kwargs) -> None:
+    async def validate(self, request: BaseRequest, **kwargs) -> None:
         league = League.find_by_id(kwargs["league_id"])
         if not league:
             raise Exception("league_id: {} のリーグ戦情報は存在しません。".format(kwargs["league_id"]))
@@ -27,8 +25,7 @@ class LeagueController(BaseController):
         self._league = league
 
     # override
-    @asyncio.coroutine
-    def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
+    async def get_layout(self, request: BaseRequest, **kwargs) -> AnyResponse:
         params = {}
 
         league = self._league
@@ -57,8 +54,7 @@ class LeagueController(BaseController):
         return self.render_template("league.html", **params)
 
     # override
-    @asyncio.coroutine
-    def get_json(self, request: BaseRequest, **kwargs) -> Dict[str, Any]:
+    async def get_json(self, request: BaseRequest, **kwargs) -> Dict[str, Any]:
         league = self._league
         point_ranks = PointRank.make_point_rank_list(league)
         _, league_log_hash = self._get_user_hash_and_league_log_hash(

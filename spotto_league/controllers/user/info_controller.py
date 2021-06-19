@@ -1,7 +1,6 @@
-import asyncio
 from typying import Any, Dict
-from spotto_league.controllers.base_controller import BaseController
-from werkzeug.wrappers import BaseRequest, BaseResponse
+from spotto_league.controllers.base_controller import BaseController, AnyResponse
+from werkzeug.wrappers import BaseRequest
 from spotto_league.models.user import User
 from spotto_league.models.league import League
 from spotto_league.entities.point_rank import PointRank
@@ -12,8 +11,7 @@ class InfoController(BaseController):
     __slots__ = ["_user"]
 
     # override
-    @asyncio.coroutine
-    def validate(self, request: BaseRequest, **kwargs) -> None:
+    async def validate(self, request: BaseRequest, **kwargs) -> None:
         user = User.find_by_login_name(kwargs["login_name"])
         if not user:
             raise Exception("{}というユーザは存在しません。".format(kwargs["login_name"]))
@@ -27,8 +25,7 @@ class InfoController(BaseController):
         self._user = user
 
     # override
-    @asyncio.coroutine
-    def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
+    async def get_layout(self, request: BaseRequest, **kwargs) -> AnyResponse:
         date = dt.now().date()
         render_hash: Dict[str, Any] = {}
         render_hash["is_update_for_admin"] = int(

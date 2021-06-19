@@ -1,6 +1,5 @@
-import asyncio
-from spotto_league.controllers.base_controller import BaseController
-from werkzeug.wrappers import BaseRequest, BaseResponse
+from spotto_league.controllers.base_controller import BaseController, AnyResponse
+from werkzeug.wrappers import BaseRequest
 from flask import redirect, url_for
 from spotto_league.models.user import User
 from spotto_league.modules.password_util import PasswordUtil
@@ -19,8 +18,7 @@ class PostLoginController(BaseController):
         return True
 
     # override
-    @asyncio.coroutine
-    def validate(self, request: BaseRequest, **kwargs) -> None:
+    async def validate(self, request: BaseRequest, **kwargs) -> None:
         login_name = request.form.get("login_name", "")
         password = request.form.get("password", "")
         common_password = request.form.get("common_password", "")
@@ -47,15 +45,13 @@ class PostLoginController(BaseController):
             raise Exception("ログイン失敗")
         self._user = user
 
-    @asyncio.coroutine
-    def get_layout_as_exception(
+    async def get_layout_as_exception(
         self, request: BaseRequest, error: Exception, **kwargs
-    ) -> None:
+    ) -> AnyResponse:
         return self.render_template("user/login.html", is_miss_login=True)
 
     # override
-    @asyncio.coroutine
-    def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
+    async def get_layout(self, request: BaseRequest, **kwargs) -> AnyResponse:
         user = User()
         user.id = self._user.login_name
         user.login_name = self._user.login_name

@@ -1,6 +1,5 @@
-import asyncio
-from spotto_league.controllers.base_controller import BaseController
-from werkzeug.wrappers import BaseRequest, BaseResponse
+from spotto_league.controllers.base_controller import BaseController, AnyResponse
+from werkzeug.wrappers import BaseRequest
 from flask import redirect, url_for
 from spotto_league.models.user import User
 from datetime import date
@@ -14,8 +13,7 @@ class PostRegisterController(BaseController):
         return False
 
     # override
-    @asyncio.coroutine
-    def validate(self, request: BaseRequest, **kwargs) -> None:
+    async def validate(self, request: BaseRequest, **kwargs) -> None:
         common_password = request.form.get("common_password")
         if not PasswordUtil.is_correct_common_password(common_password):
             raise Exception("秘密の合言葉が違います。")
@@ -36,8 +34,7 @@ class PostRegisterController(BaseController):
             raise Exception("パスワードが一致しません。")
 
     # override
-    @asyncio.coroutine
-    def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
+    async def get_layout(self, request: BaseRequest, **kwargs) -> AnyResponse:
         login_name = request.form["login_name"]
         name = request.form["name"]
         password = request.form["password"]

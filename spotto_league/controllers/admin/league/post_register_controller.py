@@ -1,6 +1,5 @@
-import asyncio
-from spotto_league.controllers.base_controller import BaseController
-from werkzeug.wrappers import BaseRequest, BaseResponse
+from spotto_league.controllers.base_controller import BaseController, AnyResponse
+from werkzeug.wrappers import BaseRequest
 from flask import redirect, url_for
 from spotto_league.models.place import Place
 from spotto_league.models.league import League
@@ -13,8 +12,7 @@ class PostRegisterController(BaseController):
     __slots__ = ["_place"]
 
     # override
-    @asyncio.coroutine
-    def validate(self, request: BaseRequest, **kwargs) -> None:
+    async def validate(self, request: BaseRequest, **kwargs) -> None:
         date_str = request.form.get("date")
         start_at_str = request.form.get("start_at")
         end_at_str = request.form.get("end_at")
@@ -53,8 +51,7 @@ class PostRegisterController(BaseController):
             raise Exception("予期せぬエラーです。")
 
     # override
-    @asyncio.coroutine
-    def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
+    async def get_layout(self, request: BaseRequest, **kwargs) -> AnyResponse:
         league_id = int(request.form.get("league_id", 0))
         date_str = request.form.get("date")
         start_at = request.form.get("start_at")

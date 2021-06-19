@@ -1,6 +1,5 @@
-import asyncio
-from spotto_league.controllers.base_controller import BaseController
-from werkzeug.wrappers import BaseRequest, BaseResponse
+from spotto_league.controllers.base_controller import BaseController, AnyResponse
+from werkzeug.wrappers import BaseRequest
 from flask import redirect, url_for
 from flask_login import current_user
 from spotto_league.models.league import League
@@ -10,8 +9,7 @@ class PostLeagueController(BaseController):
     __slots__ = ["_league"]
 
     # override
-    @asyncio.coroutine
-    def validate(self, request: BaseRequest, **kwargs) -> None:
+    async def validate(self, request: BaseRequest, **kwargs) -> None:
         try:
             self._league = League.find(kwargs["league_id"])
             if not self._league:
@@ -24,8 +22,7 @@ class PostLeagueController(BaseController):
             raise e
 
     # override
-    @asyncio.coroutine
-    def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
+    async def get_layout(self, request: BaseRequest, **kwargs) -> AnyResponse:
         # session = db.session
         self._league.session.close()
         league_member_ids = [

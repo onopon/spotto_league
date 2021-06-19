@@ -1,6 +1,5 @@
-import asyncio
-from spotto_league.controllers.base_controller import BaseController
-from werkzeug.wrappers import BaseRequest, BaseResponse
+from spotto_league.controllers.base_controller import BaseController, AnyResponse
+from werkzeug.wrappers import BaseRequest
 from flask import jsonify
 from spotto_league.models.league import League
 from spotto_league.models.user import User
@@ -13,8 +12,7 @@ class PostLeagueJoinController(BaseController):
         return True
 
     # override
-    @asyncio.coroutine
-    def validate(self, request: BaseRequest, **kwargs) -> None:
+    async def validate(self, request: BaseRequest, **kwargs) -> None:
         league_id = int(request.form.get("league_id", 0))
         try:
             League.find(league_id)
@@ -22,8 +20,7 @@ class PostLeagueJoinController(BaseController):
             raise Exception("League: {} does not exist.".format(league_id))
 
     # override
-    @asyncio.coroutine
-    def get_layout(self, request: BaseRequest, **kwargs) -> BaseResponse:
+    async def get_layout(self, request: BaseRequest, **kwargs) -> AnyResponse:
         league_id = int(request.form["league_id"])
         user_id = self.login_user.id
         login_name = request.form.get("login_name", None)
