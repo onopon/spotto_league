@@ -46,14 +46,12 @@ jobs:
     - name: Run flake8
       shell: bash
       run:  |
-        echo "SKIP"
-#        docker-compose exec -T test-app flake8 ./
+        docker-compose exec -T test-app flake8 ./
 
     - name: Run mypy
       shell: bash
       run:  |
-        echo "SKIP"
-#        docker-compose exec -T test-app --ignore-missing-imports ./
+        docker-compose exec -T test-app --ignore-missing-imports ./
 
     - name: Run Pytest
       shell: bash
