@@ -1,3 +1,4 @@
+import json
 from spotto_league.controllers.base_controller import BaseController, AnyResponse
 from werkzeug.wrappers import BaseRequest
 from flask import jsonify
@@ -26,13 +27,13 @@ class PostLeagueJoinController(BaseController):
         login_name = request.form.get("login_name", None)
         if login_name:
             try:
-                user_id = User.find(login_name).id
+                user_id = User.find_by_login_name(login_name).id
             except Exception:
-                return jsonify({"result": "failure", "cause": "{} does not found.".format(login_name)})
+                return jsonify(json.dumps({"result": "failure", "cause": "{} does not found.".format(login_name)}))
         league_member = LeagueMember.find_or_initialize_by_league_id_and_user_id(
             league_id, user_id
         )
         if request.form.get("force_join"):
             league_member.enabled = True
         league_member.save()
-        return jsonify({"result": "success"})
+        return jsonify(json.dumps({"result": "success"}))

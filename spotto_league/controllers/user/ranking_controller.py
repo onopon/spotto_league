@@ -1,3 +1,4 @@
+import json
 from flask import jsonify
 from typing import Dict, Any
 from spotto_league.controllers.base_controller import BaseController, AnyResponse
@@ -29,4 +30,4 @@ class RankingController(BaseController):
         point_rank_hash = dict(
             zip([p.user.id for p in point_ranks], [p.to_hash() for p in point_ranks])
         )
-        return jsonify({"point_rank_hash": point_rank_hash})
+        return jsonify(json.dumps({"point_rank_hash": point_rank_hash}))

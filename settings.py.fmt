@@ -17,4 +17,5 @@ DB_PASSWORD = ''
 DB_HOST = 'test-db'
 DB_NAME = 'spotto_test'
 COMMON_PASSWORD = 'spotto'
-COMMON_VISITOR_PASSWORD = 'spotto'
+# ロジック上COMMON_PASSWORDと違う値にしておかないと正常動作しないので注意
+COMMON_VISITOR_PASSWORD = 'visitor'

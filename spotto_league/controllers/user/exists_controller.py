@@ -1,4 +1,4 @@
-from flask import jsonify
+import json
 from spotto_league.controllers.base_controller import BaseController, AnyResponse
 from werkzeug.wrappers import BaseRequest
 from spotto_league.models.user import User
@@ -22,5 +22,5 @@ class ExistsController(BaseController):
     async def get_layout(self, request: BaseRequest, **kwargs) -> AnyResponse:
         login_name = kwargs["login_name"]
         if User.find_by_login_name(login_name):
-            return jsonify({"status": True})
-        return jsonify({"status": False})
+            return json.dumps({"status": True})
+        return json.dumps({"status": False})

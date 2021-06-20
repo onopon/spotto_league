@@ -1,3 +1,4 @@
+import json
 from flask import jsonify
 from typing import Dict, Any, List
 from .base_controller import BaseController, AnyResponse
@@ -73,7 +74,7 @@ class LeagueController(BaseController):
                 )
             ),
         }
-        return jsonify(params)
+        return jsonify(json.dumps(params))
 
     def _get_user_hash_and_league_log_hash(
         self, league: League, point_ranks: List[PointRank]

@@ -253,11 +253,7 @@ def handle_exception(e):
     return render_template("error.html", error_message=str(error_msg))
 
 
-'''
-for flask-login
-'''
-
-
+# for flask-login
 @login_manager.user_loader
 def user_loader(login_name):
     name_tuples = db.session.query(User.login_name).all()
@@ -271,11 +267,7 @@ def user_loader(login_name):
     return user
 
 
-'''
-for flask-login
-'''
-
-
+# for flask-login
 @login_manager.request_loader
 def request_loader(request):
     name_tuples = db.session.query(User.login_name).all()
@@ -292,11 +284,7 @@ def request_loader(request):
     return user
 
 
-'''
-for line api
-'''
-
-
+# for line api
 @app.route("/callback", methods=['POST'])
 def callback():
     # get X-Line-Signature header value

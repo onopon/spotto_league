@@ -60,14 +60,15 @@ class BaseController(metaclass=ABCMeta):
         return loop.run_until_complete(self.get_layout(request, **kwargs))
 
     def render_as_json(self, request: BaseRequest, **kwargs) -> Dict[str, Any]:
-        @asyncio.coroutine
-        def _render():
-            self.validate_for_visitor()
-            self.validate(request, **kwargs)
-            layout = self.get_json(request, **kwargs)
-            return layout
-
-        return asyncio.get_event_loop().run_until_complete(_render())
+        loop = asyncio.get_event_loop()
+        try:
+            loop.run_until_complete(self.validate_for_visitor())
+            loop.run_until_complete(self.validate(request, **kwargs))
+        except Exception as e:
+            return loop.run_until_complete(
+                self.get_layout_as_exception(request, e, **kwargs)
+            )
+        return loop.run_until_complete(self.get_json(request, **kwargs))
 
     def render_template(self, template_name_or_list, **context) -> AnyResponse:
         context["timestamp"] = time.time()

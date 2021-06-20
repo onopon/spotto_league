@@ -23,6 +23,7 @@ services:
                      pip install --upgrade pip &&
                      pip install -r /app/requirements_dev.txt &&
                      python manage.py db upgrade &&
+                     python -m spotto_league.scripts.add_league_point &&
                      service apache2 start &&
                      /bin/sh"
         tty: true
