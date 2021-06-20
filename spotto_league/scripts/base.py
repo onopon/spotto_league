@@ -7,7 +7,7 @@ class Base(metaclass=ABCMeta):
     def execute_task(self, **kwargs) -> None:
         pass
 
-    def execute(self, **kwargs) -> bool:
+    def execute(self, **kwargs) -> None:
         app = create_app()
         with app.app_context():
             return self.execute_task(**kwargs)

@@ -5,33 +5,39 @@ from spotto_league.models.league import League
 from spotto_league.models.league_member import LeagueMember
 from spotto_league.models.league_log import LeagueLog
 from spotto_league.models.league_log_detail import LeagueLogDetail
-from spotto_league.modules.league_settlement_calculator import LeagueSettlementCalculator
+from spotto_league.modules.league_settlement_calculator import (
+    LeagueSettlementCalculator,
+)
 
 
-class Rank():
-    __slots__ = ['_league_member',
-                 '_user_id',
-                 '_logs',
-                 '_details',
-                 '_win_user_ids',
-                 '_lose_user_ids',
-                 '_got_game',
-                 '_lost_game',
-                 '_got_point',
-                 '_lost_point',
-                 '_rank',
-                 '_reason']
+class Rank:
+    __slots__ = [
+        "_league_member",
+        "_user_id",
+        "_logs",
+        "_details",
+        "_win_user_ids",
+        "_lose_user_ids",
+        "_got_game",
+        "_lost_game",
+        "_got_point",
+        "_lost_point",
+        "_rank",
+        "_reason",
+    ]
 
-    def __init__(self,
-                 league_member: LeagueMember,
-                 logs: List[LeagueLog],
-                 details: List[LeagueLogDetail]):
+    def __init__(
+        self,
+        league_member: LeagueMember,
+        logs: List[LeagueLog],
+        details: List[LeagueLogDetail],
+    ):
         self._league_member = league_member
         self._user_id = league_member.user_id
         self._logs = logs
         self._details = details
-        self._win_user_ids = []
-        self._lose_user_ids = []
+        self._win_user_ids: List[int] = []
+        self._lose_user_ids: List[int] = []
         self._got_game = 0
         self._lost_game = 0
         self._got_point = 0
@@ -66,12 +72,12 @@ class Rank():
         self._rank = rank
 
     def set_reason_for_priority(self, reason_of_prioritiy: str) -> None:
-        reason = '単独'
-        if (reason_of_prioritiy == 'game_of_difference'):
+        reason = "単独"
+        if reason_of_prioritiy == "game_of_difference":
             reason = "ゲーム数による得失点差: {}".format(self.game_of_difference)
-        elif (reason_of_prioritiy == 'point_of_difference'):
+        elif reason_of_prioritiy == "point_of_difference":
             reason = "獲得ポイント数による得失点差: {}".format(self.point_of_difference)
-        elif (reason_of_prioritiy == 'league_member_id'):
+        elif reason_of_prioritiy == "league_member_id":
             reason = "参加表明時刻の差: {}".format(self.league_member.created_at)
         self._reason = reason
 
@@ -132,43 +138,46 @@ class Rank():
     def point_of_difference(self) -> int:
         return self._got_point - self._lost_point
 
-    def did_win(self, user_id:int) -> bool:
+    def did_win(self, user_id: int) -> bool:
         return user_id in self._win_user_ids
 
     def to_hash(self) -> Dict[str, Any]:
-        return {'rank': self.rank,
-                'user_name': self.user.name,
-                'login_name': self.user.login_name,
-                'win': self.win,
-                'lose': self.lose,
-                'reason': self._reason}
+        return {
+            "rank": self.rank,
+            "user_name": self.user.name,
+            "login_name": self.user.login_name,
+            "win": self.win,
+            "lose": self.lose,
+            "reason": self._reason,
+        }
 
     @classmethod
-    def make_rank_list(cls, league: League) -> List['Rank']:
+    def make_rank_list(cls, league: League) -> List["Rank"]:
         members = league.enable_members
         logs = league.logs
         settlement_hash = LeagueSettlementCalculator.get_settlement_hash(members, logs)
         rank_list = []
         for member in members:
             settlement = settlement_hash[member.user_id]
-            rank = Rank(member,
-                        settlement['logs'],
-                        settlement['details'])
+            rank = Rank(member, settlement["logs"], settlement["details"])
             rank_list.append(rank)
         rank_list.sort(key=lambda r: r.win, reverse=True)
-        sorted_rank_list = cls.sort_rank_list(rank_list, 'win')
+        sorted_rank_list = cls.sort_rank_list(rank_list, "win")
         for i, rank in enumerate(sorted_rank_list):
-            rank.set_rank(i+1)
+            rank.set_rank(i + 1)
         return sorted_rank_list
 
     @classmethod
-    def sort_rank_list(cls, rank_list: List['Rank'], grouping_point: str, count: int = 0) -> List['Rank']:
+    def sort_rank_list(
+        cls, rank_list: List["Rank"], grouping_point: str, count: int = 0
+    ) -> List["Rank"]:
         sorted_rank_list = []
         for _, group in groupby(rank_list, key=lambda r: getattr(r, grouping_point)):
             ranks = list(group)
             # 単独で順位が確定してる場合
             if len(ranks) == 1:
-                [r.set_reason_for_priority(grouping_point) for r in ranks]
+                for r in ranks:
+                    r.set_reason_for_priority(grouping_point)
                 sorted_rank_list.extend(ranks)
                 continue
             # ポイントが並んでいる選手が2人いる場合
@@ -177,21 +186,39 @@ class Rank():
                 logs = [l for l in rank_1.logs if l.is_in_user_id(rank_2.user_id)]
                 # 直接対決があった場合は勝った方の順位を優先
                 if len(logs) > 0:
-                    details = [d for d in logs[0].details if d.league_log_id == logs[0].id]
-                    win_user_id = LeagueSettlementCalculator.get_win_of_head_to_head_user_id(logs[0], details)
+                    details = [
+                        d for d in logs[0].details if d.league_log_id == logs[0].id
+                    ]
+                    win_user_id = (
+                        LeagueSettlementCalculator.get_win_of_head_to_head_user_id(
+                            logs[0], details
+                        )
+                    )
                     if rank_1.user_id == win_user_id:
-                        rank_1.set_reason("{} と {} の直接対決".format(rank_1.user.name, rank_2.user.name))
-                        rank_2.set_reason("{} と {} の直接対決".format(rank_1.user.name, rank_2.user.name))
+                        rank_1.set_reason(
+                            "{} と {} の直接対決".format(rank_1.user.name, rank_2.user.name)
+                        )
+                        rank_2.set_reason(
+                            "{} と {} の直接対決".format(rank_1.user.name, rank_2.user.name)
+                        )
                         sorted_rank_list.extend([rank_1, rank_2])
                     else:
-                        rank_2.set_reason("{} と {} の直接対決".format(rank_2.user.name, rank_1.user.name))
-                        rank_1.set_reason("{} と {} の直接対決".format(rank_2.user.name, rank_1.user.name))
+                        rank_2.set_reason(
+                            "{} と {} の直接対決".format(rank_2.user.name, rank_1.user.name)
+                        )
+                        rank_1.set_reason(
+                            "{} と {} の直接対決".format(rank_2.user.name, rank_1.user.name)
+                        )
                         sorted_rank_list.extend([rank_2, rank_1])
                     continue
             # 直接対決がない or 3つ巴以上が起きている場合
-            sort_priorities = ['game_of_difference', 'point_of_difference', 'league_member_id']
+            sort_priorities = [
+                "game_of_difference",
+                "point_of_difference",
+                "league_member_id",
+            ]
             sort_priority = sort_priorities[count]
-            is_reverse = True if sort_priority != 'league_member_id' else False
+            is_reverse = True if sort_priority != "league_member_id" else False
             ranks.sort(key=lambda r: getattr(r, sort_priority), reverse=is_reverse)
-            sorted_rank_list.extend(cls.sort_rank_list(ranks, sort_priority, count+1))
+            sorted_rank_list.extend(cls.sort_rank_list(ranks, sort_priority, count + 1))
         return sorted_rank_list

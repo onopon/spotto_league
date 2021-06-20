@@ -1,16 +1,11 @@
-from abc import ABCMeta, abstractmethod
+from abc import abstractmethod
 from typing import Optional
-from linebot import (
-    LineBotApi, WebhookHandler
-)
-from linebot.models import (
-    Message,
-    MessageEvent
-)
+from linebot.models import Message, MessageEvent
 
 
 class Base:
-    __slots__ = ['_event']
+    __slots__ = ["_event"]
+
     def __init__(self, event: MessageEvent) -> None:
         self._event = event
 
@@ -34,4 +29,3 @@ class Base:
         if not self.satisfy_react_condition(**kwargs):
             return None
         return self.create(**kwargs)
-

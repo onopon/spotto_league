@@ -15,7 +15,7 @@ class Gender(Enum):
 
 class User(flask_login.UserMixin, db.Model, Base):
 
-    __tablename__ = 'users'
+    __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
     login_name = db.Column(db.String(255), nullable=False, unique=True, index=True)
@@ -33,27 +33,25 @@ class User(flask_login.UserMixin, db.Model, Base):
         self.password = PasswordUtil.make_hex(password)
 
     @classmethod
-    def all(cls) -> List['User']:
+    def all(cls) -> List["User"]:
         return db.session.query(User).all()
 
     @classmethod
-    def all_without_visitor(cls) -> List['User']:
+    def all_without_visitor(cls) -> List["User"]:
         users = cls.all()
         roles = Role.all()
         visitor_user_ids = [r.user_id for r in roles if r.is_visitor()]
         return [u for u in users if u.id not in visitor_user_ids]
 
     @classmethod
-    def find_by_login_name(cls, login_name) -> Optional['User']:
+    def find_by_login_name(cls, login_name) -> Optional["User"]:
         return db.session.query(cls).filter(cls.login_name == login_name).one_or_none()
 
     def to_hash(self) -> Dict[str, Any]:
-        return {'id': self.id,
-                'login_name': self.login_name,
-                'name': self.name}
+        return {"id": self.id, "login_name": self.login_name, "name": self.name}
 
     @property
-    def role(self) -> Optional[Role]:
+    def role(self) -> Role:
         if not self._role:
             self._role = Role.find_or_initialize_by_user_id(self.id)
         return self._role
@@ -72,7 +70,7 @@ class User(flask_login.UserMixin, db.Model, Base):
 
     @property
     def birthday_for_display(self) -> str:
-        return self.birthday.strftime('%m月%d日')
+        return self.birthday.strftime("%m月%d日")
 
     @property
     def age(self) -> str:
@@ -84,8 +82,8 @@ class User(flask_login.UserMixin, db.Model, Base):
 
     @property
     def gender_for_display(self) -> str:
-        if (Gender(self.gender) == Gender.MALE):
+        if Gender(self.gender) == Gender.MALE:
             return "男性"
-        elif (Gender(self.gender) == Gender.FEMALE):
+        elif Gender(self.gender) == Gender.FEMALE:
             return "女性"
         return ""

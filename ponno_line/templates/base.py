@@ -1,7 +1,6 @@
 from typing import Optional
-from abc import ABCMeta, abstractmethod
+from abc import abstractmethod
 from linebot.models.template import Template
-from instance import settings
 
 
 class Base:

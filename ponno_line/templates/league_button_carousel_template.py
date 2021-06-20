@@ -1,11 +1,11 @@
 from typing import Optional, List
-from flask import url_for
 from linebot.models.template import Template, CarouselTemplate, CarouselColumn
 
 from ponno_line.templates.base import Base
-from ponno_line.carousel_columns.league_button_carousel_column import LeagueButtonCarouselColumn
+from ponno_line.carousel_columns.league_button_carousel_column import (
+    LeagueButtonCarouselColumn,
+)
 from spotto_league.models.league import League as ModelLeague
-from spotto_league.entities.rank import Rank
 
 COLUMN_MAX_COUNT = 10
 
@@ -20,14 +20,16 @@ class LeagueButtonCarouselTemplate(Base):
             columns = self._make_near_join_end_at_league_columns(**kwargs)
         if not columns:
             return None
-        return CarouselTemplate(columns = columns)
+        return CarouselTemplate(columns=columns)
 
     def _make_near_join_end_at_league_columns(self, **kwargs) -> List[CarouselColumn]:
         leagues = ModelLeague.all()
-        leagues.sort(key=lambda l:l.join_end_at)
+        leagues.sort(key=lambda l: l.join_end_at)
         columns = []
         for l in leagues:
-            if (not l.is_near_join_end_at()) or l.is_status_recruiting_near_join_end_at():
+            if (
+                not l.is_near_join_end_at()
+            ) or l.is_status_recruiting_near_join_end_at():
                 continue
             _kwargs = kwargs
             _kwargs["league"] = l
@@ -39,7 +41,7 @@ class LeagueButtonCarouselTemplate(Base):
 
     def _make_recruiting_league_columns(self, **kwargs) -> List[CarouselColumn]:
         leagues = ModelLeague.find_all_by_ids(kwargs.get("league_ids", []))
-        leagues.sort(key=lambda l:l.date)
+        leagues.sort(key=lambda l: l.date)
         columns = []
         for l in leagues:
             if not (l.is_status_recruiting() and l.is_in_join_session()):

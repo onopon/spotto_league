@@ -16,7 +16,7 @@ services:
       ports:
           - "3306:3306"
     test-app:
-        image: onopon/lolipop_web_server_for_python3:latest
+        image: onopon/lolipop_web_server_for_python3:amd64
         container_name: test_app
         command: >
             bash -c "cp /app/settings.py.fmt /app/instance/settings.py &&

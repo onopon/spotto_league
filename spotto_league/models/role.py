@@ -1,46 +1,47 @@
 from typing import Optional, List
 from datetime import datetime
-from spotto_league.modules.password_util import PasswordUtil
-import hashlib
-import flask_login
-from typing import Dict, Any
 from spotto_league.database import db
 from .base import Base
 from enum import Enum
 
 
 class RoleType(Enum):
-    GUEST = 0 # ゲスト。メンバーになる可能性がある人。ポイント付与なし。
-    ADMIN = 1 # 管理者
-    MEMBER = 2 # メンバー
-    VISITOR = 3 # ビジター。機能が制限されている。
+    GUEST = 0  # ゲスト。メンバーになる可能性がある人。ポイント付与なし。
+    ADMIN = 1  # 管理者
+    MEMBER = 2  # メンバー
+    VISITOR = 3  # ビジター。機能が制限されている。
 
     @classmethod
     def all(cls):
         # GUEST と VISITOR は特別枠なので、allには含めない。
-        return [{'id': RoleType.ADMIN.value, 'name': '管理者'},
-                {'id': RoleType.MEMBER.value, 'name': 'メンバー'}]
+        return [
+            {"id": RoleType.ADMIN.value, "name": "管理者"},
+            {"id": RoleType.MEMBER.value, "name": "メンバー"},
+        ]
+
 
 class Role(db.Model, Base):
 
-    __tablename__ = 'roles'
+    __tablename__ = "roles"
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, nullable=False, index=True)
     role_type = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
+    updated_at = db.Column(
+        db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now
+    )
 
     @classmethod
-    def all(cls) -> List['Role']:
+    def all(cls) -> List["Role"]:
         return db.session.query(Role).all()
 
     @classmethod
-    def find_by_user_id(cls, user_id: int) -> Optional['Role']:
-        return db.session.query(cls).filter(cls.user_id==user_id).one_or_none()
+    def find_by_user_id(cls, user_id: int) -> Optional["Role"]:
+        return db.session.query(cls).filter(cls.user_id == user_id).one_or_none()
 
     @classmethod
-    def find_or_initialize_by_user_id(cls, user_id: int) -> 'Role':
+    def find_or_initialize_by_user_id(cls, user_id: int) -> "Role":
         role = Role()
         role.user_id = user_id
         role.role_type = RoleType.GUEST.value

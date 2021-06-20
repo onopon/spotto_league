@@ -3,15 +3,10 @@ import traceback
 import locale
 import flask_login
 from flask import Flask, request, render_template, redirect, url_for, abort
-from sqlalchemy import exc
-from sqlalchemy.pool import Pool
-from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import date
 from datetime import datetime as dt
 from linebot import (
-    LineBotApi, WebhookHandler
+    WebhookHandler
 )
-from linebot.models import MessageEvent, TextMessage, TextSendMessage
 from linebot.exceptions import (
     InvalidSignatureError
 )
@@ -36,18 +31,22 @@ from spotto_league.controllers.admin.league.modify_controller import ModifyContr
 from spotto_league.controllers.admin.league.post_register_controller import PostRegisterController as PostAdminLeagueRegisterController
 from spotto_league.controllers.admin.league.league_controller import LeagueController as AdminLeagueController
 from spotto_league.controllers.admin.league.post_league_controller import PostLeagueController as PostAdminLeagueController
-from spotto_league.controllers.admin.league.post_league_finish_controller import PostLeagueFinishController as PostAdminLeagueFinishController
+from spotto_league.controllers.admin.league.post_league_finish_controller import (
+    PostLeagueFinishController as PostAdminLeagueFinishController
+)
 from spotto_league.controllers.admin.league.league_cancel_controller import LeagueCancelController as AdminLeagueCancelController
-from spotto_league.controllers.admin.league.post_notify_recruiting_controller import PostNotifyRecruitingController as PostAdminLeagueNotifyRecruitingController
+from spotto_league.controllers.admin.league.post_notify_recruiting_controller import (
+    PostNotifyRecruitingController as PostAdminLeagueNotifyRecruitingController
+)
 from spotto_league.controllers.admin.user.register_point_controller import RegisterPointController as AdminUserRegisterPointController
-from spotto_league.controllers.admin.user.post_register_point_controller import PostRegisterPointController as PostAdminUserRegisterPointController
+from spotto_league.controllers.admin.user.post_register_point_controller import (
+    PostRegisterPointController as PostAdminUserRegisterPointController
+)
 from spotto_league.controllers.admin.user.list_controller import ListController as AdminUserListController
 from spotto_league.controllers.admin.user.post_list_controller import PostListController as PostAdminUserListController
 from spotto_league.controllers.user.post_league_join_controller import PostLeagueJoinController as PostUserLeagueJoinController
 from spotto_league.controllers.user.post_league_cancel_controller import PostLeagueCancelController as PostUserLeagueCancelController
-from spotto_league.modules.password_util import PasswordUtil
 from spotto_league.models.user import User
-from ponno_line.ponno_bot import PonnoBot
 from ponno_line.ponno_notify import PonnoNotify
 
 
@@ -62,9 +61,7 @@ def create_app():
 
     # 標準設定ファイル読み込み
     app.config.from_object("config")
-    environment = app.config['ENV']
     secret_key = app.config['SECRET_KEY'].encode('utf-8')
-
 
     init_db(app)
     app.secret_key = secret_key
@@ -72,13 +69,16 @@ def create_app():
     login_manager.login_view = 'user_login'
     return app
 
+
 app = create_app()
 handler = WebhookHandler(app.config['LINE_BOT_CHANNEL_SECRET'])
+
 
 @app.route("/", methods=("GET", "POST"))
 @flask_login.login_required
 def league_list():
     return LeagueListController().render(request)
+
 
 @app.route("/league/<int:league_id>/", methods=("GET", "POST"))
 @flask_login.login_required
@@ -90,10 +90,12 @@ def league(league_id: int):
             PostUserLeagueCancelController().render(request)
     return LeagueController().render(request, league_id=league_id)
 
+
 @app.route("/league/<int:league_id>/json", methods=("GET", "POST"))
 @flask_login.login_required
 def league_json_data(league_id: int):
     return LeagueController().render_as_json(request, league_id=league_id)
+
 
 @app.route("/league/log", methods=("GET", "POST"))
 @flask_login.login_required
@@ -101,15 +103,18 @@ def league_log():
     if request.method == "POST":
         return PostLeagueLogController().render(request)
 
+
 @app.route("/user/register", methods=("GET", "POST"))
 def user_register():
     if request.method == "POST":
         return PostUserRegisterController().render(request)
     return UserRegisterController().render(request)
 
+
 @app.route("/user/<string:login_name>/exists", methods=("GET", "POST"))
 def user_exists(login_name: str):
     return UserExistsController().render(request, login_name=login_name)
+
 
 @app.route("/user/login", methods=("GET", "POST"))
 @login_manager.unauthorized_handler
@@ -118,16 +123,19 @@ def user_login():
         return PostUserLoginController().render(request)
     return UserLoginController().render(request)
 
+
 @app.route("/user/logout", methods=("GET", "POST"))
 @login_manager.unauthorized_handler
 def user_logout():
     flask_login.logout_user()
     return redirect(url_for('user_login'))
 
+
 @app.route("/user/info/<string:login_name>/", methods=("GET", "POST"))
 @flask_login.login_required
 def user_info(login_name: str):
     return UserInfoController().render(request, login_name=login_name)
+
 
 @app.route("/user/modify/", methods=("GET", "POST"))
 @flask_login.login_required
@@ -136,6 +144,7 @@ def user_modify():
         return PostUserModifyController().render(request)
     return UserModifyController().render(request)
 
+
 @app.route("/user/modify/password/", methods=("GET", "POST"))
 @flask_login.login_required
 def user_modify_password():
@@ -143,24 +152,29 @@ def user_modify_password():
         return PostUserModifyPasswordController().render(request)
     return UserModifyPasswordController().render(request)
 
+
 @app.route("/user/league/join", methods=("GET", "POST"))
 def user_league_join():
     if request.method == "POST":
         return PostUserLeagueJoinController().render(request)
+
 
 @app.route("/user/league/cancel", methods=("GET", "POST"))
 def user_league_cancel():
     if request.method == "POST":
         return PostUserLeagueCancelController().render(request)
 
+
 @app.route("/user/ranking/<int:year>/", methods=("GET", "POST"))
 def user_ranking(year: int):
     return UserRankingController().render(request, year=year)
+
 
 @app.route("/user/ranking/<int:year>/json", methods=("GET", "POST"))
 @flask_login.login_required
 def user_ranking_json_data(year: int):
     return UserRankingController().render_as_json(request, year=year)
+
 
 @app.route("/admin/league/register/", methods=("GET", "POST"))
 @flask_login.login_required
@@ -169,12 +183,14 @@ def admin_league_register():
         return PostAdminLeagueRegisterController().render(request)
     return AdminLeagueRegisterController().render(request)
 
+
 @app.route("/admin/league/modify/", methods=("GET", "POST"))
 @flask_login.login_required
 def admin_league_modify():
     if request.method == "POST":
         return PostAdminLeagueRegisterController().render(request)
     return AdminLeagueModifyController().render(request)
+
 
 @app.route("/admin/league/<int:league_id>/", methods=("GET", "POST"))
 @flask_login.login_required
@@ -183,22 +199,26 @@ def admin_league(league_id: int):
         return PostAdminLeagueController().render(request, league_id=league_id)
     return AdminLeagueController().render(request, league_id=league_id)
 
+
 @app.route("/admin/league/<int:league_id>/finish", methods=("GET", "POST"))
 @flask_login.login_required
 def admin_league_finish(league_id: int):
     if request.method == "POST":
         return PostAdminLeagueFinishController().render(request, league_id=league_id)
 
+
 @app.route("/admin/league/<int:league_id>/cancel", methods=("GET", "POST"))
 @flask_login.login_required
 def admin_league_cancel(league_id: int):
     return AdminLeagueCancelController().render(request, league_id=league_id)
-    
+
+
 @app.route("/admin/league/notify_recruiting", methods=("GET", "POST"))
 @flask_login.login_required
 def notify_recruiting():
     if request.method == "POST":
         return PostAdminLeagueNotifyRecruitingController().render(request)
+
 
 @app.route("/admin/user/register/point", methods=("GET", "POST"))
 @flask_login.login_required
@@ -207,12 +227,14 @@ def admin_user_register_point():
         return PostAdminUserRegisterPointController().render(request)
     return AdminUserRegisterPointController().render(request)
 
+
 @app.route("/admin/user/list", methods=("GET", "POST"))
 @flask_login.login_required
 def admin_user_list():
     if request.method == "POST":
         return PostAdminUserListController().render(request)
     return AdminUserListController().render(request)
+
 
 @app.errorhandler(Exception)
 def handle_exception(e):
@@ -224,15 +246,14 @@ def handle_exception(e):
     error_msg = " ".join(logs)
     with open(path, mode='a') as f:
         f.write(error_msg)
-    if app.config['ENV'] is "production":
+    if app.config['ENV'] == "production":
         # ぽのちゃん実験場にエラーログを送る(上限1000文字）
         length = 995 if len(error_msg) > 995 else len(error_msg)
         PonnoNotify(app.config['LINE_NOTIFY_ACCESS_TOKEN_HASH']['development']).execute("...\n" + error_msg[- length:])
     return render_template("error.html", error_message=str(error_msg))
 
-'''
-for flask-login
-'''
+
+# for flask-login
 @login_manager.user_loader
 def user_loader(login_name):
     name_tuples = db.session.query(User.login_name).all()
@@ -245,9 +266,8 @@ def user_loader(login_name):
     user.id = login_name
     return user
 
-'''
-for flask-login
-'''
+
+# for flask-login
 @login_manager.request_loader
 def request_loader(request):
     name_tuples = db.session.query(User.login_name).all()
@@ -264,9 +284,7 @@ def request_loader(request):
     return user
 
 
-'''
-for line api
-'''
+# for line api
 @app.route("/callback", methods=['POST'])
 def callback():
     # get X-Line-Signature header value
@@ -286,23 +304,10 @@ def callback():
     return 'OK'
 
 
-@handler.add(MessageEvent, message=TextMessage)
-def handle_message(event):
-    if (event.source.user_id not in app.config['LINE_BOT_ADMIN_USER_IDS']):
-        return
-    if (event.message.text == 'ここはどこ？'):
-        line_bot_api.reply_message(event.reply_token,
-                                   TextSendMessage(text="{}だよ".format(event.source.group_id)))
-
-'''
-for SqlAlchemy on production
-https://qiita.com/yukiB/items/67336716b242df3be350
-'''
-# @event.listens_for(Pool, "checkout")
-# def ping_connection(dbapi_connection, connection_record, connection_proxy):
-#     cursor = dbapi_connection.cursor()
-#     try:
-#         cursor.execute("SELECT 1")
-#     except:
-#         raise exc.DisconnectionError()
-#     cursor.close()
+# @handler.add(MessageEvent, message=TextMessage)
+# def handle_message(event):
+#     if (event.source.user_id not in app.config['LINE_BOT_ADMIN_USER_IDS']):
+#         return
+#     if (event.message.text == 'ここはどこ？'):
+#         line_bot_api.reply_message(event.reply_token,
+#                                    TextSendMessage(text="{}だよ".format(event.source.group_id)))

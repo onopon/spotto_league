@@ -2,8 +2,11 @@ from typing import Optional, Any, List
 from spotto_league.database import db
 
 
-class Base():
-    __slots__ = ['_session']
+class Base:
+    __slots__ = ["_session"]
+
+    id = db.Column(db.Integer)
+
     # 後ほど削除予定
     @property
     def session(self) -> db.session:
@@ -14,11 +17,11 @@ class Base():
 
     @classmethod
     def find(cls, target_id: int) -> Any:
-        return db.session.query(cls).filter(cls.id==target_id).one()
+        return db.session.query(cls).filter(cls.id == target_id).one()
 
     @classmethod
     def find_by_id(cls, target_id: int) -> Optional[Any]:
-        return db.session.query(cls).filter(cls.id==target_id).one_or_none()
+        return db.session.query(cls).filter(cls.id == target_id).one_or_none()
 
     @classmethod
     def find_all_by_ids(cls, target_ids: List[int]) -> List[Any]:
