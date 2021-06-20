@@ -8,7 +8,7 @@ jobs:
       DOCKER_BUILDKIT: 1
       COMPOSE_DOCKER_CLI_BUILD: 1
       APP_IMAGE_TAG: onopon/lolipop_web_server_for_python3
-      APP_IMAGE_CACHE_TAG: 202106202236
+      APP_IMAGE_CACHE_TAG: 202106202345
     steps:
     - uses: actions/checkout@v2
       with:
@@ -30,7 +30,7 @@ jobs:
 
     - name: pull image
       if: steps.load-image.conclusion == 'skipped'
-      run: docker pull onopon/lolipop_web_server_for_python3:latest
+      run: docker pull onopon/lolipop_web_server_for_python3:amd64
 
     - name: docker compose up
       run: |
