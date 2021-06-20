@@ -7,8 +7,7 @@ from flask import render_template, redirect, url_for
 from flask_login import current_user
 from spotto_league.models.user import User
 
-# AnyResponse = TypeVar('AnyResponse', str, Response)
-AnyResponse = Union[str, Response]
+AnyResponse = Union[str, Response, Dict[str, Any]]
 
 
 class BaseController(metaclass=ABCMeta):
@@ -59,7 +58,7 @@ class BaseController(metaclass=ABCMeta):
             )
         return loop.run_until_complete(self.get_layout(request, **kwargs))
 
-    def render_as_json(self, request: BaseRequest, **kwargs) -> Dict[str, Any]:
+    def render_as_json(self, request: BaseRequest, **kwargs) -> AnyResponse:
         loop = asyncio.get_event_loop()
         try:
             loop.run_until_complete(self.validate_for_visitor())

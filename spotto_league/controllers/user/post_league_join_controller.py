@@ -26,10 +26,10 @@ class PostLeagueJoinController(BaseController):
         user_id = self.login_user.id
         login_name = request.form.get("login_name", None)
         if login_name:
-            try:
-                user_id = User.find_by_login_name(login_name).id
-            except Exception:
+            user = User.find_by_login_name(login_name)
+            if not user:
                 return jsonify(json.dumps({"result": "failure", "cause": "{} does not found.".format(login_name)}))
+            user_id = user.id
         league_member = LeagueMember.find_or_initialize_by_league_id_and_user_id(
             league_id, user_id
         )
