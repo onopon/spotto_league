@@ -1,3 +1,4 @@
+from typing import List, Any
 from .user import User
 from .user_point import UserPoint
 from .league import League
@@ -21,3 +22,18 @@ __all__ = [
     "BonusPoint",
     "LeaguePoint",
 ]
+
+
+def all() -> List[Any]:
+    return [
+        User,
+        UserPoint,
+        League,
+        LeagueLog,
+        LeagueLogDetail,
+        LeagueMember,
+        Role,
+        Place,
+        BonusPoint,
+        LeaguePoint,
+    ]
