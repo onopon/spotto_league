@@ -3,7 +3,6 @@ from spotto_league.models.role import Role
 from spotto_league.modules.password_util import PasswordUtil
 from tests.base import Base
 from tests.modules.test_data_creator import TestDataCreator
-from datetime import datetime as dt
 import datetime
 import freezegun
 
@@ -29,7 +28,7 @@ class TestUser(Base):
 
     def test_find_by_login_name(self):
         user = TestDataCreator().create('guest_user')[0]
-        assert User.find_by_login_name('hogehoge') == None
+        assert not User.find_by_login_name('hogehoge')
         assert User.find_by_login_name(user.login_name) == user
 
     def test_to_hash(self):
@@ -45,28 +44,28 @@ class TestUser(Base):
         assert type(target) == Role
 
     def test_is_admin(self):
-        assert TestDataCreator().create('guest_user')[0].is_admin() == False
-        assert TestDataCreator().create('admin_user')[0].is_admin() == True
-        assert TestDataCreator().create('member_user')[0].is_admin() == False
-        assert TestDataCreator().create('visitor_user')[0].is_admin() == False
+        assert not TestDataCreator().create('guest_user')[0].is_admin()
+        assert TestDataCreator().create('admin_user')[0].is_admin()
+        assert not TestDataCreator().create('member_user')[0].is_admin()
+        assert not TestDataCreator().create('visitor_user')[0].is_admin()
 
     def test_is_member(self):
-        assert TestDataCreator().create('guest_user')[0].is_member() == False
-        assert TestDataCreator().create('admin_user')[0].is_member() == False
-        assert TestDataCreator().create('member_user')[0].is_member() == True
-        assert TestDataCreator().create('visitor_user')[0].is_member() == False
+        assert not TestDataCreator().create('guest_user')[0].is_member()
+        assert not TestDataCreator().create('admin_user')[0].is_member()
+        assert TestDataCreator().create('member_user')[0].is_member()
+        assert not TestDataCreator().create('visitor_user')[0].is_member()
 
     def test_is_guest(self):
-        assert TestDataCreator().create('guest_user')[0].is_guest() == True
-        assert TestDataCreator().create('admin_user')[0].is_guest() == False
-        assert TestDataCreator().create('member_user')[0].is_guest() == False
-        assert TestDataCreator().create('visitor_user')[0].is_guest() == False
+        assert TestDataCreator().create('guest_user')[0].is_guest()
+        assert not TestDataCreator().create('admin_user')[0].is_guest()
+        assert not TestDataCreator().create('member_user')[0].is_guest()
+        assert not TestDataCreator().create('visitor_user')[0].is_guest()
 
     def test_is_visitor(self):
-        assert TestDataCreator().create('guest_user')[0].is_visitor() == False
-        assert TestDataCreator().create('admin_user')[0].is_visitor() == False
-        assert TestDataCreator().create('member_user')[0].is_visitor() == False
-        assert TestDataCreator().create('visitor_user')[0].is_visitor() == True
+        assert not TestDataCreator().create('guest_user')[0].is_visitor()
+        assert not TestDataCreator().create('admin_user')[0].is_visitor()
+        assert not TestDataCreator().create('member_user')[0].is_visitor()
+        assert TestDataCreator().create('visitor_user')[0].is_visitor()
 
     def test_birthday_for_display(self):
         user = User()
@@ -82,7 +81,7 @@ class TestUser(Base):
         with freezegun.freeze_time('2021-09-03 00:00:00'):
             assert user.age == 32
 
-    def test_gender_for_display(self) -> str:
+    def test_gender_for_display(self):
         user = User()
         user.gender = Gender.MALE
         assert user.gender_for_display == "男性"
