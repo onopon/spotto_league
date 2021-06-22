@@ -22,9 +22,14 @@ PyYAML = "^5.4.1"
 [tool.poetry.dev-dependencies]
 pytest = "^4.6"
 freezegun = "^1.1.0"
-mypy = "^0.902"
 flake8 = "^3.9.2"
 black = "^21.6b0"
+mypy = "^0.902"
+types-Flask = "^1.1.1"
+types-requests = "^2.25.0"
+types-PyYAML = "^5.4.3"
+types-Werkzeug = "^1.0.2"
+types-freezegun = "^0.1.4"
 
 [build-system]
 requires = ["poetry>=0.12"]
