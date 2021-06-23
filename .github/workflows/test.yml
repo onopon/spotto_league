@@ -54,7 +54,7 @@ jobs:
     - name: Run Pytest
       shell: bash
       run:  |
-        docker-compose exec -T test-app pytest tests/
+        docker-compose exec -T test-app pytest --cov=spotto_league/ --cov-report html:cov_html --cov-report term-missing --no-cov-on-fail tests/
 
     - name: save image
       if: steps.load-image.conclusion == 'skipped'
@@ -62,3 +62,10 @@ jobs:
         mkdir -p /tmp/images
         web_image_id=`docker ps --format "{{.Image}} {{.Names}}" | grep test_app | cut -d ' ' -f1`
         docker save $web_image_id > /tmp/images/lolipop_web_server_for_python3.tar
+
+    - name: 'Upload Coverage Report'
+      uses: actions/upload-artifact@v2
+      with:
+        name: coverage_report
+        path: cov_html/
+        retention-days: 1

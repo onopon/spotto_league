@@ -1,0 +1,111 @@
+guest_user:
+  User:
+    properties:
+      login_name: 'guest_onopon'
+      password: 'password'
+      name: 'ゲストおのぽん'
+      gender: 1
+      birthday: '1989-09-03'
+      first_name: 'ぽん'
+      last_name: 'おの'
+admin_user:
+  User:
+    properties:
+      login_name: 'admin_onopon'
+      password: 'password'
+      name: '管理者おのぽん'
+      gender: 1
+      birthday: '1989-09-03'
+      first_name: 'ぽん'
+      last_name: 'おの'
+    related_classes:
+      Role:
+        properties:
+          role_type: 1
+member_user:
+  User:
+    properties:
+      login_name: 'membeer_onopon'
+      password: 'password'
+      name: 'メンバーおのぽん'
+      gender: 1
+      birthday: '1989-09-03'
+      first_name: 'ぽん'
+      last_name: 'おの'
+    related_classes:
+      Role:
+        properties:
+          role_type: 2
+visitor_user:
+  User:
+    properties:
+      login_name: 'visitor_onopon'
+      password: 'password'
+      name: 'ビジターおのぽん'
+      gender: 1
+      birthday: '1989-09-03'
+      first_name: 'ぽん'
+      last_name: 'おの'
+    related_classes:
+      Role:
+        properties:
+          role_type: 3
+two_guest_users:
+  User:
+    properties:
+      login_name: 'onopon'
+      password: 'password'
+      name: 'ゲストだよ'
+      gender: 1
+      birthday: '1989-09-03'
+      first_name: 'ぽん'
+      last_name: 'おの'
+  User:
+    properties:
+      login_name: 'onopon_2'
+      password: 'password'
+      name: 'Roleは持ってないよ'
+      gender: 1
+      birthday: '1989-09-03'
+      first_name: 'ぽん'
+      last_name: 'おの'
+three_member_users:
+  User:
+    properties:
+      login_name: 'uchida'
+      password: 'password'
+      name: 'うっちー'
+      gender: 1
+      birthday: '2000-01-01'
+      first_name: 'ちだ'
+      last_name: 'うっ'
+    related_classes:
+      Role:
+        properties:
+          role_type: 2
+  User:
+    properties:
+      login_name: 'amon'
+      password: 'password'
+      name: 'あもん'
+      gender: 1
+      birthday: '2000-01-01'
+      first_name: 'あもん'
+      last_name: 'ちとせ'
+    related_classes:
+      Role:
+        properties:
+          role_type: 2
+  User:
+    properties:
+      login_name: 'eda'
+      password: 'password'
+      name: 'ディグの支配者'
+      gender: 2
+      birthday: '2000-01-01'
+      first_name: 'だ'
+      last_name: 'え'
+    related_classes:
+      Role:
+        properties:
+          role_type: 2
