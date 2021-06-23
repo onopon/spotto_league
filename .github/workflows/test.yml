@@ -54,7 +54,7 @@ jobs:
     - name: Run Pytest
       shell: bash
       run:  |
-        docker-compose exec -T test-app pytest --cov=spotto_league/ --cov-report html:cov_html tests/
+        docker-compose exec -T test-app pytest --cov=spotto_league/ --cov-report html:cov_html --cov-report term-missing --no-cov-on-fail tests/
 
     - name: save image
       if: steps.load-image.conclusion == 'skipped'
