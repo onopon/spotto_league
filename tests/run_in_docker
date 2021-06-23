@@ -11,7 +11,7 @@ if [ $# -eq 1 ];then
     mypy --ignore-missing-imports $1
     echo ''
     echo '# test ##################################'
-    pytest $1
+    pytest --cov=spotto_league/ --cov-branch --cov-report term-missing $1
 else
     echo '# flake8 ################################'
     flake8 ./
@@ -20,5 +20,5 @@ else
     mypy --ignore-missing-imports ./
     echo ''
     echo '# test ##################################'
-    pytest tests/
+    pytest --cov=spotto_league/ --cov-branch --cov-report term-missing tests/
 fi
