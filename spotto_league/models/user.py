@@ -5,10 +5,10 @@ import flask_login
 from spotto_league.database import db
 from .base import Base
 from .role import Role
-from enum import Enum
+from enum import IntEnum
 
 
-class Gender(Enum):
+class Gender(IntEnum):
     MALE = 1
     FEMALE = 2
 
@@ -82,8 +82,9 @@ class User(flask_login.UserMixin, db.Model, Base):
 
     @property
     def gender_for_display(self) -> str:
+        genders = list(map(int, Gender))
+        if not self.gender in genders:
+            return ""
         if Gender(self.gender) == Gender.MALE:
             return "男性"
-        elif Gender(self.gender) == Gender.FEMALE:
-            return "女性"
-        return ""
+        return "女性"
