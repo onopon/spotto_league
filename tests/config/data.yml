@@ -60,7 +60,7 @@ two_guest_users:
       birthday: '1989-09-03'
       first_name: 'ぽん'
       last_name: 'おの'
-  User:
+  User_2:
     properties:
       login_name: 'onopon_2'
       password: 'password'
@@ -69,7 +69,7 @@ two_guest_users:
       birthday: '1989-09-03'
       first_name: 'ぽん'
       last_name: 'おの'
-three_member_users:
+five_member_users:
   User:
     properties:
       login_name: 'uchida'
@@ -83,20 +83,20 @@ three_member_users:
       Role:
         properties:
           role_type: 2
-  User:
+  User_2:
     properties:
-      login_name: 'amon'
+      login_name: 'ding'
       password: 'password'
-      name: 'あもん'
+      name: 'お☆DING☆DING'
       gender: 1
       birthday: '2000-01-01'
-      first_name: 'あもん'
-      last_name: 'ちとせ'
+      first_name: 'でぃん'
+      last_name: 'お'
     related_classes:
       Role:
         properties:
           role_type: 2
-  User:
+  User_3:
     properties:
       login_name: 'eda'
       password: 'password'
@@ -109,3 +109,108 @@ three_member_users:
       Role:
         properties:
           role_type: 2
+  User_4:
+    properties:
+      login_name: 'amon'
+      password: 'password'
+      name: '千歳亜門'
+      gender: 2
+      birthday: '2000-01-01'
+      first_name: 'あもん'
+      last_name: 'ちとせ'
+    related_classes:
+      Role:
+        properties:
+          role_type: 2
+  User_5:
+    properties:
+      login_name: 'yukinori'
+      password: 'password'
+      name: 'ゆっきー'
+      gender: 2
+      birthday: '2000-01-01'
+      first_name: 'のり'
+      last_name: 'ゆき'
+    related_classes:
+      Role:
+        properties:
+          role_type: 2
+  User_6:
+    properties:
+      login_name: 'independent'
+      password: 'password'
+      name: 'でぺ'
+      gender: 2
+      birthday: '2000-01-01'
+      first_name: 'ぺんでんと'
+      last_name: 'いんで'
+    related_classes:
+      Role:
+        properties:
+          role_type: 2
+default_league:
+  # required: place_id
+  League:
+    properties:
+      date: '2021-06-25'
+      name: 'ぽのカップ'
+      game_count: 3
+      league_point_group_id: 1
+      start_at: '17:00:00'
+      end_at: '21:00:00'
+      join_end_at: '2021-06-24 20:00:00'
+      status: 0
+place:
+  Place:
+    properties:
+      name: '横浜武道館'
+      url: 'https://test.com'
+      capacity: 4
+league_log_details_2_0:
+  # required: league_log_id
+  LeagueLogDetail:
+    properties:
+      score_1: 11
+      score_2: 1
+  LeagueLogDetail_2:
+    properties:
+      score_1: 11
+      score_2: 2
+league_log_details_2_1:
+  # required: league_log_id
+  LeagueLogDetail:
+    properties:
+      score_1: 11
+      score_2: 7
+  LeagueLogDetail_2:
+    properties:
+      score_1: 6
+      score_2: 11
+  LeagueLogDetail_3:
+    properties:
+      score_1: 13
+      score_2: 11
+league_log_details_0_2:
+  # required: league_log_id
+  LeagueLogDetail:
+    properties:
+      score_1: 4
+      score_2: 11
+  LeagueLogDetail_2:
+    properties:
+      score_1: 8
+      score_2: 11
+league_log_details_1_2:
+  # required: league_log_id
+  LeagueLogDetail:
+    properties:
+      score_1: 5
+      score_2: 11
+  LeagueLogDetail_2:
+    properties:
+      score_1: 11
+      score_2: 9
+  LeagueLogDetail_3:
+    properties:
+      score_1: 14
+      score_2: 16

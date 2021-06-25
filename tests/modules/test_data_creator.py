@@ -1,35 +1,45 @@
 import re
 import yaml
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Union
 from spotto_league.models import *  # noqa
 
 
 class TestDataCreator:
-    def create(self, yml_title: str, yml_path: str='tests/config/data.yml') -> Any:
+    __slots__ = ['_yml_data']
+
+    def __init__(self) -> None:
+        yml_path = 'tests/config/data.yml'
         with open(yml_path, 'r') as yml:
-            data = yaml.safe_load(yml)
-            target = data[yml_title]
-            instances = self._make_instances(target)
+            self._yml_data = yaml.safe_load(yml)
+
+    def create(self, yml_title: str, overrided_dict: Dict[str, Any]={}) -> Any:
+        target = self._yml_data[yml_title]
+        instances = self._make_instances(target, overrided_dict)
+        if len(instances) == 1:
+            return instances[0]
         return instances
 
     def _to_klass(self, klass_name: str) -> Any:
-        return globals()[klass_name]
+        return globals()[self._get_klass_name(klass_name)]
 
-    def _make_instances(self, data_dict: Dict[str, Any], related_dict: Dict[str, Any]={}) -> Any:
+    def _get_klass_name(self, origin_name: str) -> str:
+        return origin_name.split('_')[0]
+
+    def _make_instances(self, data_dict: Dict[str, Any], overrided_dict: Dict[str, Any]={}) -> Any:
         instances: List[Any] = []
         for klass_name, values in data_dict.items():
-            instance = self._make_instance(klass_name, values, related_dict)
+            instance = self._make_instance(klass_name, values, overrided_dict)
             instances.append(instance)
             related_classes_data = values.get('related_classes', {})
             related_dict = self._make_related_dict(instance)
-            instances.extend(self._make_instances(related_classes_data, related_dict))
+            self._make_instances(related_classes_data, related_dict)
         return instances
 
-    def _make_instance(self, klass_name, values: Dict[str, Any], related_dict: Dict[str, Any]={}) -> Any:
+    def _make_instance(self, klass_name: str, values: Dict[str, Any], overrided_dict: Dict[str, Any]={}) -> Any:
         klass = self._to_klass(klass_name)
         instance = klass()
         properties = values["properties"]
-        properties.update(related_dict)
+        properties.update(overrided_dict)
         for property_name, val in properties.items():
             setattr(instance, property_name, val)
         instance.save()
