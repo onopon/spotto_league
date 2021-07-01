@@ -69,7 +69,35 @@ two_guest_users:
       birthday: '1989-09-03'
       first_name: 'ぽん'
       last_name: 'おの'
-five_member_users:
+two_member_users:
+  User:
+    properties:
+      login_name: 'uchida'
+      password: 'password'
+      name: 'うっちー'
+      gender: 1
+      birthday: '2000-01-01'
+      first_name: 'ちだ'
+      last_name: 'うっ'
+    related_classes:
+      Role:
+        properties:
+          role_type: 2
+  User_2:
+    properties:
+      login_name: 'ding'
+      password: 'password'
+      name: 'お☆DING☆DING'
+      gender: 1
+      birthday: '2000-01-01'
+      first_name: 'でぃん'
+      last_name: 'お'
+    related_classes:
+      Role:
+        properties:
+          role_type: 2
+
+six_member_users:
   User:
     properties:
       login_name: 'uchida'
