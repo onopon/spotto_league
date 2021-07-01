@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Union
 from spotto_league.models import *  # noqa
 
 
-class TestDataCreator:
+class DataCreator:
     __slots__ = ['_yml_data']
 
     def __init__(self) -> None:
