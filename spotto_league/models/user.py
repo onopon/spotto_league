@@ -83,7 +83,7 @@ class User(flask_login.UserMixin, db.Model, Base):
     @property
     def gender_for_display(self) -> str:
         genders = list(map(int, Gender))
-        if not self.gender in genders:
+        if self.gender not in genders:
             return ""
         if Gender(self.gender) == Gender.MALE:
             return "男性"

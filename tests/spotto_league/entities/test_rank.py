@@ -5,15 +5,12 @@ from spotto_league.entities.rank import (
     SORT_PROPERTY_POINT_OF_DIFFERENCE,
     SORT_PROPERTY_LEAGUE_MEMBER_ID
 )
-from spotto_league.scripts.add_league_point import AddLeaguePoint
 from spotto_league.models.league_member import LeagueMember
 from spotto_league.models.league_log import LeagueLog
 from spotto_league.models.league_log_detail import LeagueLogDetail
 from spotto_league.modules.league_settlement_calculator import LeagueSettlementCalculator
-from spotto_league.models.role import Role
 from tests.base import Base
 from tests.modules.data_creator import DataCreator
-import datetime
 import freezegun
 
 
@@ -36,7 +33,7 @@ class TestRank(Base):
         # users[0] vs users[2] は 2-0でusers[0]の勝ちとなる
         log_details_hash = {0: 'league_log_details_2_0',
                             1: 'league_log_details_1_2',
-                            3: 'league_log_details_0_2', 
+                            3: 'league_log_details_0_2',
                             4: 'league_log_details_2_1',
                             5: None}
         for (index, yml_title) in log_details_hash.items():
@@ -45,7 +42,6 @@ class TestRank(Base):
             if yml_title:
                 DataCreator().create(yml_title, overrided_dict={'league_log_id': league_log.id})
 
-        
         details = LeagueLogDetail.find_all_by_league_log_ids([l.id for l in league.logs])
 
         # coverage 対応
@@ -77,7 +73,7 @@ class TestRank(Base):
         rank.set_reason_for_priority('game_of_difference')
         assert rank.reason == 'ゲーム数による得失点差: {}'.format(rank.game_of_difference)
         rank.set_reason_for_priority('point_of_difference')
-        assert  rank.reason == '獲得ポイント数による得失点差: {}'.format(rank.point_of_difference)
+        assert rank.reason == '獲得ポイント数による得失点差: {}'.format(rank.point_of_difference)
         rank.set_reason_for_priority('league_member_id')
         assert rank.reason == '参加表明時刻の差: {}'.format(league_member.created_at)
 
@@ -118,7 +114,7 @@ class TestRank(Base):
         # users[0] vs users[2] は 2-0でusers[0]の勝ちとなる
         log_details_hash = {0: 'league_log_details_2_0',
                             1: 'league_log_details_1_2',
-                            3: 'league_log_details_0_2', 
+                            3: 'league_log_details_0_2',
                             4: 'league_log_details_2_1',
                             5: None}
         for (index, yml_title) in log_details_hash.items():
@@ -172,7 +168,7 @@ class TestRank(Base):
         assert sorted_rank_list[0].reason == "獲得ポイント数による得失点差: 19"
         assert sorted_rank_list[1].league_member_id == rank_list[1].league_member_id
         assert sorted_rank_list[1].reason == "獲得ポイント数による得失点差: -19"
-    
+
         sorted_rank_list = Rank.sort_rank_list(rank_list, SORT_PROPERTY_LEAGUE_MEMBER_ID)
         assert len(sorted_rank_list) == len(rank_list)
         assert sorted_rank_list[0].league_member_id == rank_list[0].league_member_id
