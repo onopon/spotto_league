@@ -21,7 +21,7 @@ class LeagueLog(db.Model, Base):
 
     @classmethod
     def find_or_initialize(
-        cls, league_id, user_id_1, user_id_2
+            cls, league_id: int, user_id_1: int, user_id_2:int
     ) -> "LeagueLog":
         id_1 = user_id_1 if user_id_1 < user_id_2 else user_id_2
         id_2 = user_id_2 if user_id_1 < user_id_2 else user_id_1
