@@ -10,6 +10,12 @@ from spotto_league.modules.league_settlement_calculator import (
 )
 
 
+SORT_PROPERTY_WIN = "win"
+SORT_PROPERTY_GAME_OF_DIFFERENCE = "game_of_difference"
+SORT_PROPERTY_POINT_OF_DIFFERENCE = "point_of_difference"
+SORT_PROPERTY_LEAGUE_MEMBER_ID = "league_member_id"
+
+
 class Rank:
     __slots__ = [
         "_league_member",
@@ -42,9 +48,9 @@ class Rank:
         self._lost_game = 0
         self._got_point = 0
         self._lost_point = 0
-        self.calcurate_points()
+        self._calcurate_points()
 
-    def calcurate_points(self) -> None:
+    def _calcurate_points(self) -> None:
         for log in self._logs:
             details = [d for d in self._details if d.league_log_id == log.id]
             count_1 = [d.score_1 > d.score_2 for d in details].count(True)
@@ -73,11 +79,11 @@ class Rank:
 
     def set_reason_for_priority(self, reason_of_prioritiy: str) -> None:
         reason = "単独"
-        if reason_of_prioritiy == "game_of_difference":
+        if reason_of_prioritiy == SORT_PROPERTY_GAME_OF_DIFFERENCE:
             reason = "ゲーム数による得失点差: {}".format(self.game_of_difference)
-        elif reason_of_prioritiy == "point_of_difference":
+        elif reason_of_prioritiy == SORT_PROPERTY_POINT_OF_DIFFERENCE:
             reason = "獲得ポイント数による得失点差: {}".format(self.point_of_difference)
-        elif reason_of_prioritiy == "league_member_id":
+        elif reason_of_prioritiy == SORT_PROPERTY_LEAGUE_MEMBER_ID:
             reason = "参加表明時刻の差: {}".format(self.league_member.created_at)
         self._reason = reason
 
@@ -138,7 +144,7 @@ class Rank:
     def point_of_difference(self) -> int:
         return self._got_point - self._lost_point
 
-    def did_win(self, user_id: int) -> bool:
+    def won(self, user_id: int) -> bool:
         return user_id in self._win_user_ids
 
     def to_hash(self) -> Dict[str, Any]:
@@ -161,8 +167,7 @@ class Rank:
             settlement = settlement_hash[member.user_id]
             rank = Rank(member, settlement["logs"], settlement["details"])
             rank_list.append(rank)
-        rank_list.sort(key=lambda r: r.win, reverse=True)
-        sorted_rank_list = cls.sort_rank_list(rank_list, "win")
+        sorted_rank_list = cls.sort_rank_list(rank_list, SORT_PROPERTY_WIN)
         for i, rank in enumerate(sorted_rank_list):
             rank.set_rank(i + 1)
         return sorted_rank_list
@@ -172,6 +177,7 @@ class Rank:
         cls, rank_list: List["Rank"], grouping_point: str, count: int = 0
     ) -> List["Rank"]:
         sorted_rank_list = []
+        rank_list = sorted(rank_list, key=lambda r: r.win, reverse=True)
         for _, group in groupby(rank_list, key=lambda r: getattr(r, grouping_point)):
             ranks = list(group)
             # 単独で順位が確定してる場合
