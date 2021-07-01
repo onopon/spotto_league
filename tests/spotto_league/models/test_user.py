@@ -2,7 +2,7 @@ from spotto_league.models.user import User, Gender
 from spotto_league.models.role import Role
 from spotto_league.modules.password_util import PasswordUtil
 from tests.base import Base
-from tests.modules.test_data_creator import TestDataCreator
+from tests.modules.data_creator import DataCreator
 import datetime
 import freezegun
 
@@ -15,57 +15,58 @@ class TestUser(Base):
         assert user.password == PasswordUtil.make_hex(password)
 
     def test_all(self):
-        data = TestDataCreator().create('two_guest_users')
+        data = DataCreator().create('two_guest_users')
         assert User.all() == data
 
     def test_all_without_visitor(self):
         users_without_visitor = []
-        users_without_visitor.append(TestDataCreator().create('guest_user')[0])
-        users_without_visitor.append(TestDataCreator().create('admin_user')[0])
-        users_without_visitor.append(TestDataCreator().create('member_user')[0])
-        TestDataCreator().create('visitor_user')
+        users_without_visitor.append(DataCreator().create('guest_user'))
+        users_without_visitor.append(DataCreator().create('admin_user'))
+        users_without_visitor.append(DataCreator().create('member_user'))
+        DataCreator().create('visitor_user')
         assert User.all_without_visitor() == users_without_visitor
 
     def test_find_by_login_name(self):
-        user = TestDataCreator().create('guest_user')[0]
+        user = DataCreator().create('guest_user')
         assert not User.find_by_login_name('hogehoge')
         assert User.find_by_login_name(user.login_name) == user
 
     def test_to_hash(self):
-        user = TestDataCreator().create('guest_user')[0]
+        user = DataCreator().create('guest_user')
         target = user.to_hash()
         assert target['id'] == user.id
         assert target['login_name'] == user.login_name
         assert target['name'] == user.name
 
     def test_role(self):
-        user = TestDataCreator().create('guest_user')[0]
-        target = user.role
-        assert type(target) == Role
+        user = DataCreator().create('guest_user')
+        assert type(user.role) == Role
+        # coverage 対応
+        assert type(user.role) == Role
 
     def test_is_admin(self):
-        assert not TestDataCreator().create('guest_user')[0].is_admin()
-        assert TestDataCreator().create('admin_user')[0].is_admin()
-        assert not TestDataCreator().create('member_user')[0].is_admin()
-        assert not TestDataCreator().create('visitor_user')[0].is_admin()
+        assert not DataCreator().create('guest_user').is_admin()
+        assert DataCreator().create('admin_user').is_admin()
+        assert not DataCreator().create('member_user').is_admin()
+        assert not DataCreator().create('visitor_user').is_admin()
 
     def test_is_member(self):
-        assert not TestDataCreator().create('guest_user')[0].is_member()
-        assert not TestDataCreator().create('admin_user')[0].is_member()
-        assert TestDataCreator().create('member_user')[0].is_member()
-        assert not TestDataCreator().create('visitor_user')[0].is_member()
+        assert not DataCreator().create('guest_user').is_member()
+        assert not DataCreator().create('admin_user').is_member()
+        assert DataCreator().create('member_user').is_member()
+        assert not DataCreator().create('visitor_user').is_member()
 
     def test_is_guest(self):
-        assert TestDataCreator().create('guest_user')[0].is_guest()
-        assert not TestDataCreator().create('admin_user')[0].is_guest()
-        assert not TestDataCreator().create('member_user')[0].is_guest()
-        assert not TestDataCreator().create('visitor_user')[0].is_guest()
+        assert DataCreator().create('guest_user').is_guest()
+        assert not DataCreator().create('admin_user').is_guest()
+        assert not DataCreator().create('member_user').is_guest()
+        assert not DataCreator().create('visitor_user').is_guest()
 
     def test_is_visitor(self):
-        assert not TestDataCreator().create('guest_user')[0].is_visitor()
-        assert not TestDataCreator().create('admin_user')[0].is_visitor()
-        assert not TestDataCreator().create('member_user')[0].is_visitor()
-        assert TestDataCreator().create('visitor_user')[0].is_visitor()
+        assert not DataCreator().create('guest_user').is_visitor()
+        assert not DataCreator().create('admin_user').is_visitor()
+        assert not DataCreator().create('member_user').is_visitor()
+        assert DataCreator().create('visitor_user').is_visitor()
 
     def test_birthday_for_display(self):
         user = User()
@@ -85,6 +86,7 @@ class TestUser(Base):
         user = User()
         user.gender = Gender.MALE
         assert user.gender_for_display == "男性"
-
         user.gender = Gender.FEMALE
         assert user.gender_for_display == "女性"
+        user.gender = 3
+        assert user.gender_for_display == ""
