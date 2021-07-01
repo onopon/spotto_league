@@ -50,7 +50,7 @@ class PostLeagueFinishController(BaseController):
                 continue
 
             win_bonus_points = list(
-                filter(lambda b: rank.did_win(b.user_id), bonus_points)
+                filter(lambda b: rank.won(b.user_id), bonus_points)
             )
             for bonus_point in win_bonus_points:
                 user_point = UserPoint()
