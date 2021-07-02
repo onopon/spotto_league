@@ -31,7 +31,7 @@ class BonusPoint(db.Model, Base):
     def find_or_initialize_by_user_id(cls, user_id: int) -> "BonusPoint":
         bonus_point = cls()
         bonus_point.user_id = user_id
-        return cls.find_by_id(user_id) or bonus_point
+        return cls.find_by_user_id(user_id) or bonus_point
 
     @classmethod
     def find_all_by_user_ids(cls, user_ids: List[int]) -> List["BonusPoint"]:

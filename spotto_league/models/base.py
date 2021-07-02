@@ -7,14 +7,6 @@ class Base:
 
     id = db.Column(db.Integer)
 
-    # 後ほど削除予定
-    @property
-    def session(self) -> db.session:
-        session = db.session.object_session(self)
-        if session:
-            return session
-        return db.session
-
     @classmethod
     def find(cls, target_id: int) -> Any:
         return db.session.query(cls).filter(cls.id == target_id).one()

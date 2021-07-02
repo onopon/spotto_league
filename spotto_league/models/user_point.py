@@ -7,6 +7,10 @@ from spotto_league.models.league_point import LeaguePoint
 from spotto_league.models.bonus_point import BonusPoint
 from sqlalchemy import and_
 
+REASON_CLASS_BASE = "BasePoint"
+REASON_CLASS_LEAGUE = "LeaguePoint"
+REASON_CLASS_BONUS = "BonusPoint"
+
 
 class UserPoint(db.Model, Base):
 
@@ -25,18 +29,16 @@ class UserPoint(db.Model, Base):
     )
 
     def set_base_point(self, point: int, memo: str = "") -> None:
-        self.point = point
-        self.reason_class = "BasePoint"
-        self.memo = memo
+        self.set_point(point, REASON_CLASS_BASE, memo)
 
     def set_league_point(self, league: League, league_point: LeaguePoint) -> None:
         self.point = league_point.point
-        self.reason_class = "LeaguePoint"
+        self.reason_class = REASON_CLASS_LEAGUE
         self.reason_id = league.id
 
     def set_bonus_point(self, bonus_point: BonusPoint) -> None:
         self.point = bonus_point.point
-        self.reason_class = "BonusPoint"
+        self.reason_class = REASON_CLASS_BONUS
         self.reason_id = bonus_point.id
 
     def set_point(self, point, reason_class, memo: str = "") -> None:
