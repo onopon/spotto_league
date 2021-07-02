@@ -703,7 +703,7 @@ testing = ["pathlib2", "unittest2", "jaraco.itertools", "func-timeout"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7.3"
-content-hash = "f3691668b85a79ab77f93880930c9d9c25a2de6a643968d34e2ac1642bc76982"
+content-hash = "046757aeb62bed6e00c7163be821cab8d0b87c945afe6471eb35b2f943d7b044"
 
 [metadata.files]
 alembic = [
