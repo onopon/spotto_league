@@ -6,6 +6,10 @@ import time
 from flask import render_template, redirect, url_for
 from flask_login import current_user
 from spotto_league.models.user import User
+from spotto_league.exceptions import (
+    NotAdminException,
+    NotMemberException
+)
 
 AnyResponse = Union[str, Response, Dict[str, Any]]
 
@@ -29,7 +33,7 @@ class BaseController(metaclass=ABCMeta):
         if self.enable_for_visitor():
             return
         if current_user.is_authenticated and self.login_user.is_visitor():
-            raise Exception("ゲストの方はこのページを閲覧することはできません。")
+            raise NotMemberException("ゲストの方はこのページを閲覧することはできません。")
 
     @abstractmethod
     async def validate(self, request: BaseRequest, **kwargs) -> None:
@@ -38,7 +42,9 @@ class BaseController(metaclass=ABCMeta):
     async def get_layout_as_exception(
         self, request: BaseRequest, error: Exception, **kwargs
     ) -> AnyResponse:
-        return self.render_template("error.html", error_message=str(error))
+        if type(error) in [NotAdminException, NotMemberException]:
+            return self.render_template("error.html", 401, error_message=str(error))
+        return self.render_template("error.html", 404, error_message=str(error))
 
     @abstractmethod
     async def get_layout(self, request: BaseRequest, **kwargs) -> AnyResponse:
@@ -69,7 +75,7 @@ class BaseController(metaclass=ABCMeta):
             )
         return loop.run_until_complete(self.get_json(request, **kwargs))
 
-    def render_template(self, template_name_or_list, **context) -> AnyResponse:
+    def render_template(self, template_name_or_list, status_code=200, **context) -> AnyResponse:
         context["timestamp"] = time.time()
         if current_user.is_authenticated:
             context["login_user"] = self.login_user
@@ -77,4 +83,4 @@ class BaseController(metaclass=ABCMeta):
             if self.should_login():
                 return redirect(url_for("user_login"))
 
-        return render_template(template_name_or_list, **context)
+        return render_template(template_name_or_list, **context), status_code
