@@ -1,4 +1,3 @@
-from spotto_league.models.bonus_point import BonusPoint
 from tests.spotto_league.controllers.base_controller import BaseController
 from tests.modules.data_creator import DataCreator
 

@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Dict
 import requests
 from tests.base import Base
 from instance import settings

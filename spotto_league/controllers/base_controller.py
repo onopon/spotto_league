@@ -1,7 +1,7 @@
 from abc import ABCMeta, abstractmethod
 import asyncio
 from werkzeug.wrappers import BaseRequest, Response
-from typing import Dict, Any, Union
+from typing import Dict, Any, Union, Tuple
 import time
 from flask import render_template, redirect, url_for
 from flask_login import current_user
@@ -11,7 +11,7 @@ from spotto_league.exceptions import (
     NotMemberException
 )
 
-AnyResponse = Union[str, Response, Dict[str, Any]]
+AnyResponse = Union[str, Response, Dict[str, Any], Tuple]
 
 
 class BaseController(metaclass=ABCMeta):
