@@ -13,10 +13,8 @@ class LeagueMember(db.Model, Base):
     league_id = db.Column(db.Integer, nullable=False, index=True)
     user_id = db.Column(db.Integer, nullable=False, index=True)
     enabled = db.Column(db.Boolean, nullable=False, default=False)
-    created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    updated_at = db.Column(
-        db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now
-    )
+    created_at = db.Column(db.DateTime, nullable=False, default=lambda: datetime.now())
+    updated_at = db.Column(db.DateTime, nullable=False, default=lambda: datetime.now(), onupdate=lambda: datetime.now())
     _user = None
 
     @property

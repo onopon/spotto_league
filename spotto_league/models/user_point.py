@@ -23,10 +23,8 @@ class UserPoint(db.Model, Base):
     reason_class = db.Column(db.String(255))
     reason_id = db.Column(db.Integer)
     memo = db.Column(db.String(255))
-    created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    updated_at = db.Column(
-        db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now
-    )
+    created_at = db.Column(db.DateTime, nullable=False, default=lambda: datetime.now())
+    updated_at = db.Column(db.DateTime, nullable=False, default=lambda: datetime.now(), onupdate=lambda: datetime.now())
 
     def set_base_point(self, point: int, memo: str = "") -> None:
         self.set_point(point, REASON_CLASS_BASE, memo)

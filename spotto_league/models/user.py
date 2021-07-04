@@ -25,8 +25,8 @@ class User(flask_login.UserMixin, db.Model, Base):
     birthday = db.Column(db.Date, nullable=False, default=dt.now().date)
     first_name = db.Column(db.String(255))
     last_name = db.Column(db.String(255))
-    created_at = db.Column(db.DateTime, nullable=False, default=dt.now)
-    updated_at = db.Column(db.DateTime, nullable=False, default=dt.now, onupdate=dt.now)
+    created_at = db.Column(db.DateTime, nullable=False, default=lambda: dt.now())
+    updated_at = db.Column(db.DateTime, nullable=False, default=lambda: dt.now(), onupdate=lambda: dt.now())
     _role = None
 
     def set_password(self, password: str) -> None:
