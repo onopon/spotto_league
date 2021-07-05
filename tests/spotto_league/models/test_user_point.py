@@ -68,7 +68,6 @@ class TestUserPoint(Base):
             user_point_2020.user_id = user.id
             user_point_2020.league_id = league.id
             user_point_2020.set_point(100, 'Hoge', '2020-12-31 23:59:59')
-            user_point_2020.created_at = '2020-12-31 23:59:59'
             user_point_2020.save()
 
         with freezegun.freeze_time('2021-01-01 00:00:00'):
@@ -78,7 +77,6 @@ class TestUserPoint(Base):
             user_point_2021.user_id = user.id
             user_point_2021.league_id = league.id
             user_point_2021.set_point(100, 'Hoge', '2021-01-01 00:00:00')
-            user_point_2021.created_at = '2021-01-01 00:00:00'
             user_point_2021.save()
 
         with freezegun.freeze_time('2021-07-02 00:00:00'):
