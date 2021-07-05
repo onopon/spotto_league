@@ -28,4 +28,3 @@ class Base(object):
     # を呼び出すこと
     def tear_down(self):
         pass
-

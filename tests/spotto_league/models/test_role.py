@@ -8,5 +8,5 @@ class TestRoleType(Base):
         ids = [role_type["id"] for role_type in role_types]
         assert RoleType.ADMIN.value in ids
         assert RoleType.MEMBER.value in ids
-        assert not RoleType.GUEST.value in ids
-        assert not RoleType.VISITOR.value in ids
+        assert RoleType.GUEST.value not in ids
+        assert RoleType.VISITOR.value not in ids
