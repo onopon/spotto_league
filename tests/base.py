@@ -1,9 +1,9 @@
 import pytest
 import spotto_league.models
-from spotto_league.app import create_app
+import application
 from spotto_league.database import db
 
-app = create_app()
+app = application.app
 
 
 class Base(object):
@@ -28,3 +28,4 @@ class Base(object):
     # を呼び出すこと
     def tear_down(self):
         pass
+

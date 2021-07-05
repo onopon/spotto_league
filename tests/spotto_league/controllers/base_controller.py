@@ -1,11 +1,10 @@
 from typing import Dict
-import requests
-from tests.base import Base
+from tests.base import Base, app
 from instance import settings
 from requests.models import Response
 
-URI_FORMAT = 'http://127.0.0.1:80{}'
-ses = requests.Session()
+URI_FORMAT = 'http://127.0.0.1{}'
+client = app.test_client()
 
 
 class BaseController(Base):
@@ -13,22 +12,23 @@ class BaseController(Base):
         args = {'login_name': login_name,
                 'password': plain_password,
                 'common_password': settings.COMMON_PASSWORD}
-        self.post("/user/login", args)
+        self.post("/user/login", data=args)
 
     def logout(self) -> None:
         self.get("/user/logout")
 
-    def get(self, url_path: str, args: Dict={}) -> Response:
+    def get(self, url_path: str, data: Dict={}) -> Response:
         url = URI_FORMAT.format(url_path)
         # argsは後回し
-        if args:
+        if data:
             pass
-        return ses.get(url)
+        return client.get(url)
 
-    def post(self, url_path: str, args: Dict={}) -> Response:
-        return ses.post(URI_FORMAT.format(url_path), data=args)
+    def post(self, url_path: str, data: Dict={}) -> Response:
+        return client.post(URI_FORMAT.format(url_path), data=data)
 
     # override
     def tear_down(self):
         super().tear_down()
         self.logout()
+        client.delete()

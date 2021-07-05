@@ -9,7 +9,6 @@ class TestListController(BaseController):
         url_path = '/admin/user/list'
         result = self.get(url_path)
         assert result.status_code == 200
-        assert url_path in result.url
 
     def test_get_access_as_member(self):
         user = DataCreator().create('member_user')
@@ -17,7 +16,6 @@ class TestListController(BaseController):
         url_path = '/admin/user/list'
         result = self.get(url_path)
         assert result.status_code == 401
-        assert url_path in result.url
 
     def test_get_access_as_visitor(self):
         user = DataCreator().create('visitor_user')
@@ -25,10 +23,9 @@ class TestListController(BaseController):
         url_path = '/admin/user/list'
         result = self.get(url_path)
         assert result.status_code == 401
-        assert url_path in result.url
 
     def test_get_access_as_not_login(self):
         url_path = '/admin/user/list'
         result = self.get(url_path)
-        assert result.status_code == 200
-        assert '/user/login' in result.url
+        assert result.status_code == 302
+        assert '/user/login' in result.headers.get('Location')
