@@ -1,5 +1,5 @@
 from typing import Optional, List
-from datetime import datetime
+from datetime import datetime as dt
 from spotto_league.database import db
 from .base import Base
 from .user import User
@@ -13,8 +13,8 @@ class BonusPoint(db.Model, Base):
     user_id = db.Column(db.Integer, nullable=False, index=True)
     point = db.Column(db.Integer, nullable=False)
     available_count = db.Column(db.Integer, nullable=False, default=4)
-    created_at = db.Column(db.DateTime, nullable=False, default=lambda: datetime.now())
-    updated_at = db.Column(db.DateTime, nullable=False, default=lambda: datetime.now(), onupdate=lambda: datetime.now())
+    created_at = db.Column(db.DateTime, nullable=False, default=lambda: dt.now())
+    updated_at = db.Column(db.DateTime, nullable=False, default=lambda: dt.now(), onupdate=lambda: dt.now())
     _user = None
 
     @classmethod
