@@ -139,7 +139,6 @@ class TestRank(Base):
             with freezegun.freeze_time(frozen_time):
                 league_member = LeagueMember.find_or_initialize_by_league_id_and_user_id(league.id, u.id)
                 league_member.enabled = True
-                league_member.created_at = frozen_time
                 league_member.save()
         league_log = LeagueLog.find_or_initialize(league.id, users[0].id, users[1].id)
         league_log.save()

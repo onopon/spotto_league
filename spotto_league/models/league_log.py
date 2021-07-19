@@ -14,10 +14,8 @@ class LeagueLog(db.Model, Base):
     league_id = db.Column(db.Integer, nullable=False, index=True)
     user_id_1 = db.Column(db.Integer, nullable=False, index=True)
     user_id_2 = db.Column(db.Integer, nullable=False, index=True)
-    created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    updated_at = db.Column(
-        db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now
-    )
+    created_at = db.Column(db.DateTime, nullable=False, default=lambda: datetime.now())
+    updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=lambda: datetime.now())
 
     @classmethod
     def find_or_initialize(cls, league_id: int, user_id_1: int, user_id_2: int) -> "LeagueLog":

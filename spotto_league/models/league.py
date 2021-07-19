@@ -39,8 +39,8 @@ class League(db.Model, Base):
     status = db.Column(db.Integer, nullable=False, default=False, index=True)
     place_id = db.Column(db.Integer, nullable=False, index=True)
     league_point_group_id = db.Column(db.Integer)
-    created_at = db.Column(db.DateTime, nullable=False, default=dt.now)
-    updated_at = db.Column(db.DateTime, nullable=False, default=dt.now, onupdate=dt.now)
+    created_at = db.Column(db.DateTime, nullable=False, default=lambda: dt.now())
+    updated_at = db.Column(db.DateTime, nullable=False, default=lambda: dt.now(), onupdate=lambda: dt.now())
     _place = None
     _members = None
     _logs = None

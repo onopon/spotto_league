@@ -12,9 +12,7 @@ class LeagueSettlementCalculator:
         for member in members:
             member_logs = [l for l in logs if l.is_in_user_id(member.user_id)]
             settlement_hash[member.user_id]["logs"] = member_logs
-            settlement_hash[member.user_id][
-                "details"
-            ] = LeagueLogDetail.find_all_by_league_log_ids([l.id for l in member_logs])
+            settlement_hash[member.user_id]["details"] = LeagueLogDetail.find_all_by_league_log_ids([l.id for l in member_logs])
         return settlement_hash
 
     @classmethod

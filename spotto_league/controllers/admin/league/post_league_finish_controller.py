@@ -1,6 +1,10 @@
 from spotto_league.controllers.base_controller import BaseController, AnyResponse
 from werkzeug.wrappers import BaseRequest
 from flask import redirect, url_for
+from spotto_league.exceptions import (
+    UnexpectedLeagueStatusException,
+    UnexpectedArgsException
+)
 from spotto_league.entities.rank import Rank
 from spotto_league.models.league import League
 from spotto_league.models.league_point import LeaguePoint
@@ -16,14 +20,14 @@ class PostLeagueFinishController(BaseController):
 
     # override
     async def validate(self, request: BaseRequest, **kwargs) -> None:
-        try:
-            self._league = League.find(kwargs["league_id"])
-            if not self._league.is_status_ready():
-                raise Exception("League status is not ready")
-            if request.form.get("league_point_group_id") is None:
-                raise Exception("league_point_group_id does not exist")
-        except Exception as e:
-            raise e
+        league = League.find_by_id(kwargs["league_id"])
+        if not league:
+            raise UnexpectedArgsException("league_id :{} does not exist".format(kwargs["league_id"]))
+        if not league.is_status_ready():
+            raise UnexpectedLeagueStatusException("League status is not ready")
+        if request.form.get("league_point_group_id") is None:
+            raise UnexpectedArgsException("league_point_group_id does not exist")
+        self._league = league
 
     # override
     async def get_layout(self, request: BaseRequest, **kwargs) -> AnyResponse:
@@ -36,6 +40,7 @@ class PostLeagueFinishController(BaseController):
         for rank in ranks:
             if rank.user.is_guest() or rank.user.is_visitor():
                 continue
+            # group_id が 0（無効試合）だった場合でも、user_pointは生成される。が、全て0ポイントである
             league_point = next(
                 filter(lambda l: l.rank == rank.rank, league_points), league_points[-1]
             )
@@ -58,8 +63,8 @@ class PostLeagueFinishController(BaseController):
                 user_point.user_id = rank.user_id
                 user_point.set_bonus_point(bonus_point)
                 user_point.save()
-            self._league.league_point_group_id = group_id
-            self._league.finish()
-            self._league.save()
+        self._league.league_point_group_id = group_id
+        self._league.finish()
+        self._league.save()
         PonnoBot.push_about_finished_league(self._league.id)
         return redirect(url_for("league_list"))

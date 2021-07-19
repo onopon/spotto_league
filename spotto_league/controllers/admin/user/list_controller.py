@@ -3,13 +3,14 @@ from werkzeug.wrappers import BaseRequest
 from flask_login import current_user
 from spotto_league.models.user import User
 from spotto_league.models.role import RoleType
+from spotto_league.exceptions import NotAdminException
 
 
 class ListController(BaseController):
     # override
     async def validate(self, request: BaseRequest, **kwargs) -> None:
         if not self.login_user.is_admin():
-            raise Exception("User: {} is not admin.".format(current_user.login_name))
+            raise NotAdminException("User: {} is not admin.".format(current_user.login_name))
 
     # override
     async def get_layout(self, request: BaseRequest, **kwargs) -> AnyResponse:

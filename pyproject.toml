@@ -31,6 +31,7 @@ types-PyYAML = "^5.4.3"
 types-Werkzeug = "^1.0.2"
 types-freezegun = "^0.1.4"
 pytest-cov = "^2.12.1"
+requests = "^2.25.1"
 
 [build-system]
 requires = ["poetry>=0.12"]
