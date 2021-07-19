@@ -4,9 +4,8 @@ from spotto_league.controllers.admin.league.post_league_finish_controller import
 from spotto_league.scripts.add_league_point import AddLeaguePoint
 from spotto_league.models.league_member import LeagueMember
 from spotto_league.models.league_log import LeagueLog
-from spotto_league.models.league import League, LeagueStatus
+from spotto_league.models.league import LeagueStatus
 from spotto_league.models.bonus_point import BonusPoint
-from spotto_league.models.user_point import UserPoint
 from spotto_league.entities.point_rank import PointRank
 
 URL_PATH = '/admin/league/{}/finish'
@@ -58,14 +57,14 @@ class TestPostLeagueFinishController(BaseController):
         assert result.status_code == 302
         point_ranks = PointRank.make_point_rank_list(league)
         expected_hash_list = [
-                {'user_id': users[2].id, 'LeaguePoint': [3000], 'BonusPoint': 1500},
-                {'user_id': users[0].id, 'LeaguePoint': [2000], 'BonusPoint': 0},
-                {'user_id': users[3].id, 'LeaguePoint': [1500], 'BonusPoint': 0},
-                {'user_id': users[5].id, 'LeaguePoint': [1200], 'BonusPoint': 0},
-                {'user_id': users[4].id, 'LeaguePoint': [800], 'BonusPoint': 0},
-                {'user_id': users[1].id, 'LeaguePoint': [700], 'BonusPoint': 0},
-                {'user_id': admin_user.id, 'LeaguePoint': [], 'BonusPoint': 0},
-                {'user_id': guest.id, 'LeaguePoint': [], 'BonusPoint': 0},
+            {'user_id': users[2].id, 'LeaguePoint': [3000], 'BonusPoint': 1500},
+            {'user_id': users[0].id, 'LeaguePoint': [2000], 'BonusPoint': 0},
+            {'user_id': users[3].id, 'LeaguePoint': [1500], 'BonusPoint': 0},
+            {'user_id': users[5].id, 'LeaguePoint': [1200], 'BonusPoint': 0},
+            {'user_id': users[4].id, 'LeaguePoint': [800], 'BonusPoint': 0},
+            {'user_id': users[1].id, 'LeaguePoint': [700], 'BonusPoint': 0},
+            {'user_id': admin_user.id, 'LeaguePoint': [], 'BonusPoint': 0},
+            {'user_id': guest.id, 'LeaguePoint': [], 'BonusPoint': 0},
         ]
         for i, point_rank in enumerate(point_ranks):
             expected_hash = expected_hash_list[i]
@@ -117,18 +116,18 @@ class TestPostLeagueFinishController(BaseController):
 
         self.login(admin_user.login_name, 'password')
         assert league.league_point_group_id is None
-        result = self.post(URL_PATH.format(league.id), {"league_point_group_id": 0})
+        result = self.post(URL_PATH.format(league.id), {"league_point_group_id": INVALID_MATCH_GROUP_ID})
         assert result.status_code == 302
         point_ranks = PointRank.make_point_rank_list(league)
         expected_hash_list = [
-                {'user_id': admin_user.id, 'LeaguePoint': [], 'BonusPoint': 0},
-                {'user_id': users[0].id, 'LeaguePoint': [0], 'BonusPoint': 0},
-                {'user_id': users[1].id, 'LeaguePoint': [0], 'BonusPoint': 0},
-                {'user_id': users[2].id, 'LeaguePoint': [0], 'BonusPoint': 0},
-                {'user_id': users[3].id, 'LeaguePoint': [0], 'BonusPoint': 0},
-                {'user_id': users[4].id, 'LeaguePoint': [0], 'BonusPoint': 0},
-                {'user_id': users[5].id, 'LeaguePoint': [0], 'BonusPoint': 0},
-                {'user_id': guest.id, 'LeaguePoint': [], 'BonusPoint': 0},
+            {'user_id': admin_user.id, 'LeaguePoint': [], 'BonusPoint': 0},
+            {'user_id': users[0].id, 'LeaguePoint': [0], 'BonusPoint': 0},
+            {'user_id': users[1].id, 'LeaguePoint': [0], 'BonusPoint': 0},
+            {'user_id': users[2].id, 'LeaguePoint': [0], 'BonusPoint': 0},
+            {'user_id': users[3].id, 'LeaguePoint': [0], 'BonusPoint': 0},
+            {'user_id': users[4].id, 'LeaguePoint': [0], 'BonusPoint': 0},
+            {'user_id': users[5].id, 'LeaguePoint': [0], 'BonusPoint': 0},
+            {'user_id': guest.id, 'LeaguePoint': [], 'BonusPoint': 0},
         ]
         for i, point_rank in enumerate(point_ranks):
             print(point_rank.user.name)
@@ -137,7 +136,7 @@ class TestPostLeagueFinishController(BaseController):
             assert point_rank.current_league_points == expected_hash['LeaguePoint']
             assert point_rank.current_league_points == expected_hash['LeaguePoint']
             assert point_rank.current_bonus_point == expected_hash['BonusPoint']
-        assert league.league_point_group_id == 0
+        assert league.league_point_group_id == INVALID_MATCH_GROUP_ID
         assert LeagueStatus(league.status) == LeagueStatus.FINISHED
 
     def test_invalidate(self):
