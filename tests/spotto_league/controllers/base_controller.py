@@ -29,6 +29,6 @@ class BaseController(Base):
 
     # override
     def tear_down(self):
-        super().tear_down()
         self.logout()
         client.delete()
+        super().tear_down()

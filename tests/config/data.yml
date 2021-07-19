@@ -183,7 +183,6 @@ default_league:
       date: '2021-06-25'
       name: 'ぽのカップ'
       game_count: 3
-      league_point_group_id: 1
       start_at: '17:00:00'
       end_at: '21:00:00'
       join_end_at: '2021-06-24 20:00:00'

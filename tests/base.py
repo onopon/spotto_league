@@ -27,4 +27,4 @@ class Base(object):
     # super().tear_down()
     # を呼び出すこと
     def tear_down(self):
-        pass
+        db.session.close()
