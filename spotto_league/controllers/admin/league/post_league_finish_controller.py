@@ -11,6 +11,7 @@ from spotto_league.models.league_point import LeaguePoint
 from spotto_league.models.bonus_point import BonusPoint
 from spotto_league.models.user_point import UserPoint
 from ponno_line.ponno_bot import PonnoBot
+from spotto_league.database import db
 
 INVALID_MATCH_GROUP_ID = 0
 
@@ -31,7 +32,7 @@ class PostLeagueFinishController(BaseController):
 
     # override
     async def get_layout(self, request: BaseRequest, **kwargs) -> AnyResponse:
-        # session = db.session
+        session = db.session
         ranks = Rank.make_rank_list(self._league)
         group_id = int(request.form.get("league_point_group_id", 0))
 
@@ -48,7 +49,8 @@ class PostLeagueFinishController(BaseController):
             user_point.league_id = self._league.id
             user_point.user_id = rank.user_id
             user_point.set_league_point(self._league, league_point)
-            user_point.save()
+            session.add(user_point)
+#            user_point.save()
 
             # group_id が 0（無効試合）だった場合、bonus_pointの付与も行わない
             if group_id == INVALID_MATCH_GROUP_ID:
@@ -62,9 +64,12 @@ class PostLeagueFinishController(BaseController):
                 user_point.league_id = self._league.id
                 user_point.user_id = rank.user_id
                 user_point.set_bonus_point(bonus_point)
-                user_point.save()
+                session.add(user_point)
+#                user_point.save()
         self._league.league_point_group_id = group_id
         self._league.finish()
-        self._league.save()
+        session.add(self._league)
+        session.commit()
+#        self._league.save()
         PonnoBot.push_about_finished_league(self._league.id)
         return redirect(url_for("league_list"))

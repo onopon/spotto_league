@@ -14,5 +14,10 @@ class UnexpectedLeagueStatusException(Exception):
 
 
 class UnexpectedArgsException(Exception):
-    # GetまたはPostメソッドにて、期待した値が存在しない場合のException
+    # GetまたはPostメソッドにて、期待した引数が存在しない場合のException
+    ...
+
+
+class UnexpectedValueException(Exception):
+    # GetまたはPostメソッドにて、期待した引数の値が想定外のものとなっている場合のException
     ...
