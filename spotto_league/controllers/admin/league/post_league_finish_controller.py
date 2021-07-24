@@ -50,7 +50,6 @@ class PostLeagueFinishController(BaseController):
             user_point.user_id = rank.user_id
             user_point.set_league_point(self._league, league_point)
             session.add(user_point)
-#            user_point.save()
 
             # group_id が 0（無効試合）だった場合、bonus_pointの付与も行わない
             if group_id == INVALID_MATCH_GROUP_ID:
@@ -65,11 +64,9 @@ class PostLeagueFinishController(BaseController):
                 user_point.user_id = rank.user_id
                 user_point.set_bonus_point(bonus_point)
                 session.add(user_point)
-#                user_point.save()
         self._league.league_point_group_id = group_id
         self._league.finish()
         session.add(self._league)
         session.commit()
-#        self._league.save()
         PonnoBot.push_about_finished_league(self._league.id)
         return redirect(url_for("league_list"))
