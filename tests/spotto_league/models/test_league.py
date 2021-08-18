@@ -1,16 +1,11 @@
 from spotto_league.scripts.add_league_point import AddLeaguePoint
-from spotto_league.models.user import User, Gender
-from spotto_league.models.league import League, LeagueStatus, NEAR_JOIN_END_AT_SECONDS
+from spotto_league.models.league import League, LeagueStatus
 from spotto_league.models.league_point import LeaguePoint
 from spotto_league.models.league_member import LeagueMember
 from spotto_league.models.league_log import LeagueLog
-from spotto_league.models.role import Role
-from spotto_league.modules.password_util import PasswordUtil
 from tests.base import Base
 from tests.modules.data_creator import DataCreator
-import datetime
 import freezegun
-import spotto_league
 
 
 class TestLeague(Base):
@@ -23,7 +18,7 @@ class TestLeague(Base):
         lm = LeagueMember.find_or_initialize_by_league_id_and_user_id(league.id, user.id)
         lm.save()
         lm_enabled = LeagueMember.find_or_initialize_by_league_id_and_user_id(league.id, user_2.id)
-        lm_enabled.enabled =  True
+        lm_enabled.enabled = True
         lm_enabled.save()
         league_log = LeagueLog.find_or_initialize(league.id, user.id, user_2.id)
         league_log.save()
@@ -104,7 +99,7 @@ class TestLeague(Base):
         # coverrage 対策で2回やってる
         assert lm.user == user
         assert lm.user == user
-        
+
     def test_find_all_by_league_id(self):
         league_id = 1
         expects = []
@@ -283,12 +278,12 @@ class TestLeague(Base):
 
     def test_is_near_join_end_at(self):
         league = DataCreator().create('default_league', {'place_id': 1, 'date': '2021-08-06', 'join_end_at': '2021-08-05 23:00:00'})
-        
+
         with freezegun.freeze_time('2021-08-04 20:00:00'):
             assert not league.is_near_join_end_at()
             league.status = LeagueStatus.READY.value
             assert not league.is_near_join_end_at()
-            
+
         with freezegun.freeze_time('2021-08-05 19:59:59'):
             league.status = LeagueStatus.RECRUITING.value
             assert not league.is_near_join_end_at()

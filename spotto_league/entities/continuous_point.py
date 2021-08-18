@@ -1,13 +1,4 @@
-from typing import List, Dict, Any
-from itertools import groupby
-from spotto_league.models.user import User
 from spotto_league.models.league import League
-from spotto_league.models.league_member import LeagueMember
-from spotto_league.models.league_log import LeagueLog
-from spotto_league.models.league_log_detail import LeagueLogDetail
-from spotto_league.modules.league_settlement_calculator import (
-    LeagueSettlementCalculator,
-)
 from spotto_league.entities.rank import Rank
 
 
@@ -18,6 +9,7 @@ class ContinuousPoint:
     CONTINUOUS_POINT_BASE = 500
     LIMIT_COUNT_FOR_CONTINUOUS_BONUS = 4
     __slots__ = ["_user_id", "_league_id", "_continuous_count"]
+
     def __init__(self, user_id: int, league_id: int):
         self._user_id = user_id
         self._league_id = league_id

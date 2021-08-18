@@ -35,10 +35,10 @@ class LeagueMember(db.Model, Base):
     @classmethod
     def find_limit_all_enabled_by_user_id(cls, user_id: int, count: int) -> List["LeagueMember"]:
         return db.session.query(cls).\
-                filter(cls.user_id == user_id, cls.enabled == True).\
-                order_by(sa.desc(cls.updated_at)).\
-                limit(count).\
-                all()
+            filter(cls.user_id == user_id, cls.enabled).\
+            order_by(sa.desc(cls.updated_at)).\
+            limit(count).\
+            all()
 
     @classmethod
     def find_or_initialize_by_league_id_and_user_id(

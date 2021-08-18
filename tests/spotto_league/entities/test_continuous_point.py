@@ -1,21 +1,19 @@
 from spotto_league.models.league_member import LeagueMember
 from spotto_league.models.league import LeagueStatus
-from spotto_league.models.league_log import LeagueLog
-from spotto_league.models.league_log_detail import LeagueLogDetail
-from spotto_league.modules.league_settlement_calculator import LeagueSettlementCalculator
 from spotto_league.scripts.add_league_point import AddLeaguePoint
 from spotto_league.entities.continuous_point import ContinuousPoint
 from tests.base import Base
 from tests.modules.data_creator import DataCreator
-import freezegun
 
 
 class TestContinuousPoint(Base):
     def test_calcurate_continuous_count(self):
         AddLeaguePoint().execute()
         place = DataCreator().create('place')
-        league = DataCreator().create('default_league', overrided_dict={'place_id': place.id, 'date': '2021-08-18', 'status': LeagueStatus.FINISHED.value, 'league_point_group_id': 1})
-        league_2 = DataCreator().create('default_league', overrided_dict={'place_id': place.id, 'date': '2021-08-19', 'league_point_group_id': 1})
+        league_dict = {'place_id': place.id, 'date': '2021-08-18', 'status': LeagueStatus.FINISHED.value, 'league_point_group_id': 1}
+        league = DataCreator().create('default_league', overrided_dict=league_dict)
+        league_dict_2 = {'place_id': place.id, 'date': '2021-08-19', 'league_point_group_id': 1}
+        league_2 = DataCreator().create('default_league', overrided_dict=league_dict_2)
         users = DataCreator().create('six_member_users')
         for u in users:
             lm = LeagueMember.find_or_initialize_by_league_id_and_user_id(league.id, u.id)
@@ -57,4 +55,5 @@ class TestContinuousPoint(Base):
             continuous_point._continuous_count = count
             assert continuous_point.count_for_bonus == count - ContinuousPoint.LIMIT_COUNT_FOR_CONTINUOUS_BONUS
             assert continuous_point.count_for_display == count + 1
-            assert continuous_point.point == ContinuousPoint.CONTINUOUS_POINT_BASE * (count - ContinuousPoint.LIMIT_COUNT_FOR_CONTINUOUS_BONUS)
+            expected_point = ContinuousPoint.CONTINUOUS_POINT_BASE * (count - ContinuousPoint.LIMIT_COUNT_FOR_CONTINUOUS_BONUS)
+            assert continuous_point.point == expected_point

@@ -1,4 +1,3 @@
-import sqlalchemy as sa
 from typing import List
 from spotto_league.database import db
 from spotto_league.models.league_log import LeagueLog
@@ -10,7 +9,6 @@ from datetime import datetime as dt
 from datetime import date
 from enum import Enum
 from sqlalchemy import desc, and_
-
 
 
 NEAR_JOIN_END_AT_SECONDS = 3 * 60 * 60  # 参加締め切り時刻に近いとする時間（秒）
@@ -161,15 +159,11 @@ class League(db.Model, Base):
         # 2021/8/18 より適用開始
         target_date = date(year, 8, 18) if year == 2021 else date(year, 1, 1)
         return db.session.query(cls).\
-                order_by(desc(cls.date)).\
-                filter(
-                    and_(
-                        cls.status == LeagueStatus.FINISHED.value,
+            order_by(desc(cls.date)).\
+            filter(and_(cls.status == LeagueStatus.FINISHED.value,
                         cls.league_point_group_id != 0,
-                        cls.date >= target_date
-                    )
-                ).\
-                all()
+                        cls.date >= target_date)).\
+            all()
 
     def is_in_join_session(self) -> bool:
         return dt.now() < self.join_end_at

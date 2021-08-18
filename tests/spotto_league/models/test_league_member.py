@@ -1,10 +1,6 @@
-from spotto_league.models.user import User, Gender
 from spotto_league.models.league_member import LeagueMember
-from spotto_league.models.role import Role
-from spotto_league.modules.password_util import PasswordUtil
 from tests.base import Base
 from tests.modules.data_creator import DataCreator
-import datetime
 import freezegun
 
 
@@ -15,7 +11,7 @@ class TestLeagueMember(Base):
         # coverrage 対策で2回やってる
         assert lm.user == user
         assert lm.user == user
-        
+
     def test_find_all_by_league_id(self):
         league_id = 1
         expects = []

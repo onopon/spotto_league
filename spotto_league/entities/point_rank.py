@@ -45,21 +45,17 @@ class PointRank:
 
     @property
     def before_point(self) -> int:
-        return sum(
-                [self.before_base_point,
-                 self.before_bonus_point,
-                 self.before_continuous_point,
-                 sum(self.before_league_points)]
-                )
+        return sum([self.before_base_point,
+                    self.before_bonus_point,
+                    self.before_continuous_point,
+                    sum(self.before_league_points)])
 
     @property
     def current_point(self) -> int:
-        return sum(
-                [self.current_base_point,
-                 self.current_bonus_point,
-                 self.current_continuous_point,
-                 sum(self.current_league_points)]
-                )
+        return sum([self.current_base_point,
+                    self.current_bonus_point,
+                    self.current_continuous_point,
+                    sum(self.current_league_points)])
 
     @property
     def before_base_point(self) -> int:

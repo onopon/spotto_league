@@ -2,7 +2,6 @@ from tests.spotto_league.controllers.base_controller import BaseController
 from tests.modules.data_creator import DataCreator
 from spotto_league.controllers.admin.league.post_league_finish_controller import INVALID_MATCH_GROUP_ID
 from spotto_league.scripts.add_league_point import AddLeaguePoint
-from spotto_league.models.league import League
 from spotto_league.models.league_member import LeagueMember
 from spotto_league.models.league_log import LeagueLog
 from spotto_league.models.league import LeagueStatus
