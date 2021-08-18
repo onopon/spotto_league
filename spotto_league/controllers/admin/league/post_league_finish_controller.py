@@ -55,6 +55,12 @@ class PostLeagueFinishController(BaseController):
             if group_id == INVALID_MATCH_GROUP_ID:
                 continue
 
+            if rank.rank == 1:
+                user_point = UserPoint()
+                user_point.set_continuous_point(rank.user_id, self._league.id)
+                if user_point.point > 0:
+                    session.add(user_point)
+
             win_bonus_points = list(
                 filter(lambda b: rank.won(b.user_id), bonus_points)
             )

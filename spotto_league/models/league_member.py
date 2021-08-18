@@ -1,3 +1,4 @@
+import sqlalchemy as sa
 from typing import List
 from datetime import datetime
 from spotto_league.database import db
@@ -24,16 +25,24 @@ class LeagueMember(db.Model, Base):
         return self._user
 
     @classmethod
-    def find_all_by_league_id(cls, league_id) -> List["LeagueMember"]:
+    def find_all_by_league_id(cls, league_id: int) -> List["LeagueMember"]:
         return db.session.query(cls).filter(cls.league_id == league_id).all()
 
     @classmethod
-    def find_all_by_user_id(cls, user_id) -> List["LeagueMember"]:
+    def find_all_by_user_id(cls, user_id: int) -> List["LeagueMember"]:
         return db.session.query(cls).filter(cls.user_id == user_id).all()
 
     @classmethod
+    def find_limit_all_enabled_by_user_id(cls, user_id: int, count: int) -> List["LeagueMember"]:
+        return db.session.query(cls).\
+                filter(cls.user_id == user_id, cls.enabled == True).\
+                order_by(sa.desc(cls.updated_at)).\
+                limit(count).\
+                all()
+
+    @classmethod
     def find_or_initialize_by_league_id_and_user_id(
-        cls, league_id, user_id
+        cls, league_id: int, user_id: int
     ) -> "LeagueMember":
         league_member = LeagueMember()
         league_member.league_id = league_id

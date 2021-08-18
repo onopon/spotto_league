@@ -5,11 +5,13 @@ from .base import Base
 from spotto_league.models.league import League
 from spotto_league.models.league_point import LeaguePoint
 from spotto_league.models.bonus_point import BonusPoint
+from spotto_league.entities.continuous_point import ContinuousPoint
 from sqlalchemy import and_
 
 REASON_CLASS_BASE = "BasePoint"
 REASON_CLASS_LEAGUE = "LeaguePoint"
 REASON_CLASS_BONUS = "BonusPoint"
+REASON_CLASS_CONTINUOUS = "ContinuousPoint"
 
 
 class UserPoint(db.Model, Base):
@@ -39,7 +41,15 @@ class UserPoint(db.Model, Base):
         self.reason_class = REASON_CLASS_BONUS
         self.reason_id = bonus_point.id
 
-    def set_point(self, point, reason_class, memo: str = "") -> None:
+    def set_continuous_point(self, user_id: int, league_id: int) -> None:
+        continuous_point = ContinuousPoint(user_id, league_id)
+        self.user_id = user_id
+        self.set_point(continuous_point.point,
+                       REASON_CLASS_CONTINUOUS,
+                       "{}連勝".format(continuous_point.count_for_display))
+        self.reason_id = continuous_point.count_for_bonus
+
+    def set_point(self, point: int, reason_class: str, memo: str = "") -> None:
         self.point = point
         self.reason_class = reason_class
         self.memo = memo
