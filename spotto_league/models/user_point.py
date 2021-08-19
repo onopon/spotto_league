@@ -44,6 +44,7 @@ class UserPoint(db.Model, Base):
     def set_continuous_point(self, user_id: int, league: League) -> None:
         continuous_point = ContinuousPoint(user_id, league)
         self.user_id = user_id
+        self.league_id = league.id
         self.set_point(continuous_point.point,
                        REASON_CLASS_CONTINUOUS,
                        "{}連勝".format(continuous_point.count_for_display))
