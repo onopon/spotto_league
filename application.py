@@ -56,6 +56,13 @@ login_manager = flask_login.LoginManager()
 def create_app():
     locale.setlocale(locale.LC_TIME, 'ja_JP.UTF-8')
     app = Flask(__name__, instance_relative_config=True)
+    '''
+    下記Warning 対策( https://stackoverflow.com/questions/67521860/jinja2-deprecationwarning-the-autoescape-extension-is-deprecated-and-will-b )
+    /usr/local/lib/python3.7/site-packages/jinja2/environment.py:362: DeprecationWarning: The 'autoescape' extension is deprecated and will be removed in Jinja 3.1. This is built in now.  # noqa
+    /usr/local/lib/python3.7/site-packages/jinja2/environment.py:362: DeprecationWarning: The 'with' extension is deprecated and will be removed in Jinja 3.1. This is built in now.  # noqa
+    '''
+    app.jinja_options = {}
+
     # 非公開設定ファイル読み込み
     app.config.from_pyfile('settings.py', silent=True)
 

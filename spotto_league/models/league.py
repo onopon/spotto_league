@@ -3,15 +3,12 @@ from spotto_league.database import db
 from spotto_league.models.league_log import LeagueLog
 from spotto_league.models.place import Place
 from spotto_league.models.league_member import LeagueMember
-from spotto_league.models.league_point import (
-    RATING_BORDER_MEMBER_COUNT,
-    BASE_GROUP_ID,
-    ONE_AND_HALF_TIMES_GROUP_ID,
-    LeaguePoint,
-)
+from spotto_league.models.league_point import LeaguePoint
 from .base import Base
 from datetime import datetime as dt
+from datetime import date
 from enum import Enum
+from sqlalchemy import and_
 
 
 NEAR_JOIN_END_AT_SECONDS = 3 * 60 * 60  # 参加締め切り時刻に近いとする時間（秒）
@@ -71,9 +68,9 @@ class League(db.Model, Base):
     @property
     def recommend_league_point_group_id(self) -> int:
         member_count = len(self.members)
-        if member_count < RATING_BORDER_MEMBER_COUNT:
-            return BASE_GROUP_ID
-        return ONE_AND_HALF_TIMES_GROUP_ID
+        if member_count < LeaguePoint.RATING_BORDER_MEMBER_COUNT:
+            return LeaguePoint.BASE_GROUP_ID
+        return LeaguePoint.ONE_AND_HALF_TIMES_GROUP_ID
 
     @property
     def league_points(self) -> List[LeaguePoint]:
@@ -112,6 +109,10 @@ class League(db.Model, Base):
     @property
     def join_end_at_for_display(self) -> str:
         return self.join_end_at.strftime("%m月%d日（%a）%H:%M")
+
+    @property
+    def start_datetime(self) -> dt:
+        return dt.combine(self.date, self.start_at)
 
     def league_point_group_id_is(self, group_id: int) -> bool:
         return group_id == self.recommend_league_point_group_id
@@ -155,6 +156,22 @@ class League(db.Model, Base):
     @classmethod
     def all(cls) -> List["League"]:
         return db.session.query(League).all()
+
+    @classmethod
+    def find_all_for_cosecutive_win_bonus_point(cls) -> List["League"]:
+        year = dt.today().year
+        # 2021/8/18 より適用開始
+        target_date = date(year, 8, 18) if year == 2021 else date(year, 1, 1)
+        items = db.session.query(cls).\
+            filter(and_(cls.status == LeagueStatus.FINISHED.value,
+                        cls.league_point_group_id != 0,
+                        cls.date >= target_date)).\
+            all()
+        return sorted(
+            items,
+            key=lambda x: (x.date, x.end_at),
+            reverse=True
+        )
 
     def is_in_join_session(self) -> bool:
         return dt.now() < self.join_end_at

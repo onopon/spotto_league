@@ -10,6 +10,8 @@ BASIC_AVAILABLE_COUNT = 8
 POINT_HASH_KEY_BASE = "BasePoint"
 POINT_HASH_KEY_BONUS = "BonusPoint"
 POINT_HASH_KEY_LEAGUE = "LeaguePoint"
+POINT_HASH_KEY_CONTINUOUS = "ContinuousPoint"
+MAX_CONTINUOUS_POINT = 15000
 
 
 class RankSatus(Enum):
@@ -43,13 +45,22 @@ class PointRank:
 
     @property
     def before_point(self) -> int:
-        values = list(self._before_points_hash.values())
-        return sum([sum(points) for points in values])
+        return sum([self.before_base_point,
+                    self.before_bonus_point,
+                    self.before_continuous_point,
+                    sum(self.before_league_points)])
 
     @property
     def current_point(self) -> int:
-        values = list(self._current_points_hash.values())
-        return sum([sum(points) for points in values])
+        return sum([self.current_base_point,
+                    self.current_bonus_point,
+                    self.current_continuous_point,
+                    sum(self.current_league_points)])
+
+    @property
+    def before_base_point(self) -> int:
+        values = list(self._before_points_hash[POINT_HASH_KEY_BASE])
+        return sum(values)
 
     @property
     def current_base_point(self) -> int:
@@ -57,9 +68,24 @@ class PointRank:
         return sum(values)
 
     @property
+    def before_continuous_point(self) -> int:
+        values = list(self._before_points_hash[POINT_HASH_KEY_CONTINUOUS])
+        return min(sum(values), MAX_CONTINUOUS_POINT)
+
+    @property
+    def before_bonus_point(self) -> int:
+        values = list(self._before_points_hash[POINT_HASH_KEY_BONUS])
+        return sum(values)
+
+    @property
     def current_bonus_point(self) -> int:
         values = list(self._current_points_hash[POINT_HASH_KEY_BONUS])
         return sum(values)
+
+    @property
+    def current_continuous_point(self) -> int:
+        values = list(self._current_points_hash[POINT_HASH_KEY_CONTINUOUS])
+        return min(sum(values), MAX_CONTINUOUS_POINT)
 
     @property
     def before_league_points(self) -> List[int]:
@@ -114,6 +140,7 @@ class PointRank:
                 POINT_HASH_KEY_BASE: [],
                 POINT_HASH_KEY_LEAGUE: [],
                 POINT_HASH_KEY_BONUS: [],
+                POINT_HASH_KEY_CONTINUOUS: [],
             }
             rank_list.append(PointRank(user, before_points, current_points))
 
@@ -179,7 +206,6 @@ class PointRank:
     """
     全リーグのうち高いポイントをBASIC_AVAILABLE_COUNT分と、ボーナスポイントをavailable_countの分だけ取得
     """
-
     @classmethod
     def get_sorted_points_hash(
         cls, user_points: List[UserPoint], bonus_points: List[BonusPoint]
@@ -188,17 +214,18 @@ class PointRank:
             POINT_HASH_KEY_BASE: [],
             POINT_HASH_KEY_LEAGUE: [],
             POINT_HASH_KEY_BONUS: [],
+            POINT_HASH_KEY_CONTINUOUS: [],
         }
         if len(user_points) == 0:
             return sorted_points_hash
 
         user_base_points = [
-            up.point for up in user_points if up.reason_class == "BasePoint"
+            up.point for up in user_points if up.reason_class == POINT_HASH_KEY_BASE
         ]
         sorted_points_hash[POINT_HASH_KEY_BASE].extend(user_base_points)
 
         user_bonus_points = [
-            up for up in user_points if up.reason_class == "BonusPoint"
+            up for up in user_points if up.reason_class == POINT_HASH_KEY_BONUS
         ]
         for bp in bonus_points:
             m_bonus_points = [
@@ -208,8 +235,14 @@ class PointRank:
                 m_bonus_points[: bp.available_count]
             )
         sorted_points_hash[POINT_HASH_KEY_BONUS].sort(reverse=True)
+
+        user_continuous_points = [
+            up.point for up in user_points if up.reason_class == POINT_HASH_KEY_CONTINUOUS
+        ]
+        sorted_points_hash[POINT_HASH_KEY_CONTINUOUS].extend(user_continuous_points)
+
         league_point_list = [
-            up.point for up in user_points if up.reason_class == "LeaguePoint"
+            up.point for up in user_points if up.reason_class == POINT_HASH_KEY_LEAGUE
         ]
         league_point_list.sort(reverse=True)
         sorted_points_hash[POINT_HASH_KEY_LEAGUE] = league_point_list[
