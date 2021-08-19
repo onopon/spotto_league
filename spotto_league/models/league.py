@@ -8,7 +8,7 @@ from .base import Base
 from datetime import datetime as dt
 from datetime import date
 from enum import Enum
-from sqlalchemy import desc, and_
+from sqlalchemy import and_
 
 
 NEAR_JOIN_END_AT_SECONDS = 3 * 60 * 60  # 参加締め切り時刻に近いとする時間（秒）
@@ -110,6 +110,10 @@ class League(db.Model, Base):
     def join_end_at_for_display(self) -> str:
         return self.join_end_at.strftime("%m月%d日（%a）%H:%M")
 
+    @property
+    def start_datetime(self) -> dt:
+        return dt.combine(self.date, self.start_at)
+
     def league_point_group_id_is(self, group_id: int) -> bool:
         return group_id == self.recommend_league_point_group_id
 
@@ -158,12 +162,16 @@ class League(db.Model, Base):
         year = dt.today().year
         # 2021/8/18 より適用開始
         target_date = date(year, 8, 18) if year == 2021 else date(year, 1, 1)
-        return db.session.query(cls).\
-            order_by(desc(cls.date)).\
+        items = db.session.query(cls).\
             filter(and_(cls.status == LeagueStatus.FINISHED.value,
                         cls.league_point_group_id != 0,
                         cls.date >= target_date)).\
             all()
+        return sorted(
+            items,
+            key=lambda x: (x.date, x.end_at),
+            reverse=True
+        )
 
     def is_in_join_session(self) -> bool:
         return dt.now() < self.join_end_at

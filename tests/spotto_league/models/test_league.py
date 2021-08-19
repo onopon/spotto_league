@@ -6,6 +6,7 @@ from spotto_league.models.league_log import LeagueLog
 from tests.base import Base
 from tests.modules.data_creator import DataCreator
 import freezegun
+import datetime
 
 
 class TestLeague(Base):
@@ -31,6 +32,7 @@ class TestLeague(Base):
         # coverrage 対策で2回やってる
         assert league.logs == [league_log]
         assert league.logs == [league_log]
+        assert league.start_datetime == datetime.datetime(2021, 6, 25, 17, 0)
         assert league.date_for_display == '06月25日（金）17:00 - 21:00'
         assert league.time_for_display == '17:00 - 21:00'
         assert league.join_end_at_for_display == '06月24日（木）20:00'
@@ -221,14 +223,38 @@ class TestLeague(Base):
         with freezegun.freeze_time('2022-01-08 00:00:00'):
             assert not League.find_all_for_cosecutive_win_bonus_point() == [league]
 
-        league = DataCreator().create('default_league', {'place_id': 1, 'date': '2022-01-01'})
+        league_2 = DataCreator().create('default_league', {'place_id': 1, 'date': '2022-01-01'})
         with freezegun.freeze_time('2022-01-08 00:00:00'):
-            assert not League.find_all_for_cosecutive_win_bonus_point() == [league]
-        league.league_point_group_id = 1
-        league.finish()
-        league.save()
+            assert not League.find_all_for_cosecutive_win_bonus_point()
+        league_2.league_point_group_id = 1
+        league_2.finish()
+        league_2.save()
         with freezegun.freeze_time('2022-01-08 00:00:00'):
-            assert League.find_all_for_cosecutive_win_bonus_point() == [league]
+            assert League.find_all_for_cosecutive_win_bonus_point() == [league_2]
+
+        # created_atとdateの順番が交差してしまっている場合
+        with freezegun.freeze_time('2022-02-01 00:00:00'):
+            league_3 = DataCreator().create('default_league', {'place_id': 1, 'date': '2022-02-08', 'start_at': '18:00:00'})
+            league_3.league_point_group_id = 1
+            league_3.finish()
+            league_3.save()
+        with freezegun.freeze_time('2022-02-02 00:00:00'):
+            league_4 = DataCreator().create('default_league', {'place_id': 1, 'date': '2022-02-09'})
+            league_4.league_point_group_id = 1
+            league_4.finish()
+            league_4.save()
+        with freezegun.freeze_time('2022-02-03 00:00:00'):
+            league_5 = DataCreator().create('default_league', {'place_id': 1, 'date': '2022-02-07'})
+            league_5.league_point_group_id = 1
+            league_5.finish()
+            league_5.save()
+        with freezegun.freeze_time('2022-02-03 00:00:00'):
+            league_6 = DataCreator().create('default_league', {'place_id': 1, 'date': '2022-02-08', 'start_at': '10:00:00'})
+            league_6.league_point_group_id = 1
+            league_6.finish()
+            league_6.save()
+        with freezegun.freeze_time('2022-02-10 00:00:00'):
+            assert League.find_all_for_cosecutive_win_bonus_point() == [league_4, league_3, league_6, league_5, league_2]
 
     def test_is_in_join_session(self):
         league = DataCreator().create('default_league', {'place_id': 1, 'date': '2021-08-06', 'join_end_at': '2021-08-05 23:59:59'})

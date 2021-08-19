@@ -41,8 +41,8 @@ class UserPoint(db.Model, Base):
         self.reason_class = REASON_CLASS_BONUS
         self.reason_id = bonus_point.id
 
-    def set_continuous_point(self, user_id: int, league_id: int) -> None:
-        continuous_point = ContinuousPoint(user_id, league_id)
+    def set_continuous_point(self, user_id: int, league: League) -> None:
+        continuous_point = ContinuousPoint(user_id, league)
         self.user_id = user_id
         self.set_point(continuous_point.point,
                        REASON_CLASS_CONTINUOUS,
