@@ -26,6 +26,18 @@ class TestUser(Base):
         DataCreator().create('visitor_user')
         assert User.all_without_visitor() == users_without_visitor
 
+    def test_all_on_birthday(self):
+        birthday_users = []
+        DataCreator().create('guest_user', {'birthday': '1980-01-03'})
+        DataCreator().create('guest_user', {'login_name': 'guest_2', 'birthday': '1980-01-02'})
+        birthday_users.append(DataCreator().create('admin_user', {'birthday': '1981-01-03'}))
+        DataCreator().create('admin_user', {'login_name': 'admin_2', 'birthday': '1980-01-02'})
+        birthday_users.append(DataCreator().create('member_user', {'birthday': '1981-01-03'}))
+        DataCreator().create('member_user', {'login_name': 'member_2', 'birthday': '1980-03-08'})
+        DataCreator().create('visitor_user', {'birthday': '1985-01-03'})
+        DataCreator().create('visitor_user', {'login_name': 'visitor_2', 'birthday': '1988-12-23'})
+        assert User.all_on_birthday(1, 3) == birthday_users
+
     def test_find_by_login_name(self):
         user = DataCreator().create('guest_user')
         assert not User.find_by_login_name('hogehoge')

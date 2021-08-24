@@ -20,5 +20,5 @@ else
     mypy --ignore-missing-imports ./
     echo ''
     echo '# test ##################################'
-    pytest --cov=spotto_league/ --cov-branch --cov-report term-missing --no-cov-on-fail tests/
+    pytest --cov=spotto_league/ --cov=ponno_line/ --cov-branch --cov-report term-missing --no-cov-on-fail tests/
 fi
