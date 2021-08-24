@@ -1,0 +1,29 @@
+from ponno_line.ponno_bot import PonnoBot
+from tests.base import Base
+from tests.modules.ponno_line_decorator import PonnoLineDecorator
+from tests.modules.data_creator import DataCreator
+from instance import settings
+import freezegun
+
+
+class TestPonnoBot(Base):
+    decorator = PonnoLineDecorator()
+
+    def _push_about_birthday(self):
+        user = DataCreator().create('admin_user')
+        with freezegun.freeze_time('2021-{}-{} 00:00:00'.format(user.birthday.month, user.birthday.day)):
+            PonnoBot.push_about_birthday()
+
+    @decorator.line_pushed
+    def test_push_about_birthday(self):
+        self._push_about_birthday()
+
+    @decorator.notify_posted
+    def test_push_about_birthday(self):
+        self._push_about_birthday()
+
+    @decorator.line_not_pushed
+    def test_push_about_birthday_not_called(self):
+        user = DataCreator().create('admin_user')
+        with freezegun.freeze_time('2021-{}-{} 00:00:00'.format(user.birthday.month, user.birthday.day + 1)):
+            PonnoBot.push_about_birthday()

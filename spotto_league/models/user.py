@@ -44,6 +44,14 @@ class User(flask_login.UserMixin, db.Model, Base):
         return [u for u in users if u.id not in visitor_user_ids]
 
     @classmethod
+    def all_on_birthday(cls, month: int, day: int) -> List["User"]:
+        def is_satisfy(user: User, month:int, day:int) -> bool:
+            return all([month == user.birthday.month,
+                        day == user.birthday.day,
+                        (user.is_admin() or user.is_member())])
+        return [u for u in cls.all() if is_satisfy(u, month, day)]
+
+    @classmethod
     def find_by_login_name(cls, login_name) -> Optional["User"]:
         return db.session.query(cls).filter(cls.login_name == login_name).one_or_none()
 
