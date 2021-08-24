@@ -122,7 +122,6 @@ class PonnoBot:
         except LineBotApiError:
             PonnoNotify().notify_about_recruiting_league_information(league_ids)
 
-    # league_ids の中で、まだ申し込み中のLeagueを投稿する。
     @classmethod
     def push_about_birthday(
         cls, channel: str = None

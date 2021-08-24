@@ -24,5 +24,9 @@ class TestPonnoBot(Base):
     @decorator.line_not_pushed
     def test_push_about_birthday_not_called(self):
         user = DataCreator().create('admin_user')
+        # guestとvisitorは誕生日でも祝ってもらえない
+        DataCreator().create('guest_user', {'birthday': '1990-{}-{}'.format(user.birthday.month, user.birthday.day)})
+        DataCreator().create('visitor_user', {'birthday': '1992-{}-{}'.format(user.birthday.month, user.birthday.day)})
+
         with freezegun.freeze_time('2021-{}-{} 00:00:00'.format(user.birthday.month, user.birthday.day + 1)):
             PonnoBot.push_about_birthday()
