@@ -2,7 +2,6 @@ from ponno_line.ponno_bot import PonnoBot
 from tests.base import Base
 from tests.modules.ponno_line_decorator import PonnoLineDecorator
 from tests.modules.data_creator import DataCreator
-from instance import settings
 import freezegun
 
 
@@ -19,7 +18,7 @@ class TestPonnoBot(Base):
         self._push_about_birthday()
 
     @decorator.notify_posted
-    def test_push_about_birthday(self):
+    def test_push_about_birthday_notify_posted(self):
         self._push_about_birthday()
 
     @decorator.line_not_pushed

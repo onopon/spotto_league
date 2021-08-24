@@ -45,7 +45,7 @@ class User(flask_login.UserMixin, db.Model, Base):
 
     @classmethod
     def all_on_birthday(cls, month: int, day: int) -> List["User"]:
-        def is_satisfy(user: User, month:int, day:int) -> bool:
+        def is_satisfy(user: User, month: int, day: int) -> bool:
             return all([month == user.birthday.month,
                         day == user.birthday.day,
                         (user.is_admin() or user.is_member())])

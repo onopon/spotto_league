@@ -38,7 +38,6 @@ class TestUser(Base):
         DataCreator().create('visitor_user', {'login_name': 'visitor_2', 'birthday': '1988-12-23'})
         assert User.all_on_birthday(1, 3) == birthday_users
 
-
     def test_find_by_login_name(self):
         user = DataCreator().create('guest_user')
         assert not User.find_by_login_name('hogehoge')
