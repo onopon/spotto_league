@@ -1,6 +1,5 @@
 from spotto_league.models.unpaid import Unpaid
 from tests.base import Base
-from tests.modules.data_creator import DataCreator
 
 
 class TestUnpaid(Base):

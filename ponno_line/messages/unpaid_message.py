@@ -3,7 +3,6 @@ from ponno_line.messages.base import Base
 from linebot.models import Message, TextSendMessage
 from spotto_league.models.user import User as ModelUser
 from spotto_league.models.unpaid import Unpaid as ModelUnpaid
-from datetime import date
 
 
 class UnpaidMessage(Base):

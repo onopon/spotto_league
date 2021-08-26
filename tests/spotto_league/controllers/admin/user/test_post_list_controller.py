@@ -16,9 +16,9 @@ class TestPostListController(BaseController):
 
         user_2 = DataCreator().create('member_user')
         user_3 = DataCreator().create('guest_user')
-        user_4 = DataCreator().create('visitor_user')
+        # visitorは含まれない
+        DataCreator().create('visitor_user')
 
-        url_path = '/admin/user/list'
         args = {"radio_{}".format(user.login_name): RoleType.ADMIN.value,
                 "radio_{}".format(user_2.login_name): RoleType.GUEST.value,
                 "radio_{}".format(user_3.login_name): RoleType.MEMBER.value,
@@ -41,7 +41,6 @@ class TestPostListController(BaseController):
     def test_post_cannot_change_role_myself(self):
         user = DataCreator().create('admin_user')
         self.login(user.login_name, 'password')
-        url_path = '/admin/user/list'
         args = {"radio_{}".format(user.login_name): RoleType.MEMBER.value,
                 "unpaid_{}".format(user.login_name): 0,
                 "unpaid_memo_{}".format(user.login_name): ""}
