@@ -7,6 +7,7 @@ from linebot.exceptions import LineBotApiError
 from ponno_line.messages.base import Base as MessageBase
 from ponno_line.messages.league_template_send_message import LeagueTemplateSendMessage
 from ponno_line.messages.birthday_message import BirthdayMessage
+from ponno_line.messages.unpaid_message import UnpaidMessage
 from ponno_line.ponno_notify import PonnoNotify
 from instance import settings
 from spotto_league.app import create_app
@@ -139,6 +140,22 @@ class PonnoBot:
             PonnoNotify().execute(BirthdayMessage.get_text())
 
     @classmethod
+    def push_about_unpaid(
+        cls, channel: str = None
+    ) -> None:
+        if not settings.LINE_BOT_ENABLE:
+            return
+
+        channel = channel or settings.LINE_BOT_GROUP_ID_HASH[settings.LINE_BOT_ENV]
+        message = UnpaidMessage.get_message()
+        if not message:
+            return
+        try:
+            LineBotApi(settings.LINE_BOT_CHANNEL_ACCESS_TOKEN).push_message(channel, message)
+        except LineBotApiError:
+            PonnoNotify().execute(UnpaidMessage.get_text())
+
+    @classmethod
     def push_text(cls, text: str, channel: str = None) -> None:
         if not settings.LINE_BOT_ENABLE:
             return
@@ -160,6 +177,7 @@ if __name__ == "__main__":
     poetry run python -m ponno_line.ponno_bot --method_name push_about_recruiting_league_information --kwargs '{"league_ids": [14, 15]}'
     poetry run python -m ponno_line.ponno_bot --method_name push_text --kwargs '{"text": "hoge"}'
     poetry run python -m ponno_line.ponno_bot --method_name push_about_birthday
+    poetry run python -m ponno_line.ponno_bot --method_name push_about_unpaid
     """
     # ponno_lineはspotto_leagueと切り分けたからか、appの設定を書かないと機能しない
     app = create_app()
