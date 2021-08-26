@@ -14,3 +14,14 @@ class TestUnpaid(Base):
         unpaid_2.amount = 5000
         unpaid_2.save()
         assert Unpaid.all() == [unpaid, unpaid_2]
+
+    def test_find_or_initialize_by_user_id(self):
+        user_id = 1
+        unpaid = Unpaid.find_or_initialize_by_user_id(user_id)
+        assert unpaid.id is None
+        assert unpaid.user_id == user_id
+        unpaid.save()
+        assert unpaid.id is not None
+
+        unpaid_2 = Unpaid.find_or_initialize_by_user_id(user_id)
+        assert unpaid.id == unpaid_2.id

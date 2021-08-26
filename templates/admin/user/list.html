@@ -34,21 +34,22 @@
     <div class="col orange small">※ 苗字と名前が設定されているユーザのみ役柄を設定できます。</div>
   </div>
   <form class="row g-3" method="post">
-    <ul class="list-group list-group-flush mb-3">
-      <li class="list-group-item">
+    <ul class="list-group list-group-flush mb-3 horizontal-scroll">
+      <li class="list-group-item horizontal-item">
         <div class="row align-items-center pale-gray small">
           <div class="col-2 pale-gray small">login_name</div>
           <div class="col-2 pale-gray small">ニックネーム</div>
           <div class="col-1 pale-gray small">苗字</div>
           <div class="col-1 pale-gray small">名前</div>
           <div class="col-1 pale-gray small">性別</div>
-          <div class="col-2 pale-gray small">誕生日</div>
+          <div class="col-1 pale-gray small">誕生日</div>
           <div class="col-1 pale-gray small">現在の年齢</div>
-          <div class="col-2 pale-gray small">役柄</div>
+          <div class="col-1 pale-gray small">役柄</div>
+          <div class="col-2 pale-gray small">未払金</div>
         </div>
       </li>
       {% for user in users %}
-      <li class="list-group-item">
+      <li class="list-group-item horizontal-item">
         <div class="row align-items-center">
           <div class="col-2">{{ user.login_name }}</div>
           <div class="col-2">
@@ -61,9 +62,9 @@
           <div class="col-1">{{ user.last_name or '' }}</div>
           <div class="col-1">{{ user.first_name or '' }}</div>
           <div class="col-1">{{ user.gender_for_display }}</div>
-          <div class="col-2">{{ user.birthday }}</div>
+          <div class="col-1">{{ user.birthday }}</div>
           <div class="col-1">{{ user.age }}</div>
-          <div class="col-2">
+          <div class="col-1">
             {% set user_role_id = user.role.role_type or -1  %}
             {% for role_type_hash in role_type_hash_list %}
             {% set role_id = "radio_{}_{}".format(user.login_name, role_type_hash['id']) %}
@@ -90,6 +91,21 @@
               >
               <label class="form-check-label" for="{{ role_id }}">ゲスト</label>
             </div>
+          </div>
+          <div class="col-2 price">
+              <div class="row">
+                  <div class="col-10">
+                      <input type="text" name="unpaid_{{ user.login_name }}" value="{{ user.unpaid.amount or '' }}">
+                  </div>
+                  <div class="col-2">
+                      円
+                  </div>
+              </div>
+              <div class="row mt-2">
+                  <div class="col-12">
+                      <input type="text" name="unpaid_memo_{{ user.login_name }}" value="{{ user.unpaid.memo or '' }}">
+                  </div>
+              </div>
           </div>
         </div>
       </li>

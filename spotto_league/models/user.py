@@ -5,6 +5,7 @@ import flask_login
 from spotto_league.database import db
 from .base import Base
 from .role import Role
+from .unpaid import Unpaid
 from enum import IntEnum
 
 
@@ -28,6 +29,7 @@ class User(flask_login.UserMixin, db.Model, Base):
     created_at = db.Column(db.DateTime, nullable=False, default=lambda: dt.now())
     updated_at = db.Column(db.DateTime, nullable=False, default=lambda: dt.now(), onupdate=lambda: dt.now())
     _role = None
+    _unpaid = None
 
     def set_password(self, password: str) -> None:
         self.password = PasswordUtil.make_hex(password)
@@ -75,6 +77,12 @@ class User(flask_login.UserMixin, db.Model, Base):
 
     def is_visitor(self) -> bool:
         return self.role.is_visitor()
+
+    @property
+    def unpaid(self) -> Unpaid:
+        if not self._unpaid:
+            self._unpaid = Unpaid.find_or_initialize_by_user_id(self.id)
+        return self._unpaid
 
     @property
     def birthday_for_display(self) -> str:

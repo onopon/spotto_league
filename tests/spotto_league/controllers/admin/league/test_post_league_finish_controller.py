@@ -82,6 +82,7 @@ class TestPostLeagueFinishController(BaseController):
             assert point_rank.current_bonus_point == expected_hash['ContinuousPoint']
         assert league.league_point_group_id == 1
         assert LeagueStatus(league.status) == LeagueStatus.FINISHED
+        import pdb;pdb.set_trace()
 
     def test_invalid_group_id(self):
         AddLeaguePoint().execute()
