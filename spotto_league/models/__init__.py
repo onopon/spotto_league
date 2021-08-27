@@ -9,6 +9,7 @@ from .role import Role
 from .place import Place
 from .bonus_point import BonusPoint
 from .league_point import LeaguePoint
+from .unpaid import Unpaid
 
 __all__ = [
     "User",
@@ -21,6 +22,7 @@ __all__ = [
     "Place",
     "BonusPoint",
     "LeaguePoint",
+    "Unpaid",
 ]
 
 
@@ -36,4 +38,5 @@ def all() -> List[Any]:
         Place,
         BonusPoint,
         LeaguePoint,
+        Unpaid,
     ]

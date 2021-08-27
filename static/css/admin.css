@@ -8,17 +8,17 @@
 }
 
 #admin-league-register select {
-	font-size: 100%;
-	line-height: 1.1em;
-	border-radius: 5px;
+  font-size: 100%;
+  line-height: 1.1em;
+  border-radius: 5px;
   padding: 3%;
   border: 2px solid #91C9F4;
 }
 
 #admin-user-register-point select {
-	font-size: 100%;
-	line-height: 1.1em;
-	border-radius: 5px;
+  font-size: 100%;
+  line-height: 1.1em;
+  border-radius: 5px;
   padding-top: 1%;
   padding-bottom: 1%;
   padding-left: 3%;
@@ -27,9 +27,9 @@
 }
 
 select.user-select {
-	font-size: 100%;
-	line-height: 1.1em;
-	border-radius: 5px;
+  font-size: 100%;
+  line-height: 1.1em;
+  border-radius: 5px;
   padding-top: 1%;
   padding-bottom: 1%;
   padding-left: 3%;
@@ -42,4 +42,26 @@ select.user-select {
   width: 100%;
   border: 3px solid #FF9A68;
   background: #FF9A68;
+}
+
+.horizontal-scroll {
+  overflow-x: scroll;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+}
+
+li.horizontal-item {
+  min-width: 1280px;
+}
+
+#admin-user-register-point .price input {
+  width: 100%;
+}
+
+ul.list-group.list-group-striped li:nth-of-type(odd){
+  border-bottom: 0px;
+}
+ul.list-group.list-group-striped li:nth-of-type(even){
+  background: #F0F0F0;
+  border-bottom: 0px;
 }

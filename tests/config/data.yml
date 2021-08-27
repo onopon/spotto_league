@@ -36,6 +36,24 @@ member_user:
       Role:
         properties:
           role_type: 2
+unpaid_member_user:
+  User:
+    properties:
+      login_name: 'unpaid_member_onopon'
+      password: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8'
+      name: '未払いメンバーおのぽん'
+      gender: 1
+      birthday: '1989-09-03'
+      first_name: 'ぽん'
+      last_name: 'おの'
+    related_classes:
+      Role:
+        properties:
+          role_type: 2
+      Unpaid:
+        properties:
+          amount: 3000
+          memo: '試合のお金'
 visitor_user:
   User:
     properties:

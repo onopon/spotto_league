@@ -77,6 +77,13 @@ $poetry run python manage.py db upgrade    # mysqlへの反映が行われてい
 $poetry run python manage.py db downgrade  # mysqlの反映を巻き戻す時に叩く
 ```
 
+Docker上でやる場合はこっち。
+```
+$docker-compose exec test-app python manage.py db migrate
+$docker-compose exec test-app python manage.py db upgrade
+$docker-compose exec test-app python manage.py db downgrade
+```
+
 ### master dataの準備
 
 LeaguePointを準備する。

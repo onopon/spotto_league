@@ -25,6 +25,22 @@
     </div>
   </div>
 
+  {% if user.id == login_user.id %}
+    {% if user.unpaid.amount and user.unpaid.amount > 0 %}
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-warning alert-dismissible fade show mt-2" role="alert">
+                <h4>{{ user.unpaid.amount }}円のお支払いがお済みでないようです。</h4>
+                {% if user.unpaid.memo %}
+                <p>備考： {{ user.unpaid.memo }}</p>
+                {% endif %}
+                <p class="small">すでにお支払い済みの方で、このポップアップが表示される方がいらっしゃいましたら、管理者までご連絡ください。</p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+  {% endif %}
+
   <ul class="list-group list-group-flush mb-3">
     {% if user.id == login_user.id %}
     <li class="list-group-item">
@@ -87,7 +103,6 @@
     <div class="col-12">
       <div class="alert alert-success alert-dismissible fade show mt-4" role="alert">
         更新しました。
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
     </div>
   </div>
