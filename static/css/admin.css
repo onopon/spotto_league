@@ -59,5 +59,13 @@ li.horizontal-item {
 }
 
 #admin-user-register-point .price input {
-    width: 100%;
+  width: 100%;
+}
+
+ul.list-group.list-group-striped li:nth-of-type(odd){
+  border-bottom: 0px;
+}
+ul.list-group.list-group-striped li:nth-of-type(even){
+  background: #F0F0F0;
+  border-bottom: 0px;
 }
