@@ -48,7 +48,7 @@ class PostListController(BaseController):
             role_type_key = "radio_{}".format(user.login_name)
             role_type_value = int(request.form[role_type_key])
             if role_type_value == ROLE_TYPE_GUEST:
-                if user.role:
+                if user.role.id:
                     session.delete(user.role)
                 continue
             role = user.role or Role()
