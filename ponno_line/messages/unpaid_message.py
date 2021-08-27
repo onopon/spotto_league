@@ -37,7 +37,7 @@ class UnpaidMessage(Base):
         texts.append("----------")
         texts.extend(unpaid_texts)
         texts.append("----------")
-        texts.append("未払金の詳細はご自身のユーザページにてご確認いただけます。")
+        texts.append("未払額の詳細はご自身のユーザページにてご確認いただけます。")
         texts.append("また、すでにお支払い済みの方で、こちらにお名前がご記載の方がいらっしゃいましたら、まぐまさんにご連絡ください。")
         texts.append("よろしくお願いいたします。")
         return "\n".join(texts)
