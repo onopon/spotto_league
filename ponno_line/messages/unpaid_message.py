@@ -32,8 +32,8 @@ class UnpaidMessage(Base):
             user = ModelUser.find(unpaid.user_id)
             unpaid_texts.append("{}さん: {}円".format(user.name, unpaid.amount))
 
-        texts = ["○諸々の費用未払いの方へご連絡です○"]
-        texts.append("下記の方は、次回の練習や電子マネー、お振込等でまぐまさんにご返済ください。")
+        texts = ["○諸々の費用の支払いや、ユニフォーム等の受け取りがお済みでない方へご連絡です○"]
+        texts.append("下記の方は、次回の練習の際やお振込等で、なるべく早くご対応をお願いします。")
         texts.append("----------")
         texts.extend(unpaid_texts)
         texts.append("----------")
