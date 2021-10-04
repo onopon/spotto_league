@@ -23,7 +23,7 @@ class TestPostLeagueFinishController(BaseController):
             AddLeaguePoint().execute()
             place = DataCreator().create('place')
             league = DataCreator().create('default_league', overrided_dict={'place_id': place.id, 'status': LeagueStatus.READY.value})
-    
+
             admin_user = DataCreator().create('admin_user')
             users = DataCreator().create('six_member_users')
             guest = DataCreator().create('guest_user')
@@ -41,10 +41,10 @@ class TestPostLeagueFinishController(BaseController):
                 league_member.save()
             user = users[2]
             league_member = LeagueMember.find_or_initialize_by_league_id_and_user_id(league.id, user.id)
-    
+
             league_log_2 = LeagueLog.find_or_initialize(league.id, users[1].id, users[2].id)
             league_log_2.save()
-    
+
             # users[2]を基準として見ているので、
             # users[0] vs users[2] は 2-0でusers[0]の勝ちとなる
             log_details_hash = {0: 'league_log_details_2_0',
@@ -57,13 +57,13 @@ class TestPostLeagueFinishController(BaseController):
                 league_log.save()
                 if yml_title:
                     DataCreator().create(yml_title, overrided_dict={'league_log_id': league_log.id})
-    
+
             self.login(admin_user.login_name, 'password')
             assert league.league_point_group_id is None
-    
+
             # 連勝記録
             mocker.patch.object(ContinuousPoint, 'count_for_bonus', 3)
-    
+
             result = self.post(URL_PATH.format(league.id), {"league_point_group_id": 1, "should_notify": 1})
             assert result.status_code == 302
             point_ranks = PointRank.make_point_rank_list(league)
