@@ -35,6 +35,7 @@ class PostLeagueFinishController(BaseController):
         session = db.session
         ranks = Rank.make_rank_list(self._league)
         group_id = int(request.form.get("league_point_group_id", 0))
+        should_notify = int(request.form.get("should_notify", 0))
 
         league_points = LeaguePoint.find_all_by_group_id(group_id)
         bonus_points = BonusPoint.find_all_by_user_ids([r.user_id for r in ranks])
@@ -74,5 +75,6 @@ class PostLeagueFinishController(BaseController):
         self._league.finish()
         session.add(self._league)
         session.commit()
-        PonnoBot.push_about_finished_league(self._league.id)
+        if should_notify:
+            PonnoBot.push_about_finished_league(self._league.id)
         return redirect(url_for("league_list"))

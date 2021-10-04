@@ -33,3 +33,5 @@ class PonnoLineDecorator:
                 assert not mock_push_message.called
             return res
         return wrapper
+
+
