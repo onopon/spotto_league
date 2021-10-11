@@ -124,6 +124,20 @@ class PonnoBot:
             PonnoNotify().notify_about_recruiting_league_information(league_ids)
 
     @classmethod
+    def push_about_league_day_before(cls, channel: str = None) -> None:
+        if not settings.LINE_BOT_ENABLE:
+            return
+
+        channel = channel or settings.LINE_BOT_GROUP_ID_HASH[settings.LINE_BOT_ENV]
+        message = LeagueTemplateSendMessage.get_for_push_about_league_day_before()
+        if not message:
+            return
+        try:
+            LineBotApi(settings.LINE_BOT_CHANNEL_ACCESS_TOKEN).push_message(channel, message)
+        except LineBotApiError:
+            PonnoNotify().execute(LeagueTemplateSendMessage.get_for_push_about_league_day_before_text())
+
+    @classmethod
     def push_about_birthday(
         cls, channel: str = None
     ) -> None:
@@ -178,6 +192,7 @@ if __name__ == "__main__":
     poetry run python -m ponno_line.ponno_bot --method_name push_text --kwargs '{"text": "hoge"}'
     poetry run python -m ponno_line.ponno_bot --method_name push_about_birthday
     poetry run python -m ponno_line.ponno_bot --method_name push_about_unpaid
+    poetry run python -m ponno_line.ponno_bot --method_name push_about_league_day_before
     """
     # ponno_lineはspotto_leagueと切り分けたからか、appの設定を書かないと機能しない
     app = create_app()
