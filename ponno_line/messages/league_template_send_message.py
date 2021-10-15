@@ -68,7 +68,6 @@ class LeagueTemplateSendMessage(Base):
     def get_for_push_about_league_day_before_text(cls, **kwargs) -> Optional[str]:
         leagues = ModelLeague.all()
         leagues.sort(key=lambda l: l.start_at)
-        columns = []
         tomorrow = date.today() + timedelta(days=1)
         leagues = [l for l in leagues if l.is_status_ready() and l.date == tomorrow]
         if not leagues:
