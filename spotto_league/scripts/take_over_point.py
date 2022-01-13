@@ -1,5 +1,4 @@
 import argparse
-from spotto_league.models.user import User
 from .base import Base
 from decimal import Decimal, ROUND_HALF_UP
 from spotto_league.entities.point_rank import PointRank, POINT_HASH_KEY_BASE
