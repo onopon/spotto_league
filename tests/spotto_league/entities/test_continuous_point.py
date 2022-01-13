@@ -1,3 +1,4 @@
+import freezegun
 from spotto_league.models.league_member import LeagueMember
 from spotto_league.models.league import LeagueStatus
 from spotto_league.scripts.add_league_point import AddLeaguePoint
@@ -7,6 +8,7 @@ from tests.modules.data_creator import DataCreator
 
 
 class TestContinuousPoint(Base):
+    @freezegun.freeze_time('2021-10-01 00:00:00')
     def test_calcurate_continuous_count(self):
         AddLeaguePoint().execute()
         place = DataCreator().create('place')
@@ -57,6 +59,7 @@ class TestContinuousPoint(Base):
         continuous_point = ContinuousPoint(users[0].id, league_4)
         assert continuous_point._calcurate_continuous_count() == 0
 
+    @freezegun.freeze_time('2021-10-01 00:00:00')
     def test_some_properties(self):
         place = DataCreator().create('place')
         league_dict = {'place_id': place.id, 'date': '2021-08-18', 'status': LeagueStatus.FINISHED.value, 'league_point_group_id': 1}
