@@ -23,8 +23,18 @@ class TestUser(Base):
         users_without_visitor.append(DataCreator().create('guest_user'))
         users_without_visitor.append(DataCreator().create('admin_user'))
         users_without_visitor.append(DataCreator().create('member_user'))
+        users_without_visitor.append(DataCreator().create('withdrawaler_user'))
         DataCreator().create('visitor_user')
         assert User.all_without_visitor() == users_without_visitor
+
+    def test_all_within_team(self):
+        users_without_visitor = []
+        users_without_visitor.append(DataCreator().create('admin_user'))
+        users_without_visitor.append(DataCreator().create('member_user'))
+        DataCreator().create('guest_user')
+        DataCreator().create('visitor_user')
+        DataCreator().create('withdrawaler_user')
+        assert User.all_within_team() == users_without_visitor
 
     def test_all_on_birthday(self):
         birthday_users = []
@@ -61,24 +71,35 @@ class TestUser(Base):
         assert DataCreator().create('admin_user').is_admin()
         assert not DataCreator().create('member_user').is_admin()
         assert not DataCreator().create('visitor_user').is_admin()
+        assert not DataCreator().create('withdrawaler_user').is_admin()
 
     def test_is_member(self):
         assert not DataCreator().create('guest_user').is_member()
         assert not DataCreator().create('admin_user').is_member()
         assert DataCreator().create('member_user').is_member()
         assert not DataCreator().create('visitor_user').is_member()
+        assert not DataCreator().create('withdrawaler_user').is_member()
 
     def test_is_guest(self):
         assert DataCreator().create('guest_user').is_guest()
         assert not DataCreator().create('admin_user').is_guest()
         assert not DataCreator().create('member_user').is_guest()
         assert not DataCreator().create('visitor_user').is_guest()
+        assert not DataCreator().create('withdrawaler_user').is_guest()
 
     def test_is_visitor(self):
         assert not DataCreator().create('guest_user').is_visitor()
         assert not DataCreator().create('admin_user').is_visitor()
         assert not DataCreator().create('member_user').is_visitor()
         assert DataCreator().create('visitor_user').is_visitor()
+        assert not DataCreator().create('withdrawaler_user').is_visitor()
+
+    def test_is_withdrawaler(self):
+        assert not DataCreator().create('guest_user').is_withdrawaler()
+        assert not DataCreator().create('admin_user').is_withdrawaler()
+        assert not DataCreator().create('member_user').is_withdrawaler()
+        assert not DataCreator().create('visitor_user').is_withdrawaler()
+        assert DataCreator().create('withdrawaler_user').is_withdrawaler()
 
     def test_birthday_for_display(self):
         user = User()

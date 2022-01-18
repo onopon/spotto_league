@@ -32,6 +32,8 @@ class PostLoginController(BaseController):
                 raise Exception("ログイン失敗")
             if not user.is_visitor():
                 raise Exception("ログイン失敗")
+            if user.is_withdrawaler():
+                raise Exception("ログイン失敗")
         # それ以外の人用validate
         elif PasswordUtil.is_correct_common_password(common_password):
             user = User.find_by_login_name(login_name)
@@ -39,7 +41,7 @@ class PostLoginController(BaseController):
                 raise Exception("ログイン失敗")
             if not PasswordUtil.is_same(password, user.password):
                 raise Exception("ログイン失敗")
-            if user.is_visitor():
+            if user.is_visitor() or user.is_withdrawaler():
                 raise Exception("ログイン失敗")
         else:
             raise Exception("ログイン失敗")

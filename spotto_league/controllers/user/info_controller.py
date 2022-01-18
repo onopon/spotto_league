@@ -13,12 +13,12 @@ class InfoController(BaseController):
     # override
     async def validate(self, request: BaseRequest, **kwargs) -> None:
         user = User.find_by_login_name(kwargs["login_name"])
-        if not user:
+        if not user or user.is_withdrawaler():
             raise Exception("{}というユーザは存在しません。".format(kwargs["login_name"]))
 
         if user.is_visitor():
             raise Exception(
-                "ビジターアカウントはの情報は見ることができません。{}の誕生日は{}だよ。".format(
+                "ビジターアカウントではこの情報を見ることができません。{}の誕生日は{}だよ。".format(
                     user.name, user.birthday_for_display
                 )
             )

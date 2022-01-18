@@ -30,7 +30,11 @@
           {% if login_user.id == point_rank.user.id %}
           <b><a class="deep-blue" href='/user/info/{{ point_rank.user.login_name }}/'>{{ point_rank.user.name }}</a></b>
           {% else %}
-          <a href='/user/info/{{ point_rank.user.login_name }}/'>{{ point_rank.user.name }}</a>
+            {% if not point_rank.user.is_withdrawaler() %}
+              <a href='/user/info/{{ point_rank.user.login_name }}/'>{{ point_rank.user.name }}</a>
+            {% else %}
+              {{ point_rank.user.name }}
+            {% endif %}
           {% endif %}
         </div>
       </div>

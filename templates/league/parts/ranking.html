@@ -27,7 +27,11 @@
             {% if login_user.id == r_user_id %}
             <b><a class="deep-blue" href='/user/info/{{ rank_hash[r_user_id]["login_name"] }}/'>{{ rank_hash[r_user_id]['user_name'] }}</a></b>
             {% else %}
-            <a href='/user/info/{{ rank_hash[r_user_id]["login_name"] }}/'>{{ rank_hash[r_user_id]['user_name'] }}</a>
+              {% if not rank_hash[r_user_id]['is_withdrawaler'] %}
+                <a href='/user/info/{{ rank_hash[r_user_id]["login_name"] }}/'>{{ rank_hash[r_user_id]['user_name'] }}</a>
+              {% else %}
+                {{ rank_hash[r_user_id]['user_name'] }}
+              {% endif %}
             {% endif %}
           {% endif %}
         </div>

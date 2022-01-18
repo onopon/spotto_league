@@ -68,6 +68,20 @@ visitor_user:
       Role:
         properties:
           role_type: 3
+withdrawaler_user:
+  User:
+    properties:
+      login_name: 'withdrawaler_onopon'
+      password: '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8'
+      name: '退会おのぽん'
+      gender: 1
+      birthday: '1989-09-03'
+      first_name: 'ぽん'
+      last_name: 'おの'
+    related_classes:
+      Role:
+        properties:
+          role_type: 4
 two_guest_users:
   User:
     properties:

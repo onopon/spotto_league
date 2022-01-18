@@ -10,6 +10,7 @@ class RoleType(Enum):
     ADMIN = 1  # 管理者
     MEMBER = 2  # メンバー
     VISITOR = 3  # ビジター。機能が制限されている。
+    WITHDRAWALER = 4  # 退会した人。何も表示されないようにする。
 
     @classmethod
     def all(cls):
@@ -17,6 +18,7 @@ class RoleType(Enum):
         return [
             {"id": RoleType.ADMIN.value, "name": "管理者"},
             {"id": RoleType.MEMBER.value, "name": "メンバー"},
+            {"id": RoleType.WITHDRAWALER.value, "name": "退会者"},
         ]
 
 
@@ -56,3 +58,9 @@ class Role(db.Model, Base):
 
     def is_visitor(self) -> bool:
         return RoleType(self.role_type) == RoleType.VISITOR
+
+    def is_withdrawaler(self) -> bool:
+        return RoleType(self.role_type) == RoleType.WITHDRAWALER
+
+    def is_in_team(self) -> bool:
+        return self.is_admin() or self.is_member()
