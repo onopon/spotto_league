@@ -38,6 +38,43 @@ class TestPostListController(BaseController):
         assert user_2.unpaid.memo == "このメモは残る"
         assert not user_3.unpaid.memo
 
+    def test_post_cannot_change_role_if_user_not_setting_name(self):
+        user = DataCreator().create('admin_user')
+        self.login(user.login_name, 'password')
+        guest_user = DataCreator().create('guest_user')
+        guest_user.last_name = ""
+        guest_user.first_name = ""
+        guest_user.save()
+
+        for role_type_value in [RoleType.ADMIN.value, RoleType.MEMBER.value]:
+            args = {"radio_{}".format(user.login_name): RoleType.ADMIN.value,
+                    "radio_{}".format(guest_user.login_name): role_type_value,
+                    "unpaid_{}".format(user.login_name): 0,
+                    "unpaid_{}".format(guest_user.login_name): 0,
+                    "unpaid_memo_{}".format(user.login_name): "",
+                    "unpaid_memo_{}".format(guest_user.login_name): ""}
+            result = self.post(URL_PATH, args)
+            assert result.status_code == 200
+            assert guest_user.is_guest()
+
+    def test_post_can_change_to_withdrawaler_if_user_not_setting_name(self):
+        user = DataCreator().create('admin_user')
+        self.login(user.login_name, 'password')
+        guest_user = DataCreator().create('guest_user')
+        guest_user.last_name = ""
+        guest_user.first_name = ""
+        guest_user.save()
+
+        args = {"radio_{}".format(user.login_name): RoleType.ADMIN.value,
+                "radio_{}".format(guest_user.login_name): RoleType.WITHDRAWALER.value,
+                "unpaid_{}".format(user.login_name): 0,
+                "unpaid_{}".format(guest_user.login_name): 0,
+                "unpaid_memo_{}".format(user.login_name): "",
+                "unpaid_memo_{}".format(guest_user.login_name): ""}
+        result = self.post(URL_PATH, args)
+        assert result.status_code == 200
+        assert guest_user.is_withdrawaler()
+
     def test_post_cannot_change_role_myself(self):
         user = DataCreator().create('admin_user')
         self.login(user.login_name, 'password')
@@ -69,6 +106,16 @@ class TestPostListController(BaseController):
         result = self.post(URL_PATH, args)
         assert result.status_code == 200
         assert user.is_visitor()
+
+    def test_post_as_withdrawaler(self):
+        user = DataCreator().create('withdrawaler_user')
+        self.login(user.login_name, 'password')
+        args = {"radio_{}".format(user.login_name): RoleType.ADMIN.value,
+                "unpaid_{}".format(user.login_name): 0,
+                "unpaid_memo_{}".format(user.login_name): ""}
+        result = self.post(URL_PATH, args)
+        assert result.status_code == 200
+        assert user.is_withdrawaler()
 
     def test_post_as_not_login(self):
         user = DataCreator().create('admin_user')
