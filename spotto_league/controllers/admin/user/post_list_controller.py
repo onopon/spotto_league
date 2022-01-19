@@ -26,7 +26,7 @@ class PostListController(BaseController):
                 and role_type_value != RoleType.ADMIN.value
             ):
                 raise Exception("自分自身を管理者以外に設定することはできません。")
-            if (not user.first_name or not user.last_name) and role_type_value > 0:
+            if (not user.first_name or not user.last_name) and role_type_value in [RoleType.ADMIN.value, RoleType.MEMBER.value]:
                 raise Exception("名前の設定がないユーザに役柄を設定することはできません。")
 
     async def get_layout_as_exception(

@@ -74,7 +74,7 @@
                      name="radio_{{ user.login_name }}"
                      id="{{ role_id }}"
                      value="{{ role_type_hash['id'] }}"
-                     {% if (not user.first_name) or (not user.last_name) %} disabled {% endif %}
+                     {% if ((not user.first_name) or (not user.last_name)) and role_type_hash['id'] in [1, 2]  %} disabled {% endif %}
                      {% if user_role_id == role_type_hash['id'] %} checked {% endif %}
               >
               <label class="form-check-label" for="{{ role_id }}">{{ role_type_hash['name'] }}</label>
