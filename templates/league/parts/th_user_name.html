@@ -8,6 +8,10 @@
   {% if login_user.id == user.id %}
   <th class="user-name" scope="col"><a class="deep-blue" href='/user/info/{{ user.login_name }}/'>{{ user.name }}</a></th>
   {% else %}
-  <th class="user-name" scope="col"><a href='/user/info/{{ user.login_name }}/'>{{ user.name }}</a></th>
+      {% if not user.is_withdrawaler() %}
+          <th class="user-name" scope="col"><a href='/user/info/{{ user.login_name }}/'>{{ user.name }}</a></th>
+      {% else %}
+          <th class="user-name" scope="col">{{ user.name }}</th>
+      {% endif %}
   {% endif %}
 {% endif %}

@@ -46,6 +46,13 @@ class User(flask_login.UserMixin, db.Model, Base):
         return [u for u in users if u.id not in visitor_user_ids]
 
     @classmethod
+    def all_within_team(cls) -> List["User"]:
+        users = cls.all()
+        roles = Role.all()
+        team_user_ids = [r.user_id for r in roles if r.is_in_team()]
+        return [u for u in users if u.id in team_user_ids]
+
+    @classmethod
     def all_on_birthday(cls, month: int, day: int) -> List["User"]:
         def is_satisfy(user: User, month: int, day: int) -> bool:
             return all([month == user.birthday.month,
@@ -77,6 +84,9 @@ class User(flask_login.UserMixin, db.Model, Base):
 
     def is_visitor(self) -> bool:
         return self.role.is_visitor()
+
+    def is_withdrawaler(self) -> bool:
+        return self.role.is_withdrawaler()
 
     @property
     def unpaid(self) -> Unpaid:

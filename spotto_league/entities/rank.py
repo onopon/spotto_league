@@ -155,6 +155,7 @@ class Rank:
             "win": self.win,
             "lose": self.lose,
             "reason": self._reason,
+            "is_withdrawaler": self.user.is_withdrawaler()
         }
 
     @classmethod

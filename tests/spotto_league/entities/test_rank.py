@@ -92,6 +92,16 @@ class TestRank(Base):
         assert rank_hash['win'] == rank.win
         assert rank_hash['lose'] == rank.lose
         assert rank_hash['reason'] == rank.reason
+        assert not rank_hash['is_withdrawaler']
+
+    def test_to_hash_for_withdrawaler(self):
+        user = DataCreator().create('withdrawaler_user')
+        league_member = LeagueMember.find_or_initialize_by_league_id_and_user_id(1, user.id)
+        rank = Rank(league_member, [], [])
+        rank._rank = 1
+        rank._reason = ""
+        rank_hash = rank.to_hash()
+        assert rank_hash['is_withdrawaler']
 
     def test_make_rank_list(self):
         place = DataCreator().create('place')
