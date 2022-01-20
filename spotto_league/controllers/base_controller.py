@@ -4,7 +4,7 @@ from werkzeug.wrappers import BaseRequest, Response
 from typing import Dict, Any, Union, Tuple
 import time
 from flask import render_template, redirect, url_for
-from flask_login import current_user
+from flask_login import current_user, logout_user
 from spotto_league.models.user import User
 from spotto_league.exceptions import (
     NotAdminException,
@@ -35,6 +35,10 @@ class BaseController(metaclass=ABCMeta):
         if current_user.is_authenticated and self.login_user.is_visitor():
             raise NotMemberException("ゲストの方はこのページを閲覧することはできません。")
 
+    async def validate_for_withdrawaler(self) -> None:
+        if current_user.is_authenticated and self.login_user.is_withdrawaler():
+            logout_user()
+
     @abstractmethod
     async def validate(self, request: BaseRequest, **kwargs) -> None:
         pass
@@ -57,6 +61,7 @@ class BaseController(metaclass=ABCMeta):
         loop = asyncio.get_event_loop()
         try:
             loop.run_until_complete(self.validate_for_visitor())
+            loop.run_until_complete(self.validate_for_withdrawaler())
             loop.run_until_complete(self.validate(request, **kwargs))
         except Exception as e:
             return loop.run_until_complete(

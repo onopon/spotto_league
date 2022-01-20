@@ -1,5 +1,6 @@
 from tests.spotto_league.controllers.base_controller import BaseController
 from tests.modules.data_creator import DataCreator
+from spotto_league.models.role import RoleType
 
 
 class TestInfoController(BaseController):
@@ -43,3 +44,17 @@ class TestInfoController(BaseController):
         withdrawaler_user = dc.create('withdrawaler_user')
         result = self.get("/user/info/{}/".format(withdrawaler_user.login_name))
         assert result.status_code == 404
+
+    def test_get_to_member_but_exchange_to_withdrawaler_myself(self):
+        dc = DataCreator()
+        user = dc.create('member_user')
+        self.login(user.login_name, 'password')
+        result = self.get("/user/info/{}/".format(user.login_name))
+        assert result.status_code == 200
+
+        user.role.role_type = RoleType.WITHDRAWALER.value
+        user.role.save()
+
+        result = self.get("/user/info/{}/".format(user.login_name))
+        assert result.status_code == 302
+        assert '/user/login' in result.headers['Location']
