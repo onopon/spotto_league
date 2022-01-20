@@ -109,12 +109,14 @@ class TestPostListController(BaseController):
 
     def test_post_as_withdrawaler(self):
         user = DataCreator().create('withdrawaler_user')
+        # ログインできない
         self.login(user.login_name, 'password')
         args = {"radio_{}".format(user.login_name): RoleType.ADMIN.value,
                 "unpaid_{}".format(user.login_name): 0,
                 "unpaid_memo_{}".format(user.login_name): ""}
         result = self.post(URL_PATH, args)
-        assert result.status_code == 200
+        assert result.status_code == 302
+        assert '/user/login' in result.headers["Location"]
         assert user.is_withdrawaler()
 
     def test_post_as_not_login(self):
